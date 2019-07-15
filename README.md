@@ -30,8 +30,10 @@ Almost all things those you can do with original Trello:
  - Also, I'm considering to add a chat to a board
 
 #Configs
+
 To check it out create .env file in "server" folder and set JWT_SECRET.
 Also, in server/index.js set correct MONGODB_URI and PORT for process.env.
 
 #P.S.
+
 This is my first own app that I'm making all by myself. I hope it will be good enough to you consider to invite me to interview. I'm looking for trainee/junior position. But if you have something different (and still in front-end) and interesting, please, let me know!
