@@ -4,7 +4,7 @@ It's a Trello like app that I made for my portfolio.
 
 # What am I using to create the app
 
-I'm using create-react-app for a client and node and express for server. Also, I'm using mongodb as a database and bootstrap as a css framework.
+I'm using create-react-app for a client and node and express for server. Also, I'm using mongodb as a database and bootstrap as a css framework. And air-bnb config for eslint.
 
 # What you can do using the app
 
