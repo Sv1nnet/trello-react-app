@@ -16,12 +16,19 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const { mongoose } = require('./db/mongoose');
+const { userRouter } = require('./routes/user');
 
 const app = express();
 const port = process.env.PORT;
 
 app.use(bodyParser.json());
 
+app.use('/user', userRouter);
+
 app.listen(port, () => {
   console.log(`Started on port ${port}`);
 });
+
+module.exports = {
+  app,
+};

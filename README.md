@@ -33,6 +33,7 @@ Almost all things those you can do with original Trello:
 
 To check it out create .env file in "server" folder and set JWT_SECRET.
 Also, in server/index.js set correct MONGODB_URI and PORT for process.env.
+To send emails I'm using mailtrap.io so you need to set EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS in .env.
 
 ## P.S.
 
