@@ -9,6 +9,6 @@ const { app } = require('./index');
 const { User } = require('./models/User');
 const { users, populateUsers, initNewUser } = require('./test/seed');
 
-const { userPostRequests } = require('./routes/__test__/user.test');
+const { userRequests } = require('./routes/__test__/user.test');
 
-userPostRequests();
+userRequests();

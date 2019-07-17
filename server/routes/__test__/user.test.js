@@ -9,7 +9,7 @@ const { app } = require('../../index');
 const { User } = require('../../models/User');
 const { users, populateUsers, initNewUser } = require('../../test/seed');
 
-function userPostRequests() {
+function userRequests() {
   beforeEach(populateUsers);
 
   describe('POST /user', function() {
@@ -273,5 +273,5 @@ function userPostRequests() {
 }
 
 module.exports = {
-  userPostRequests,
+  userRequests,
 };
