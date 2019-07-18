@@ -61,40 +61,45 @@ router.post('/signup', (req, res) => {
   const { firstName } = credentials;
   const { lastName } = credentials;
 
-  const user = new User({
-    email,
-    password,
-    nick,
-    firstName,
-    lastName,
-  });
-  const authToken = user.generateAuthToken();
+  User.findOne({ email }).then((doc) => {
+    if (doc) {
+      res.status(400).send({ err: 'User with this email already exists' });
+    } else {
+      User.findOne({ nick }).then((doc) => {
+        if (doc) {
+          return Promise.reject(new Error('User with this nick already exists'));
+        }
 
-  user.hashPassword(user.password);
-  user.generateConfirmationToken();
+        const user = new User({
+          email,
+          password,
+          nick,
+          firstName,
+          lastName,
+        });
 
-  user.save()
-    .then((doc) => {
-      if (!doc) {
-        return res.status(400).send({ err: 'Could not create a new user' });
-      }
+        user.hashPassword(user.password);
+        user.generateConfirmationToken();
 
-      if (doc.confirmed) {
-        const { token } = authToken;
-        res.status(200).header('Authorization', `Bearer ${token}`).send(_.pick(doc, ['email', 'nick', 'firstName', 'lastName', 'boards']));
-      } else {
-        sendConfirmationEmail(user)
-          .then(() => {
-            res.status(200).send(_.pick(doc, ['confirmed']));
+        user.save()
+          .then((doc) => {
+            if (!doc) {
+              return res.status(400).send({ err: 'Could not create a new user' });
+            }
+            sendConfirmationEmail(user)
+              .then(() => {
+                res.status(200).send(_.pick(doc, ['confirmed']));
+              })
+              .catch((err) => {
+                res.status(500).send({ err: 'Could not send confirmation email' });
+              });
           })
-          .catch((err) => {
-            res.status(500).send({ err: 'Could not send confirmation email' });
+          .catch(() => {
+            res.status(400).send({ err: 'Validation failed' });
           });
-      }
-    })
-    .catch(() => {
-      res.status(400).send({ err: 'Could not create a new user' });
-    });
+      }).catch(() => res.status(400).send({ err: 'User with this nickname already exists' }));
+    }
+  }).catch(() => res.status(400).send({ err: 'Validation failed' }));
 });
 
 // Confirm registration
@@ -149,7 +154,7 @@ router.post('/login', (req, res) => {
         const authObject = user.generateAuthObject();
         const authToken = authObject.token.token;
 
-        res.status(200).header('Authorization', `Bearer ${authToken}`).send(authObject);        
+        res.status(200).header('Authorization', `Bearer ${authToken}`).send(authObject);
       } else {
         res.status(200).send({ confirmed: false });
       }

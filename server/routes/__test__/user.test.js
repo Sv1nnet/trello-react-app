@@ -92,7 +92,7 @@ function userRequests() {
   describe('POST /user/signup', function() {
     this.timeout(10000);
 
-    it('Should return a new user on post /user/signup if comfinrmed or confirmed that equals false', (done) => {
+    it('Should return confirmed that equals false', (done) => {
       const newUser = new User({
         email: 'sv@mail.com',
         password: '12345678',
@@ -104,11 +104,49 @@ function userRequests() {
         .send({ credentials: { email: newUser.email, password: '12345678', nick: newUser.nick } })
         .expect(200)
         .expect((res) => {
-          if (res.body.confirmed) {
-            expect(res.body.email).to.equal(newUser.email);
-          } else {
-            expect(res.body.confirmed).to.equal(false);
-          }
+          expect(res.body.confirmed).to.equal(false);
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+
+          done();
+        });
+    });
+
+    it('Should return 400 if user with specified email already exists that equals false', (done) => {
+      const newUser = new User({
+        email: users[0].email,
+        password: '12345678',
+        nick: 'somenick',
+      });
+
+      request(app)
+        .post('/user/signup')
+        .send({ credentials: { email: newUser.email, password: '12345678', nick: newUser.nick } })
+        .expect(400)
+        .expect((res) => {
+          expect(res.body.err).to.equal('User with this email already exists');
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+
+          done();
+        });
+    });
+
+    it('Should return 400 if user with specified nick already exists that equals false', (done) => {
+      const newUser = new User({
+        email: 'sm@mai.com',
+        password: '12345678',
+        nick: users[0].nick,
+      });
+
+      request(app)
+        .post('/user/signup')
+        .send({ credentials: { email: newUser.email, password: '12345678', nick: newUser.nick } })
+        .expect(400)
+        .expect((res) => {
+          expect(res.body.err).to.equal('User with this nickname already exists');
         })
         .end((err, res) => {
           if (err) return done(err);
@@ -129,7 +167,7 @@ function userRequests() {
         .send({ credentials: { email: newUser.email, password: newUser.password, nick: newUser.nick } })
         .expect(400)
         .expect((res) => {
-          expect(res.body.err).to.equal('Could not create a new user');
+          expect(res.body.err).to.equal('Validation failed');
         })
         .end((err, res) => {
           if (err) return done(err);
