@@ -145,10 +145,14 @@ router.post('/login', (req, res) => {
     if (!user) return Promise.reject(new Error('There is no such user'));
 
     if (user.isValidPassword(password)) {
-      const authObject = user.generateAuthObject();
-      const authToken = authObject.token.token;
+      if (user.confirmed) {
+        const authObject = user.generateAuthObject();
+        const authToken = authObject.token.token;
 
-      res.status(200).header('Authorization', `Bearer ${authToken}`).send(authObject);
+        res.status(200).header('Authorization', `Bearer ${authToken}`).send(authObject);        
+      } else {
+        res.status(200).send({ confirmed: false });
+      }
     } else {
       res.status(400).send({ err: 'Password is wrong' });
     }

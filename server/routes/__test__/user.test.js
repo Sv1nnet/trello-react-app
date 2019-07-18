@@ -143,14 +143,47 @@ function userRequests() {
     this.timeout(10000);
 
     it('Should return auth token and user info email, nick, firstName, lastName, boards on post /user/login', (done) => {
+      User.findByIdAndUpdate(
+        {
+          _id: users[0]._id,
+        },
+        {
+          $set: {
+            confirmed: true,
+          },
+        },
+        {
+          new: true,
+        },
+      )
+        .then((user) => {
+          request(app)
+            .post('/user/login')
+            .send({ credentials: { email: users[0].email, password: '12345678' } })
+            .expect(200)
+            .expect((res) => {
+
+              expect(res.body.email).to.equal(user.email);
+              expect(res.body.nick).to.equal(user.nick);
+              expect(res.body.token.access).to.equal(user.tokens[1].access);
+            })
+            .end((err) => {
+              if (err) return done(err);
+
+              done();
+            });
+        });
+    });
+
+    it('Should return confirmed equals false on post /user/login', (done) => {
+
       request(app)
         .post('/user/login')
         .send({ credentials: { email: users[0].email, password: '12345678' } })
         .expect(200)
         .expect((res) => {
-          expect(res.body.email).to.equal(users[0].email);
-          expect(res.body.nick).to.equal(users[0].nick);
-          expect(res.body.token.access).to.equal(users[0].tokens[1].access);
+          expect(res.body.confirmed).to.equal(false);
+          expect(res.body.token).to.equal(undefined);
         })
         .end((err) => {
           if (err) return done(err);
