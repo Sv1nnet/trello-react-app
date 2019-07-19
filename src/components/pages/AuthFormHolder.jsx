@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { formActionTypes } from '../../types';
 
 class AuthFormHolder extends Component {
   state = {
@@ -26,7 +25,7 @@ class AuthFormHolder extends Component {
   }
 
   onSubmit = () => {
-    
+
   }
 
   render() {
