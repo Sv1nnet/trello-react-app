@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Loader from '../utils/Loader';
 
 class AuthFormHolder extends Component {
   state = {
@@ -9,6 +10,10 @@ class AuthFormHolder extends Component {
       confirmPassword: '',
       firstName: '',
       lastName: '',
+    },
+    status: {
+      loading: false,
+      err: undefined,
     },
   }
 
@@ -24,8 +29,16 @@ class AuthFormHolder extends Component {
     }));
   }
 
-  onSubmit = () => {
+  onSubmit = (e) => {
+    e.preventDefault();
 
+    this.setState(state => ({
+      ...state,
+      status: {
+        ...state.status,
+        loading: true,
+      },
+    }));
   }
 
   render() {
@@ -36,11 +49,15 @@ class AuthFormHolder extends Component {
       onSubmit,
     } = this;
     const { switchForm } = props;
-    const { userData } = state;
+    const { userData, status } = state;
+    const { loading } = status;
     const AuthForm = props.authForm;
 
     return (
-      <AuthForm switchForm={switchForm} userData={userData} formMethods={{ onChange, onSubmit }} />
+      <>
+        <AuthForm switchForm={switchForm} userData={userData} formMethods={{ onChange, onSubmit }} />
+        {loading && <Loader.FormLoader />}
+      </>
     );
   }
 }
