@@ -29,13 +29,18 @@ class AuthFormHolder extends Component {
   }
 
   render() {
-    const { state, props } = this;
+    const {
+      state,
+      props,
+      onChange,
+      onSubmit,
+    } = this;
     const { switchForm } = props;
     const { userData } = state;
     const AuthForm = props.authForm;
 
     return (
-      <AuthForm switchForm={switchForm} userData={userData} onChange={this.onChange} />
+      <AuthForm switchForm={switchForm} userData={userData} formMethods={{ onChange, onSubmit }} />
     );
   }
 }

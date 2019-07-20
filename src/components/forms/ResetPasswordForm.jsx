@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 const ResetPasswordForm = (props) => {
   const [mounted, setMounted] = useState(false);
 
-  const { onChange, userData } = props;
+  const { formMethods, userData } = props;
+  const { onChange, onSubmit } = formMethods;
   const {
     email,
   } = userData;

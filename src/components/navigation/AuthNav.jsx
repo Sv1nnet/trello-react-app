@@ -20,6 +20,7 @@ class AuthNav extends Component {
     }
   }
 
+  // Switch a form that we need render
   switchForm = ({ resetPassword, isSignupButtonActive, isLoginButtonActive }) => {
     this.setState(state => ({
       ...state,
@@ -29,6 +30,7 @@ class AuthNav extends Component {
     }));
   }
 
+  // Get form height to make smooth increase height
   getFormHeight = () => {
     const { isSignupButtonActive, isLoginButtonActive, resetPassword } = this.state;
 
@@ -39,6 +41,7 @@ class AuthNav extends Component {
     return '100%';
   }
 
+  // Get AuthFormHolder with a form that we need to render as authProp and render it in AuthFormHolder as children
   getForm = () => {
     const { isSignupButtonActive, isLoginButtonActive, resetPassword } = this.state;
     let Form;

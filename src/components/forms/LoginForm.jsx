@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 const LoginForm = (props) => {
   const [mounted, setMounted] = useState(false);
 
-  const { onChange, userData, switchForm } = props;
+  const { formMethods, userData, switchForm } = props;
+  const { onChange, onSubmit } = formMethods;
   const {
     email,
     password,
@@ -14,7 +15,7 @@ const LoginForm = (props) => {
   setTimeout(() => setMounted(true), 50);
 
   return (
-    <form action="" className={`${mounted && 'active'}`}>
+    <form action="" className={`mb-3 ${mounted && 'active'}`}>
       <label htmlFor="email" className="d-block w-100">
         <input onChange={onChange} type="email" name="email" id="email" className="w-100 px-2" value={email} />
         <span className="form-label-text">Email</span>
