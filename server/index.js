@@ -21,7 +21,17 @@ const { userRouter } = require('./routes/user');
 const app = express();
 const port = process.env.PORT;
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*'); // update to match the domain you will make the request from
+  res.header('Access-Control-Allow-Headers', 'Authorization, Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 app.use(bodyParser.json());
+app.use((req, res, next) => {
+  console.log('Incoming requst', req.url);
+  next();
+});
 
 app.use('/user', userRouter);
 

@@ -27,7 +27,7 @@ const UserSchema = new Schema({
     required: true,
     minlength: 8,
   },
-  nick: {
+  nickname: {
     type: String,
     required: true,
     unique: true,
@@ -103,7 +103,7 @@ UserSchema.methods.generateConfirmationToken = function generateAndSetConfirmati
 UserSchema.methods.generateConfirmationUrl = function generateConfirmationUrl() {
   const user = this;
   const confirmationToken = user.tokens.find(token => token.access === 'conf').token;
-  const url = `http://localhost:${process.env.PORT}/user/confirmation/${confirmationToken}`;
+  const url = `http://localhost:3000/user/confirmation/${confirmationToken}`;
 
   return url;
 };
@@ -124,7 +124,7 @@ UserSchema.methods.generateAuthObject = function generateAuthObject() {
 
   return {
     email: user.email,
-    nick: user.nick,
+    nickname: user.nickname,
     firstName: user.firstName,
     lastName: user.lastName,
     boards: user.boards,

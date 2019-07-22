@@ -15,12 +15,12 @@ function userRequests() {
   describe('POST /user', function() {
     this.timeout(10000);
 
-    it('Should return new user info email, nick, firstName, lastName on post /user', (done) => {
+    it('Should return new user info email, nickname, firstName, lastName on post /user', (done) => {
       const token = users[0].tokens.find(token => token.access === 'auth');
       const tokenAccess = token.access;
       const newUserData = {
         email: 'new@email.com',
-        nick: 'new_nick',
+        nickname: 'new_nick',
         firstName: 'firstname',
         lastName: 'lastname',
       };
@@ -32,7 +32,7 @@ function userRequests() {
         .expect(200)
         .expect((res) => {
           expect(res.body.email).to.equal(newUserData.email);
-          expect(res.body.nick).to.equal(newUserData.nick);
+          expect(res.body.nickname).to.equal(newUserData.nickname);
           expect(res.body.firstName).to.equal(newUserData.firstName);
           expect(res.body.lastName).to.equal(newUserData.lastName);
           expect(res.headers.authorization.split(' ')[1]).to.equal(token.token);
@@ -49,7 +49,7 @@ function userRequests() {
       const tokenAccess = 'conf';
       const newUserData = {
         email: 'new@email.com',
-        nick: 'new_nick',
+        nickname: 'new_nick',
         firstName: 'firstname',
         lastName: 'lastname',
       };
@@ -71,7 +71,7 @@ function userRequests() {
       const tokenAccess = 'auth';
       const newUserData = {
         email: 'new@email.com',
-        nick: 'new_nick',
+        nickname: 'new_nick',
         firstName: 'firstname',
         lastName: 'lastname',
       };
@@ -96,12 +96,12 @@ function userRequests() {
       const newUser = new User({
         email: 'sv@mail.com',
         password: '12345678',
-        nick: 'nick_3',
+        nickname: 'nick_3',
       });
 
       request(app)
         .post('/user/signup')
-        .send({ credentials: { email: newUser.email, password: '12345678', nick: newUser.nick } })
+        .send({ credentials: { email: newUser.email, password: '12345678', nickname: newUser.nickname } })
         .expect(200)
         .expect((res) => {
           expect(res.body.confirmed).to.equal(false);
@@ -117,12 +117,12 @@ function userRequests() {
       const newUser = new User({
         email: users[0].email,
         password: '12345678',
-        nick: 'somenick',
+        nickname: 'somenick',
       });
 
       request(app)
         .post('/user/signup')
-        .send({ credentials: { email: newUser.email, password: '12345678', nick: newUser.nick } })
+        .send({ credentials: { email: newUser.email, password: '12345678', nickname: newUser.nickname } })
         .expect(400)
         .expect((res) => {
           expect(res.body.err).to.equal('User with this email already exists');
@@ -134,16 +134,16 @@ function userRequests() {
         });
     });
 
-    it('Should return 400 if user with specified nick already exists that equals false', (done) => {
+    it('Should return 400 if user with specified nickname already exists that equals false', (done) => {
       const newUser = new User({
         email: 'sm@mai.com',
         password: '12345678',
-        nick: users[0].nick,
+        nickname: users[0].nickname,
       });
 
       request(app)
         .post('/user/signup')
-        .send({ credentials: { email: newUser.email, password: '12345678', nick: newUser.nick } })
+        .send({ credentials: { email: newUser.email, password: '12345678', nickname: newUser.nickname } })
         .expect(400)
         .expect((res) => {
           expect(res.body.err).to.equal('User with this nickname already exists');
@@ -159,12 +159,12 @@ function userRequests() {
       const newUser = new User({
         email: 'sv@mailcom',
         password: '1234567',
-        nick: '',
+        nickname: '',
       });
 
       request(app)
         .post('/user/signup')
-        .send({ credentials: { email: newUser.email, password: newUser.password, nick: newUser.nick } })
+        .send({ credentials: { email: newUser.email, password: newUser.password, nickname: newUser.nickname } })
         .expect(400)
         .expect((res) => {
           expect(res.body.err).to.equal('Validation failed');
@@ -180,7 +180,7 @@ function userRequests() {
   describe('POST /user/login', function() {
     this.timeout(10000);
 
-    it('Should return auth token and user info email, nick, firstName, lastName, boards on post /user/login', (done) => {
+    it('Should return auth token and user info email, nickname, firstName, lastName, boards on post /user/login', (done) => {
       User.findByIdAndUpdate(
         {
           _id: users[0]._id,
@@ -202,7 +202,7 @@ function userRequests() {
             .expect((res) => {
 
               expect(res.body.email).to.equal(user.email);
-              expect(res.body.nick).to.equal(user.nick);
+              expect(res.body.nickname).to.equal(user.nickname);
               expect(res.body.token.access).to.equal(user.tokens[1].access);
             })
             .end((err) => {
@@ -261,13 +261,13 @@ function userRequests() {
     });
   });
 
-  describe('GET /user/confirmation/:token', function() {
+  describe('POST /user/confirmation', function() {
     this.timeout(10000);
 
-    it('Should return user and set confirmed true on post /user/confirmation/:token', (done) => {
+    it('Should return user and set confirmed true on post /user/confirmation', (done) => {
       const newUser = new User({
         email: 'new@email.com',
-        nick: 'new_nick',
+        nickname: 'new_nick',
         firstName: 'firstname',
         lastName: 'lastname',
         password: '12345678',
@@ -279,7 +279,8 @@ function userRequests() {
       const token = newUser.tokens.find(userToken => userToken.access === 'conf');
 
       request(app)
-        .get(`/user/confirmation/${token.token}`)
+        .post('/user/confirmation')
+        .set('Authorization', `Bearer ${token.token}`)
         .send()
         .expect(200)
         .expect((res) => {

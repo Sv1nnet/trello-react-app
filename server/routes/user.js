@@ -19,14 +19,14 @@ router.post('/', (req, res) => {
 
   const { email } = credentials;
   const { password } = credentials;
-  const { nick } = credentials;
+  const { nickname } = credentials;
   const { firstName } = credentials;
   const { lastName } = credentials;
 
   const userData = {
     email,
     password,
-    nick,
+    nickname,
     firstName,
     lastName,
   };
@@ -46,7 +46,7 @@ router.post('/', (req, res) => {
           new: true,
         },
       ).then((user) => {
-        res.status(200).header('Authorization', `Bearer ${token}`).send(_.pick(user, ['email', 'nick', 'firstName', 'lastName', 'boards']));
+        res.status(200).header('Authorization', `Bearer ${token}`).send(_.pick(user, ['email', 'nickname', 'firstName', 'lastName', 'boards']));
       }).catch(err => res.status(400).send(parseError(err)));
     }
   });
@@ -57,23 +57,23 @@ router.post('/signup', (req, res) => {
   const { credentials } = req.body;
   const { email } = credentials;
   const { password } = credentials;
-  const { nick } = credentials;
+  const { nickname } = credentials;
   const { firstName } = credentials;
   const { lastName } = credentials;
 
   User.findOne({ email }).then((doc) => {
     if (doc) {
-      res.status(400).send({ err: 'User with this email already exists' });
+      res.status(400).json({ err: 'User with this email already exists' });
     } else {
-      User.findOne({ nick }).then((doc) => {
+      User.findOne({ nickname }).then((doc) => {
         if (doc) {
-          return Promise.reject(new Error('User with this nick already exists'));
+          return Promise.reject(new Error('User with this nickname already exists'));
         }
 
         const user = new User({
           email,
           password,
-          nick,
+          nickname,
           firstName,
           lastName,
         });
@@ -84,28 +84,28 @@ router.post('/signup', (req, res) => {
         user.save()
           .then((doc) => {
             if (!doc) {
-              return res.status(400).send({ err: 'Could not create a new user' });
+              return res.status(400).json({ err: 'Could not create a new user' });
             }
             sendConfirmationEmail(user)
               .then(() => {
-                res.status(200).send(_.pick(doc, ['confirmed']));
+                res.status(200).send({ confirmed: doc.confirmed, message: 'Confirmation mail was sent' });
               })
               .catch((err) => {
-                res.status(500).send({ err: 'Could not send confirmation email' });
+                res.status(500).json({ err: 'Could not send confirmation email' });
               });
           })
-          .catch(() => {
-            res.status(400).send({ err: 'Validation failed' });
+          .catch((err) => {
+            console.log(err);
+            res.status(400).json({ err: 'Validation failed' });
           });
-      }).catch(() => res.status(400).send({ err: 'User with this nickname already exists' }));
+      }).catch(() => res.status(400).json({ err: 'User with this nickname already exists' }));
     }
-  }).catch(() => res.status(400).send({ err: 'Validation failed' }));
+  }).catch(() => res.status(400).json({ err: 'Could not create a user' }));
 });
 
 // Confirm registration
-router.get('/confirmation/:token', (req, res) => {
-  const { token } = req.params;
-
+router.post('/confirmation', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       res.status(401).send({ err: 'Invalid token' });
@@ -128,8 +128,11 @@ router.get('/confirmation/:token', (req, res) => {
             new: true,
           },
         ).then((user) => {
-          const authToken = user.generateAuthToken().token;
-          res.status(200).header('Authorization', `Bearer ${authToken}`).send(_.pick(user, ['email', 'nick', 'firstName', 'lastName', 'boards']));
+          const authToken = user.generateAuthToken();
+          res.status(200).send({
+            ..._.pick(user, ['email', 'nickname', 'firstName', 'lastName', 'boards']),
+            token: authToken,
+          });
         }).catch(err => res.status(400).send(parseError(err)));
       });
     }
@@ -141,7 +144,7 @@ router.post('/login', (req, res) => {
   const { credentials } = req.body;
   const { email } = credentials;
   const { password } = credentials;
-  const queryField = email ? 'email' : 'nick';
+  const queryField = email ? 'email' : 'nickname';
   const queryObject = {
     [queryField]: credentials[queryField],
   };
@@ -154,14 +157,16 @@ router.post('/login', (req, res) => {
         const authObject = user.generateAuthObject();
         const authToken = authObject.token.token;
 
-        res.status(200).header('Authorization', `Bearer ${authToken}`).send(authObject);
+        console.log('authObject', authObject);
+        console.log('authToken', authToken);
+        res.status(200).send(authObject);
       } else {
-        res.status(200).send({ confirmed: false });
+        res.status(200).send({ confirmed: false, message: 'Confirm your email' });
       }
     } else {
-      res.status(400).send({ err: 'Password is wrong' });
+      res.status(400).json({ err: 'Password is wrong' });
     }
-  }).catch(err => res.status(400).send({ err: err.message }));
+  }).catch(err => res.status(400).json({ err: err.message }));
 });
 
 // Logout

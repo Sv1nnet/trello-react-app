@@ -14,7 +14,7 @@ const userOne = new User({
   _id: new ObjectID(),
   email: 'svi_1@mail.ru',
   password: '12345678',
-  nick: 'nick_1',
+  nickname: 'nick_1',
   tokens: [],
   boards: [new ObjectID().toHexString()],
 });
@@ -24,7 +24,7 @@ const userTwo = new User({
   _id: new ObjectID(),
   email: 'svi_2@mail.ru',
   password: '12345678',
-  nick: 'nick_2',
+  nickname: 'nick_2',
   tokens: [],
   boards: [new ObjectID().toHexString()],
 });
