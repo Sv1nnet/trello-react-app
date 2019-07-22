@@ -16,7 +16,7 @@ function App(props) {
 }
 
 const mapStateToProps = state => ({
-  isAuthenticated: !!state.user.token,
+  isAuthenticated: !!state.user.token.token, // If there is a token then user is authenticated
 });
 
 export default connect(mapStateToProps)(App);

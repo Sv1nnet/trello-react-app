@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { formActionTypes } from '../../types';
 
-const ResetPasswordForm = (props) => {
+const ForgotPasswordForm = (props) => {
   const [mounted, setMounted] = useState(false);
 
   const { formMethods, userData } = props;
@@ -13,7 +14,7 @@ const ResetPasswordForm = (props) => {
   setTimeout(() => setMounted(true), 50);
 
   return (
-    <form action="" onSubmit={onSubmit} className={`${mounted && 'active'}`}>
+    <form action="" onSubmit={e => onSubmit(e, formActionTypes.FORGOT_PASSWORD)} className={`${mounted && 'active'}`}>
       <label htmlFor="email" className="d-block w-100">
         <input onChange={onChange} type="email" name="email" id="email" className="w-100 px-2" value={email} />
         <span className="form-label-text">Email</span>
@@ -24,4 +25,4 @@ const ResetPasswordForm = (props) => {
   );
 };
 
-export default ResetPasswordForm;
+export default ForgotPasswordForm;

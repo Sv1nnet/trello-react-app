@@ -1,0 +1,26 @@
+form
+  label
+    margin-top: 33px
+    text-align: left !important
+    position: relative
+    input
+      position: relative
+      z-index: 0
+      line-height: 1.6em
+      font-size: 1.2em
+      &:not([value=""]) + .form-label-text, &:focus + .form-label-text
+        transform: translate3d(-1em, -1.9em, 0) scale(.95)
+        opacity: 1
+    
+
+    .form-label-text
+      cursor: text
+      position: absolute
+      top: 6px
+      left: 7px
+      z-index: 1
+      font-size: 1em
+      display: inline-block
+      width: 100%
+      opacity: .7
+      transition: .3s transform ease

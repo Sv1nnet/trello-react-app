@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { formActionTypes } from '../../types';
 
 const LoginForm = (props) => {
   const [mounted, setMounted] = useState(false);
@@ -15,7 +16,7 @@ const LoginForm = (props) => {
   setTimeout(() => setMounted(true), 50);
 
   return (
-    <form action="" onSubmit={onSubmit} className={`mb-3 ${mounted && 'active'}`}>
+    <form action="" onSubmit={e => onSubmit(e, formActionTypes.LOGIN)} className={`mb-3 ${mounted && 'active'}`}>
       <label htmlFor="email" className="d-block w-100">
         <input onChange={onChange} type="email" name="email" id="email" className="w-100 px-2" value={email} />
         <span className="form-label-text">Email</span>

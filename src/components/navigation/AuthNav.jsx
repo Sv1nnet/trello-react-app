@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SignupForm from '../forms/SignupForm';
 import LoginForm from '../forms/LoginForm';
-import ResetPasswordForm from '../forms/ResetPasswordForm';
+import ResetPasswordForm from '../forms/ForgotPasswordForm';
 import AuthFormHolder from '../pages/AuthFormHolder';
 
 class AuthNav extends Component {
@@ -13,6 +13,7 @@ class AuthNav extends Component {
 
   componentDidMount() {
     const { routeInfo } = this.props;
+    console.log(routeInfo);
     const { pathname } = routeInfo.location;
     if (pathname === '/user/forgot_password') {
       routeInfo.history.push('/');
@@ -61,11 +62,11 @@ class AuthNav extends Component {
     const authForm = this.getForm();
 
     return (
-      <div className="container auth-page">
+      <div className="container auth-page mb-4">
         <div className="row justify-content-center">
           <div
             style={{ height }}
-            className="col-xs-12 col-sm-12 col-md-5 col-l-4 col-xl-4 text-center auth-forms-container"
+            className="col-xs-12 col-sm-12 col-md-6 col-l-4 col-xl-4 text-center auth-forms-container"
           >
             <div className="row">
 

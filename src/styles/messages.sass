@@ -1,0 +1,48 @@
+@import '_vars.sass'
+  
+.message-container
+  position: absolute
+  height: 100%
+  top: 0
+  left: 0
+  display: flex
+  align-items: center
+  width: 100%
+  z-index: 10000
+  .message
+    max-width: 420px
+    width: 95%
+    margin: 0 auto
+    background: white
+    text-align: center
+    .btn
+      max-width: 50%
+      width: 100%
+    h4
+      line-height: 1.5
+      color: white
+  .message-error
+    border: 2px solid $main-color-red
+  .message-info
+    border: 2px solid $main-color-blue
+  .message-success
+    border: 2px solid $main-color-green
+
+.loading-text
+  &:after
+    position: absolute
+    animation: loading-text 2s linear
+    animation-iteration-count: infinite
+    content: ""
+
+@keyframes loading-text
+  0%
+    content: ""
+  33%
+    content: "."
+  66%
+    content: ".."
+  100%
+    content: "..."
+
+
