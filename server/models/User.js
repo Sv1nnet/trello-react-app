@@ -80,6 +80,8 @@ UserSchema.methods.isValidPassword = function isValidPassword(password) {
 UserSchema.methods.hashPassword = function hashPassword(password) {
   const user = this;
   user.password = bcrypt.hashSync(password, 10);
+
+  return user.password;
 };
 
 UserSchema.methods.generateConfirmationToken = function generateAndSetConfirmationToken() {
@@ -135,6 +137,7 @@ UserSchema.methods.generateResetPasswordToken = function generateResetPasswordTo
   } else {
     // If reset password token exists then detele the one and push a new one
     user.tokens = user.tokens.filter(token => token.access === 'reset');
+    console.log();
     user.tokens.push(resetPasswordToken);
   }
 };

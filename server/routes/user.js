@@ -130,17 +130,22 @@ router.post('/confirmation', (req, res) => {
           },
         ).then((user) => {
           const authToken = user.generateAuthToken();
-          res.status(200).send({
-            ..._.pick(user, ['email', 'nickname', 'firstName', 'lastName', 'boards']),
-            token: authToken,
-          });
+
+          user.save()
+            .then((user) => {
+              res.status(200).send({
+                ..._.pick(user, ['email', 'nickname', 'firstName', 'lastName', 'boards']),
+                token: authToken,
+              });
+            })
+            .catch(err => console.log('Could not save the auth token'));
         }).catch(err => res.status(400).send(parseError(err)));
       });
     }
   });
 });
 
-// Sent reset password email
+// Send reset password email
 router.post('/forgot_password', (req, res) => {
   // console.log(req.body);
   const { email } = req.body.credentials;
@@ -152,6 +157,8 @@ router.post('/forgot_password', (req, res) => {
     user.generateResetPasswordToken();
     sendResetPasswordEmail(user)
       .then(() => {
+        // console.log('reset token', user.tokens.find(token => token.access === 'reset'));
+        user.save().then(user => console.log('user safe')).catch(err => console.log('user already exists'));
         res.status(200).send({ message: 'Reset password email has been sent' });
       })
       .catch((err) => {
@@ -173,9 +180,11 @@ router.post('/reset_password', (req, res) => {
       res.status(401).send({ err: 'Invalid token' });
     } else {
       User.findById({ _id: decoded._id }).then((user) => {
-        const confToken = user.tokens.find(userToken => userToken.token === token);
+        const resetToken = user.tokens.find(userToken => userToken.token === token);
 
-        if (!confToken) return res.status(400).send({ err: 'Reset password token is not found.' });
+        if (!resetToken) return res.status(400).send({ err: 'Reset password token is not found.' });
+
+        const { password } = req.body.credentials;
 
         User.findOneAndUpdate(
           {
@@ -187,6 +196,9 @@ router.post('/reset_password', (req, res) => {
                 access: 'reset',
                 token,
               },
+            },
+            $set: {
+              password: user.hashPassword(password),
             },
           },
           {
@@ -218,9 +230,9 @@ router.post('/login', (req, res) => {
         const authObject = user.generateAuthObject();
         const authToken = authObject.token.token;
 
-        console.log('authObject', authObject);
-        console.log('authToken', authToken);
-        res.status(200).send(authObject);
+        user.save().then((user) => {
+          res.status(200).send(authObject);
+        });
       } else {
         res.status(200).send({ confirmed: false, message: 'Confirm your email' });
       }
