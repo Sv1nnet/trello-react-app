@@ -89,93 +89,93 @@ function userRequests() {
     });
   });
 
-  describe('POST /user/signup', function() {
-    this.timeout(10000);
+  // describe('POST /user/signup', function() {
+  //   this.timeout(10000);
 
-    it('Should return confirmed that equals false', (done) => {
-      const newUser = new User({
-        email: 'sv@mail.com',
-        password: '12345678',
-        nickname: 'nick_3',
-      });
+  //   it('Should return confirmed that equals false', (done) => {
+  //     const newUser = new User({
+  //       email: 'sv@mail.com',
+  //       password: '12345678',
+  //       nickname: 'nick_3',
+  //     });
 
-      request(app)
-        .post('/user/signup')
-        .send({ credentials: { email: newUser.email, password: '12345678', nickname: newUser.nickname } })
-        .expect(200)
-        .expect((res) => {
-          expect(res.body.confirmed).to.equal(false);
-        })
-        .end((err, res) => {
-          if (err) return done(err);
+  //     request(app)
+  //       .post('/user/signup')
+  //       .send({ credentials: { email: newUser.email, password: '12345678', nickname: newUser.nickname } })
+  //       .expect(200)
+  //       .expect((res) => {
+  //         expect(res.body.confirmed).to.equal(false);
+  //       })
+  //       .end((err, res) => {
+  //         if (err) return done(err);
 
-          done();
-        });
-    });
+  //         done();
+  //       });
+  //   });
 
-    it('Should return 400 if user with specified email already exists that equals false', (done) => {
-      const newUser = new User({
-        email: users[0].email,
-        password: '12345678',
-        nickname: 'somenick',
-      });
+  //   it('Should return 400 if user with specified email already exists that equals false', (done) => {
+  //     const newUser = new User({
+  //       email: users[0].email,
+  //       password: '12345678',
+  //       nickname: 'somenick',
+  //     });
 
-      request(app)
-        .post('/user/signup')
-        .send({ credentials: { email: newUser.email, password: '12345678', nickname: newUser.nickname } })
-        .expect(400)
-        .expect((res) => {
-          expect(res.body.err).to.equal('User with this email already exists');
-        })
-        .end((err, res) => {
-          if (err) return done(err);
+  //     request(app)
+  //       .post('/user/signup')
+  //       .send({ credentials: { email: newUser.email, password: '12345678', nickname: newUser.nickname } })
+  //       .expect(400)
+  //       .expect((res) => {
+  //         expect(res.body.err).to.equal('User with this email already exists');
+  //       })
+  //       .end((err, res) => {
+  //         if (err) return done(err);
 
-          done();
-        });
-    });
+  //         done();
+  //       });
+  //   });
 
-    it('Should return 400 if user with specified nickname already exists that equals false', (done) => {
-      const newUser = new User({
-        email: 'sm@mai.com',
-        password: '12345678',
-        nickname: users[0].nickname,
-      });
+  //   it('Should return 400 if user with specified nickname already exists that equals false', (done) => {
+  //     const newUser = new User({
+  //       email: 'sm@mai.com',
+  //       password: '12345678',
+  //       nickname: users[0].nickname,
+  //     });
 
-      request(app)
-        .post('/user/signup')
-        .send({ credentials: { email: newUser.email, password: '12345678', nickname: newUser.nickname } })
-        .expect(400)
-        .expect((res) => {
-          expect(res.body.err).to.equal('User with this nickname already exists');
-        })
-        .end((err, res) => {
-          if (err) return done(err);
+  //     request(app)
+  //       .post('/user/signup')
+  //       .send({ credentials: { email: newUser.email, password: '12345678', nickname: newUser.nickname } })
+  //       .expect(400)
+  //       .expect((res) => {
+  //         expect(res.body.err).to.equal('User with this nickname already exists');
+  //       })
+  //       .end((err, res) => {
+  //         if (err) return done(err);
 
-          done();
-        });
-    });
+  //         done();
+  //       });
+  //   });
 
-    it('Should return 400 on post /user/signup if credentials are wrong', (done) => {
-      const newUser = new User({
-        email: 'sv@mailcom',
-        password: '1234567',
-        nickname: '',
-      });
+  //   it('Should return 400 on post /user/signup if credentials are wrong', (done) => {
+  //     const newUser = new User({
+  //       email: 'sv@mailcom',
+  //       password: '1234567',
+  //       nickname: '',
+  //     });
 
-      request(app)
-        .post('/user/signup')
-        .send({ credentials: { email: newUser.email, password: newUser.password, nickname: newUser.nickname } })
-        .expect(400)
-        .expect((res) => {
-          expect(res.body.err).to.equal('Validation failed');
-        })
-        .end((err, res) => {
-          if (err) return done(err);
+  //     request(app)
+  //       .post('/user/signup')
+  //       .send({ credentials: { email: newUser.email, password: newUser.password, nickname: newUser.nickname } })
+  //       .expect(400)
+  //       .expect((res) => {
+  //         expect(res.body.err).to.equal('Validation failed');
+  //       })
+  //       .end((err, res) => {
+  //         if (err) return done(err);
 
-          done();
-        });
-    });
-  });
+  //         done();
+  //       });
+  //   });
+  // });
 
   describe('POST /user/login', function() {
     this.timeout(10000);
@@ -334,6 +334,105 @@ function userRequests() {
         .expect(401)
         .expect((res) => {
           expect(res.body.err).to.equal('Invalid token');
+        })
+        .end((err) => {
+          if (err) return done(err);
+
+          done();
+        });
+    });
+  });
+
+  describe('POST /user/reset_password', function() {
+    this.timeout(10000);
+
+    it('Should return 200 if password has been reset', (done) => {
+      const newUser = new User({
+        email: 'new@email.com',
+        nickname: 'new_nick',
+        firstName: 'firstname',
+        lastName: 'lastname',
+        password: '12345678',
+      });
+
+      initNewUser(newUser, false);
+      newUser.generateResetPasswordToken();
+      newUser.save();
+
+      const token = newUser.tokens.find(userToken => userToken.access === 'reset');
+
+      request(app)
+        .post('/user/reset_password')
+        .set('Authorization', `Bearer ${token.token}`)
+        .send()
+        .expect(200)
+        .expect((res) => {
+          User.findById(newUser._id)
+            .then((user) => {
+              expect(user.tokens.find(userToken => userToken.access === 'reset')).to.equal(undefined);
+            })
+            .catch(err => done(err));
+        })
+        .end((err) => {
+          if (err) return done(err);
+
+          done();
+        });
+    });
+  });
+
+  describe('POST /user/forgot_password', function() {
+    this.timeout(10000);
+
+    it('Should return 200 if reset password url was sent on /user/forgot_password', (done) => {
+      const newUser = new User({
+        email: 'new@email.com',
+        nickname: 'new_nick',
+        firstName: 'firstname',
+        lastName: 'lastname',
+        password: '12345678',
+      });
+
+      initNewUser(newUser, false);
+      newUser.save();
+
+      request(app)
+        .post('/user/forgot_password')
+        .send({ credentials: { email: newUser.email } })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.message).to.equal('Reset password email has been sent');
+          User.findById(newUser._id)
+            .then((user) => {
+              expect(user.tokens.find(userToken => userToken.access === 'reset')).to.equal(undefined);
+            })
+            .catch(err => done(err));
+        })
+        .end((err) => {
+          if (err) return done(err);
+
+          done();
+        });
+    });
+
+    it('Should return 400 if user with specified email doesn\'t exist /user/forgot_password', (done) => {
+      const newUser = new User({
+        email: 'new@email.com',
+        nickname: 'new_nick',
+        firstName: 'firstname',
+        lastName: 'lastname',
+        password: '12345678',
+      });
+
+      initNewUser(newUser, false);
+      newUser.save();
+
+      request(app)
+        .post('/user/forgot_password')
+        .send({ credentials: { email: 'wrong@email.com' } })
+        .expect(400)
+        .expect((res) => {
+          expect(res.body.err).to.equal('User with this email doesn\'t exist');
         })
         .end((err) => {
           if (err) return done(err);

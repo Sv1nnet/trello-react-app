@@ -15,6 +15,8 @@ function setup() {
 }
 
 function sendConfirmationEmail(user) {
+  console.log('Confirmation email sending');
+
   const transport = setup();
   const url = user.generateConfirmationUrl();
   const email = {
@@ -32,6 +34,7 @@ function sendConfirmationEmail(user) {
 }
 
 function sendResetPasswordEmail(user) {
+  console.log('Reset password email sending');
   const transport = setup();
   const email = {
     sender,
@@ -40,11 +43,11 @@ function sendResetPasswordEmail(user) {
     text: `
       To reset password follow this link
     
-      ${user.generateResetPasswordLink()}
+      ${user.generateResetPasswordUrl()}
     `,
   };
 
-  transport.sendMail(email);
+  return transport.sendMail(email);
 }
 
 module.exports = {

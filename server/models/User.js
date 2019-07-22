@@ -113,6 +113,32 @@ UserSchema.methods.confirmRegistration = function confirmRegistration() {
   user.confirmed = true;
 };
 
+UserSchema.methods.generateResetPasswordUrl = function generateResetPasswordUrl() {
+  const user = this;
+  const resetPasswordToken = user.tokens.find(token => token.access === 'reset').token;
+  const url = `http://localhost:3000/user/reset_password/${resetPasswordToken}`;
+
+  return url;
+};
+
+UserSchema.methods.generateResetPasswordToken = function generateResetPasswordToken() {
+  const user = this;
+  const resetPasswordToken = {
+    access: 'reset',
+    token: user.generateJWT(),
+  };
+
+  const currentToken = user.tokens.find(token => token.access === 'reset');
+
+  if (!currentToken) {
+    user.tokens.push(resetPasswordToken);
+  } else {
+    // If reset password token exists then detele the one and push a new one
+    user.tokens = user.tokens.filter(token => token.access === 'reset');
+    user.tokens.push(resetPasswordToken);
+  }
+};
+
 UserSchema.methods.generateAuthObject = function generateAuthObject() {
   const user = this;
   const authToken = {
