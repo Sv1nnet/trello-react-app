@@ -16,7 +16,7 @@ const ForgotPasswordForm = (props) => {
   return (
     <form action="" onSubmit={e => onSubmit(e, formActionTypes.FORGOT_PASSWORD)} className={`${mounted && 'active'}`}>
       <label htmlFor="email" className="d-block w-100">
-        <input onChange={onChange} type="email" name="email" id="email" className="w-100 px-2" value={email} />
+        <input onChange={onChange} type="email" name="email" id="email" className="w-100 px-2" value={email} required />
         <span className="form-label-text">Email</span>
       </label>
 

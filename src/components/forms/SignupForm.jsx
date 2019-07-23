@@ -21,22 +21,22 @@ const SignupForm = (props) => {
   return (
     <form action="" onSubmit={e => onSubmit(e, formActionTypes.SIGNUP)} className={`${mounted && 'active'}`}>
       <label htmlFor="email" className="d-block w-100">
-        <input onChange={onChange} type="email" name="email" id="email" className="w-100 px-2" value={email} />
+        <input onChange={onChange} type="email" name="email" id="email" className="w-100 px-2" value={email} required />
         <span className="form-label-text">Email</span>
       </label>
 
       <label htmlFor="nickname" className="d-block w-100">
-        <input onChange={onChange} type="text" name="nickname" id="nickname" className="w-100 px-2" value={nickname} />
+        <input onChange={onChange} type="text" name="nickname" id="nickname" className="w-100 px-2" value={nickname} required />
         <span className="form-label-text">Nickname</span>
       </label>
 
       <label htmlFor="password" className="d-block w-100">
-        <input onChange={onChange} type="password" name="password" id="password" className="w-100 px-2" value={password} />
+        <input onChange={onChange} type="password" name="password" id="password" className="w-100 px-2" value={password} required />
         <span className="form-label-text">Password</span>
       </label>
 
       <label htmlFor="confirmPassword" className="d-block w-100">
-        <input onChange={onChange} type="password" name="confirmPassword" id="confirmPassword" className="w-100 px-2" value={confirmPassword} />
+        <input onChange={onChange} type="password" name="confirmPassword" id="confirmPassword" className="w-100 px-2" value={confirmPassword} required />
         <span className="form-label-text">Confirm password</span>
       </label>
 

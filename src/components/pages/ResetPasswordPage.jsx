@@ -175,12 +175,12 @@ class ResetPasswordPage extends Component {
             <form action="" onSubmit={onSubmit} className="reset-password px-15">
 
               <label htmlFor="password" className="d-block w-100">
-                <input onChange={onChange} type="password" name="password" id="password" className="w-100 px-2" value={state.userData.password} />
+                <input onChange={onChange} type="password" name="password" id="password" className="w-100 px-2" value={state.userData.password} required />
                 <span className="form-label-text">Password</span>
               </label>
 
               <label htmlFor="confirmPassword" className="d-block w-100">
-                <input onChange={onChange} type="password" name="confirmPassword" id="confirmPassword" className="w-100 px-2" value={state.userData.confirmPassword} />
+                <input onChange={onChange} type="password" name="confirmPassword" id="confirmPassword" className="w-100 px-2" value={state.userData.confirmPassword} required />
                 <span className="form-label-text">Confirm password</span>
               </label>
 

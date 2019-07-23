@@ -18,12 +18,12 @@ const LoginForm = (props) => {
   return (
     <form action="" onSubmit={e => onSubmit(e, formActionTypes.LOGIN)} className={`mb-3 ${mounted && 'active'}`}>
       <label htmlFor="email" className="d-block w-100">
-        <input onChange={onChange} type="email" name="email" id="email" className="w-100 px-2" value={email} />
+        <input onChange={onChange} type="email" name="email" id="email" className="w-100 px-2" value={email} required />
         <span className="form-label-text">Email</span>
       </label>
 
       <label htmlFor="password" className="d-block w-100">
-        <input onChange={onChange} type="password" name="password" id="password" className="w-100 px-2" value={password} />
+        <input onChange={onChange} type="password" name="password" id="password" className="w-100 px-2" value={password} required />
         <span className="form-label-text">Password</span>
       </label>
 
