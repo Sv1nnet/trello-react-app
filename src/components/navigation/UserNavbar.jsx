@@ -23,7 +23,10 @@ class UserNavbar extends Component {
   }
 
   handleFocus = (e) => {
-    if (window.getComputedStyle(e.target).display !== 'none') e.target.classList.add('active');
+    if (window.getComputedStyle(e.target).display !== 'none') {
+      e.target.classList.add('active');
+      this.searchBar.current.classList.add('active');
+    }
   }
 
   handleBlur = (e) => {
