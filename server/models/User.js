@@ -5,7 +5,6 @@ const { Schema } = mongoose;
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { sendConfirmationEmail } = require('../mailer');
 
 const UserSchema = new Schema({
   email: {
@@ -152,6 +151,7 @@ UserSchema.methods.generateAuthObject = function generateAuthObject() {
   user.tokens.push(authToken);
 
   return {
+    _id: user._id,
     email: user.email,
     nickname: user.nickname,
     firstName: user.firstName,

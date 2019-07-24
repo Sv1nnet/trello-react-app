@@ -5,13 +5,15 @@ import ConfirmationPage from '../pages/ConfirmationPage';
 import ResetPasswordPage from '../pages/ResetPasswordPage';
 
 const GuestRoutes = () => (
-  <Switch>
-    <Route exact path="/" component={HomePage} />
-    <Route exact path="/user/confirmation/:confToken" component={ConfirmationPage} />
-    <Route exact path="/user/forgot_password" component={HomePage} />
-    <Route exact path="/user/reset_password/:resetToken" component={ResetPasswordPage} />
-    <Route path="*" component={() => <Redirect to="/" />} />
-  </Switch>
+  <div className="guest-route-wrapper">
+    <Switch>
+      <Route exact path="/" component={HomePage} />
+      <Route exact path="/user/confirmation/:confToken" component={ConfirmationPage} />
+      <Route exact path="/user/forgot_password" component={HomePage} />
+      <Route exact path="/user/reset_password/:resetToken" component={ResetPasswordPage} />
+      <Route path="*" component={() => <Redirect to="/" />} />
+    </Switch>
+  </div>
 );
 
 export default GuestRoutes;

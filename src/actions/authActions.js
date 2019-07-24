@@ -1,5 +1,5 @@
 import axios from 'axios';
-import types from '../types';
+import { userActionTypes } from '../types';
 import api from '../api';
 
 const {
@@ -14,7 +14,7 @@ const {
   LOGGING_FAILED,
   EMAIL_CONFIRMATION_FAILED,
   FORGOT_PASSWORD_FAILED,
-} = types;
+} = userActionTypes;
 
 const resetPassword = ({ token, password }) => (dispatch, getState) => {
   const data = {

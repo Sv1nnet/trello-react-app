@@ -1,4 +1,4 @@
-export default {
+export const userActionTypes = {
   LOGGEDIN: 'LOGGEDIN',
   LOGGEDOUT: 'LOGGEDOUT',
   SIGNEDUP: 'SIGNEDUP',
@@ -11,6 +11,10 @@ export default {
   LOGGING_FAILED: 'LOGGING_FAILED',
   EMAIL_CONFIRMATION_FAILED: 'EMAIL_CONFIRMATION_FAILED',
 };
+
+export const boardActionTypes = {
+
+}
 
 export const formActionTypes = {
   LOGIN: 'LOGIN',

@@ -1,4 +1,5 @@
-import types from '../types';
+/* eslint-disable no-underscore-dangle */
+import { userActionTypes } from '../types';
 
 const user = localStorage.getItem('user');
 const initialState = user ? JSON.parse(user) : {
@@ -10,18 +11,19 @@ const userReducer = (state = initialState, action) => {
   let data;
   let newState;
   switch (action.type) {
-    case types.SIGNEDUP:
+    case userActionTypes.SIGNEDUP:
       return {
         ...state,
       };
-    case types.EMAIL_CONFIRMED:
-    case types.LOGGEDIN:
+    case userActionTypes.EMAIL_CONFIRMED:
+    case userActionTypes.LOGGEDIN:
       data = { ...action.data.data };
       newState = {
         ...state,
         userData: {
+          _id: data._id,
           email: data.email,
-          nickName: data.nickName,
+          nickname: data.nickname,
           firstName: data.firstName,
           secondName: data.secondName,
           boards: [],
@@ -29,9 +31,10 @@ const userReducer = (state = initialState, action) => {
         token: data.token,
       };
       localStorage.setItem('user', JSON.stringify(newState));
+      console.log('new state', newState);
 
       return newState;
-    case types.EMAIL_CONFIRMATION_FAILED:
+    case userActionTypes.EMAIL_CONFIRMATION_FAILED:
       return {
         ...state,
       };

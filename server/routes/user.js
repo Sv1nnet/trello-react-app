@@ -130,11 +130,12 @@ router.post('/confirmation', (req, res) => {
           },
         ).then((user) => {
           const authToken = user.generateAuthToken();
+          console.log(authToken);
 
           user.save()
             .then((user) => {
               res.status(200).send({
-                ..._.pick(user, ['email', 'nickname', 'firstName', 'lastName', 'boards']),
+                ..._.pick(user, ['_id', 'email', 'nickname', 'firstName', 'lastName', 'boards']),
                 token: authToken,
               });
             })
@@ -228,7 +229,7 @@ router.post('/login', (req, res) => {
     if (user.isValidPassword(password)) {
       if (user.confirmed) {
         const authObject = user.generateAuthObject();
-        const authToken = authObject.token.token;
+        console.log(authObject);
 
         user.save().then((user) => {
           res.status(200).send(authObject);

@@ -24,7 +24,6 @@ const api = {
       return axios.post('http://192.168.0.11:3111/user/reset_password', data);
     },
     confirmEmail: (token) => {
-      console.log('api token', token);
       setAuthHeaders(token);
       return axios.post('http://192.168.0.11:3111/user/confirmation');
     },

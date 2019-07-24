@@ -1,0 +1,22 @@
+@media screen and (min-width: 576px) 
+  .logo-container 
+    > a 
+      > svg
+        margin-right: 5px
+      > span
+        display: inline !important
+  .nav-button
+    input.nav-link[type="button"]
+      display: none !important
+    input.nav-link[type="text"]
+      display: block !important
+      transition: .3s all ease
+      color: white
+      &.active
+        width: 265px !important
+
+  .nav
+    .dropdown-search
+      width: 500px !important
+      &-container
+        display: none
