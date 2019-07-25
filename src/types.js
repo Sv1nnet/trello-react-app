@@ -13,8 +13,8 @@ export const userActionTypes = {
 };
 
 export const boardActionTypes = {
-
-}
+  DOWNLOADED: 'DOWNLOADED',
+};
 
 export const formActionTypes = {
   LOGIN: 'LOGIN',

@@ -27,7 +27,6 @@
     margin: 0 2px
     letter-spacing: 0.03em;
     > button.nav-link, & input.nav-link
-      padding: 0
       height: 40px
       line-height: 40px
       background-color: transparent
@@ -85,6 +84,18 @@
     &.active
       display: block
 
+  .dropdown-user
+    display: none
+    width: 100%
+    border-radius: 2px
+    min-width: 250px
+    top: 48px
+    left: initial
+    right: 0
+    .dropdown-user-container
+      position: relative
+    &.active
+      display: inline-block
 // .dropdown-search-icon
 //   position: absolute
 //   top: 12px

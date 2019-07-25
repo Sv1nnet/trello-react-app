@@ -25,7 +25,7 @@ const userReducer = (state = initialState, action) => {
           email: data.email,
           nickname: data.nickname,
           firstName: data.firstName,
-          secondName: data.secondName,
+          lastName: data.lastName,
           boards: [],
         },
         token: data.token,
@@ -34,6 +34,12 @@ const userReducer = (state = initialState, action) => {
       console.log('new state', newState);
 
       return newState;
+    case userActionTypes.LOGGEDOUT:
+      localStorage.setItem('user', '');
+
+      return {
+        ...initialState,
+      };
     case userActionTypes.EMAIL_CONFIRMATION_FAILED:
       return {
         ...state,
