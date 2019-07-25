@@ -67,9 +67,13 @@ class UserNavbar extends Component {
       searchText: target.value,
     }));
   }
-
-  handleUserPopupBtnFocus = (e) => {
-    this.userPopup.current.classList.add('active');
+  
+  handleUserPopupBtnClick = (e) => {
+    if (this.userPopup.current.classList.contains('active')) {
+      this.userPopup.current.classList.remove('active');
+    } else {
+      this.userPopup.current.classList.add('active');
+    }
   }
 
   handleUserPopupBtnBlur = (e) => {
@@ -91,8 +95,8 @@ class UserNavbar extends Component {
       clearInput,
       userPopup,
       userIconBtn,
-      handleUserPopupBtnFocus,
       handleUserPopupBtnBlur,
+      handleUserPopupBtnClick,
     } = this;
     const { searchText } = state;
     const { nickname, email } = props.user;
@@ -136,7 +140,7 @@ class UserNavbar extends Component {
         </li>
 
         <li className="nav-item nav-button user-logo">
-          <button onFocus={handleUserPopupBtnFocus} onBlur={handleUserPopupBtnBlur} type="button" className="nav-link p-0 w-100 text-primary rounded-circle bg-white text-center font-weight-bold">{emailInitials || 'US'}</button>
+          <button onClick={handleUserPopupBtnClick} onBlur={handleUserPopupBtnBlur} type="button" className="nav-link p-0 w-100 text-primary rounded-circle bg-white text-center font-weight-bold">{emailInitials || 'US'}</button>
         </li>
 
         <div className="dropdown-menu dropdown-search" ref={searchBar}>
@@ -163,7 +167,7 @@ class UserNavbar extends Component {
           </div>
         </div>
 
-        <div className="dropdown-menu dropdown-user active" ref={userPopup}>
+        <div className="dropdown-menu dropdown-user" ref={userPopup}>
           <div className="container-fluid">
 
             <div className="row">
