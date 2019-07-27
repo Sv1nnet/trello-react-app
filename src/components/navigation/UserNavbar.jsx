@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThList, faHome } from '@fortawesome/free-solid-svg-icons';
 import SearchInput from '../utils/SearchInput';
 import '../../styles/navbar.sass';
-import UserPopupMenu from '../utils/UserPopupMenu';
+import PopupContainer from '../utils/PopupContainer';
 
 class UserNavbar extends Component {
   constructor(props) {
@@ -21,14 +21,7 @@ class UserNavbar extends Component {
   state = {
     searchText: '',
     userPopupActive: false,
-    redirectUrl: '',
-  }
-
-  componentDidMount = () => {
-    this.setState(state => ({
-      ...state,
-      redirectUrl: '',
-    }));
+    boardsPopupActive: false,
   }
 
   // Handle focus event for search input
@@ -52,11 +45,11 @@ class UserNavbar extends Component {
       ...state,
       searchText: '',
     }),
-    () => {
-      // After we clear search input we need return focus to it
-      if (getComputedStyle(navSearchInput.current.inputElement.current).display !== 'none') navSearchInput.current.inputElement.current.focus();
-      if (getComputedStyle(searchCardsInput.current.inputElement.current).display !== 'none') searchCardsInput.current.inputElement.current.focus();
-    });
+      () => {
+        // After we clear search input we need return focus to it
+        if (getComputedStyle(navSearchInput.current.inputElement.current).display !== 'none') navSearchInput.current.inputElement.current.focus();
+        if (getComputedStyle(searchCardsInput.current.inputElement.current).display !== 'none') searchCardsInput.current.inputElement.current.focus();
+      });
   }
 
   // This works on small screen. Search button showed instead of search text input so when we click the button search popup appears
@@ -76,10 +69,10 @@ class UserNavbar extends Component {
   }
 
   // Show or hide user popup component. Also, we pass it to removeElement prop of userPopup
-  handleUserPopupBtnClick = () => {
+  handlePopupBtnClick = (popup) => {
     this.setState(state => ({
       ...state,
-      userPopupActive: !state.userPopupActive,
+      [popup]: !state[popup],
     }));
   }
 
@@ -96,9 +89,9 @@ class UserNavbar extends Component {
       handleSearchButtonClick,
       handleOnSearchChange,
       clearInput,
-      handleUserPopupBtnClick,
+      handlePopupBtnClick,
     } = this;
-    const { searchText, userPopupActive } = state;
+    const { searchText, userPopupActive, boardsPopupActive } = state;
     const { nickname, email } = props.user;
     const emailInitials = `${nickname[0]}${nickname[1]}`.toUpperCase();
 
@@ -113,7 +106,7 @@ class UserNavbar extends Component {
           </li>
 
           <li className="nav-item dropdown nav-button">
-            <button type="button" className="nav-link text-white">Boards</button>
+            <button onClick={() => handlePopupBtnClick('boardsPopupActive')} type="button" className="nav-link text-white">Boards</button>
           </li>
 
           <div className="logo-container text-center">
@@ -125,6 +118,7 @@ class UserNavbar extends Component {
 
           <li className="nav-item nav-button dropdown search-button">
             <div className="nav-search-input-container">
+
               <SearchInput
                 ref={navSearchInput}
                 inputValue={searchText}
@@ -134,12 +128,13 @@ class UserNavbar extends Component {
                 onCrossBtnClick={clearInput}
                 hideSearchBtn
               />
+
             </div>
             <input onClick={handleSearchButtonClick} type="button" className="nav-link text-white" value="Search" />
           </li>
 
           <li className="nav-item nav-button user-logo">
-            <button onClick={handleUserPopupBtnClick} type="button" className="nav-link p-0 w-100 text-primary rounded-circle bg-white text-center font-weight-bold">{emailInitials || 'US'}</button>
+            <button onClick={() => handlePopupBtnClick('userPopupActive')} type="button" className="nav-link p-0 w-100 text-primary rounded-circle bg-white text-center font-weight-bold">{emailInitials || 'US'}</button>
           </li>
 
           <div className="dropdown-menu dropdown-search" ref={searchBar}>
@@ -147,6 +142,7 @@ class UserNavbar extends Component {
 
               <div className="row">
                 <div className="col dropdown-search-container my-1">
+
                   <SearchInput
                     ref={searchCardsInput}
                     onChange={handleOnSearchChange}
@@ -154,6 +150,7 @@ class UserNavbar extends Component {
                     onCrossBtnClick={clearInput}
                     onBlur={handleBlur}
                   />
+
                 </div>
               </div>
 
@@ -166,7 +163,38 @@ class UserNavbar extends Component {
             </div>
           </div>
 
-          {userPopupActive && <UserPopupMenu removeElement={handleUserPopupBtnClick} userData={{ email, nickname }} />}
+          {
+            boardsPopupActive
+            && (
+              <PopupContainer popupToClose="boardsPopupActive" targetClasses={['dropdown-boards', 'active']} extraClasses={['dropdown-boards']} removeElement={handlePopupBtnClick} userData={{ email, nickname }}>
+                <h5 className="mt-3 w-100 text-secondary text-center">Boards</h5>
+
+                <div className="col-12 px-0 dropdown-user-credentials pt-2">
+                  
+                </div>
+              </PopupContainer>
+            )
+          }
+
+          {
+            userPopupActive
+            && (
+              <PopupContainer popupToClose="userPopupActive" targetClasses={['dropdown-user', 'user-credentials']} extraClasses={['dropdown-user']} removeElement={handlePopupBtnClick} userData={{ email, nickname }}>
+                <div className="col-12 dropdown-user-credentials pt-2 border-bottom">
+                  <p className="user-credentials text-center">{`${email} (${nickname})`}</p>
+                </div>
+
+                <div className="col-12 px-0 dropdown-user-credentials pt-2 pb-2 border-bottom">
+                  <Link className="text-center w-100 d-block" to="/user">Edit account</Link>
+                </div>
+
+                <div className="col-12 px-0 dropdown-user-credentials pt-2">
+                  <Link className="text-center w-100 d-block" to="/logout">Log out</Link>
+                </div>
+              </PopupContainer>
+            )
+          }
+          {/* {userPopupActive && <UserPopupMenu removeElement={handlePopupBtnClick} userData={{ email, nickname }} />} */}
         </ul>
       </>
     );

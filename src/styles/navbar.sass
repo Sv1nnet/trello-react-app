@@ -43,10 +43,8 @@
       height: 20px
       width: 20px
       transition: .3s all ease
-    .icon-container.active
-      opacity: .7
-      > svg path
-        fill: white
+    .icon-container
+      display: none
     input.nav-link::placeholder
       color: white
       
@@ -84,29 +82,12 @@
     &.active
       display: block
 
-  .dropdown-user
-    display: none
+  .dropdown-user, .dropdown-boards
+    display: inline-block
     width: 100%
     border-radius: 2px
     min-width: 250px
     top: 48px
-    left: initial
     right: 0
-    .dropdown-user-container
+    .dropdown-user-container, .dropdown-boards-container
       position: relative
-    &.active
-      display: inline-block
-// .dropdown-search-icon
-//   position: absolute
-//   top: 12px
-//   right: 28px
-//   height: 20px
-//   width: 20px
-//   opacity: .7
-//   display: block
-// .clear-input-button
-//   opacity: 0
-// .clear-input-button.active + .dropdown-search-icon.search-button
-//   display: none
-// .clear-input-button.active
-//   opacity: .7

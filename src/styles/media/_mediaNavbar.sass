@@ -1,6 +1,7 @@
 @media screen and (min-width: 576px) 
   .logo-container 
-    > a 
+    > a
+      font-size: 22px
       > svg
         margin-right: 5px
       > span
@@ -13,7 +14,13 @@
       transition: .3s all ease
       color: white
       &.active
-        width: 265px !important
+        width: 215px !important
+        padding-right: 40px
+    .icon-container.active
+      display: block !important
+      opacity: .7 !important
+      > svg path
+        fill: white
 
   .nav
     .dropdown-search
@@ -21,12 +28,18 @@
       width: 500px !important
       &-container
         display: none
-    .dropdown-user
+    .dropdown-user, .dropdown-boards
       width: min-content !important
       min-width: 300px !important
       border-radius: 2px
       top: 48px
-      left: initial
       right: 0
       &-container
         position: relative
+
+    .dropdown-user
+      left: initial
+    .dropdown-boards
+      left: 45px
+    
+
