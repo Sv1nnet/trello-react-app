@@ -166,8 +166,8 @@ class UserNavbar extends Component {
           {
             boardsPopupActive
             && (
-              <PopupContainer popupToClose="boardsPopupActive" targetClasses={['dropdown-boards', 'active']} extraClasses={['dropdown-boards']} removeElement={handlePopupBtnClick} userData={{ email, nickname }}>
-                <h5 className="mt-3 w-100 text-secondary text-center">Boards</h5>
+              <PopupContainer popupToClose="boardsPopupActive" targetClasses={['dropdown-boards', 'boards-title']} extraClasses={['dropdown-boards']} removeElement={handlePopupBtnClick} userData={{ email, nickname }}>
+                <h5 className="mt-3 w-100 boards-title text-secondary text-center">Boards</h5>
 
                 <div className="col-12 px-0 dropdown-user-credentials pt-2">
                   

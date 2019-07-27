@@ -30,7 +30,7 @@ class PopupContainer extends Component {
   windowClick = (event) => {
     const { removeElement, targetClasses, popupToClose } = this.props;
     const { mounted } = this.state;
-    const targetIsPopup = targetClasses && !!targetClasses.find(className => event.target.classList.contains(className) || event.target.classList.contains(className));
+    const targetIsPopup = targetClasses && !!targetClasses.find(className => event.target.classList.contains(className));
 
     if (targetIsPopup) {
       return;
