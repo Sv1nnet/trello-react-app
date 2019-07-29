@@ -7,6 +7,9 @@ import { faThList, faHome } from '@fortawesome/free-solid-svg-icons';
 import SearchInput from '../utils/SearchInput';
 import '../../styles/navbar.sass';
 import PopupContainer from '../utils/PopupContainer';
+import BoardListItem from '../boards/BoardListItem';
+import CreateBoard from '../boards/CreateBoard';
+import actions from '../../actions/authActions';
 
 class UserNavbar extends Component {
   constructor(props) {
@@ -15,13 +18,13 @@ class UserNavbar extends Component {
     this.searchBar = React.createRef();
     this.navSearchInput = React.createRef();
     this.searchCardsInput = React.createRef();
-    this.boardsBar = React.createRef();
   }
 
   state = {
     searchText: '',
     userPopupActive: false,
     boardsPopupActive: false,
+    createBoardActive: false,
   }
 
   // Handle focus event for search input
@@ -76,6 +79,34 @@ class UserNavbar extends Component {
     }));
   }
 
+  openCreateBoard = (e) => {
+    e.preventDefault();
+
+    this.setState(state => ({
+      ...state,
+      createBoardActive: true,
+    }));
+  }
+
+  closeCreateBoard = () => {
+    this.setState(state => ({
+      ...state,
+      createBoardActive: false,
+    }));
+  }
+
+  logout = (e) => {
+    e.preventDefault();
+
+    const { logout, token } = this.props;
+
+    logout(token.token).then(() => {
+      console.log('logged out');
+    });
+    window.localStorage.setItem('user', '');
+    window.location.reload();
+  }
+
   render() {
     const {
       props,
@@ -85,14 +116,15 @@ class UserNavbar extends Component {
       searchBar,
       searchCardsInput,
       navSearchInput,
-      boardsBar,
       handleSearchButtonClick,
       handleOnSearchChange,
       clearInput,
       handlePopupBtnClick,
+      closeCreateBoard,
+      openCreateBoard,
     } = this;
-    const { searchText, userPopupActive, boardsPopupActive } = state;
-    const { nickname, email } = props.user;
+    const { searchText, userPopupActive, boardsPopupActive, createBoardActive } = state;
+    const { nickname, email, boards } = props.user;
     const emailInitials = `${nickname[0]}${nickname[1]}`.toUpperCase();
 
     return (
@@ -137,6 +169,7 @@ class UserNavbar extends Component {
             <button onClick={() => handlePopupBtnClick('userPopupActive')} type="button" className="nav-link p-0 w-100 text-primary rounded-circle bg-white text-center font-weight-bold">{emailInitials || 'US'}</button>
           </li>
 
+          {/* Further I placed dropdown menu for navigation. Search specifically in dropdown-menu container and User menu, Boards list as separeted components out of dropdown-menu container */}
           <div className="dropdown-menu dropdown-search" ref={searchBar}>
             <div className="container-fluid">
 
@@ -167,10 +200,12 @@ class UserNavbar extends Component {
             boardsPopupActive
             && (
               <PopupContainer popupToClose="boardsPopupActive" targetClasses={['dropdown-boards', 'boards-title']} extraClasses={['dropdown-boards']} removeElement={handlePopupBtnClick} userData={{ email, nickname }}>
-                <h5 className="mt-3 w-100 boards-title text-secondary text-center">Boards</h5>
+                <h5 className="mt-2 w-100 boards-title text-secondary text-center">Boards</h5>
 
-                <div className="col-12 px-0 dropdown-user-credentials pt-2">
-                  
+                {boards.map(board => <BoardListItem key={board.id} id={board.id} title={board.title} />)}
+
+                <div className="col-12 px-0 text-center dropdown-board-list-item pt-2">
+                  <a onClick={openCreateBoard} href="/">Create a new board</a>
                 </div>
               </PopupContainer>
             )
@@ -189,21 +224,26 @@ class UserNavbar extends Component {
                 </div>
 
                 <div className="col-12 px-0 dropdown-user-credentials pt-2">
-                  <Link className="text-center w-100 d-block" to="/logout">Log out</Link>
+                  <Link onClick={this.logout} className="text-center w-100 d-block" to="/logout">Log out</Link>
                 </div>
               </PopupContainer>
             )
           }
-          {/* {userPopupActive && <UserPopupMenu removeElement={handlePopupBtnClick} userData={{ email, nickname }} />} */}
         </ul>
+
+        {createBoardActive && <CreateBoard close={closeCreateBoard} />}
       </>
     );
   }
 }
-// onFocus={handleFocus} onBlur={handleBlur}
 
 const mapStateToProps = state => ({
   user: state.user.userData,
+  token: state.user.token,
 });
 
-export default connect(mapStateToProps)(UserNavbar);
+const mapDispatchToProps = dispatch => ({
+  logout: token => dispatch(actions.logout(token)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserNavbar);

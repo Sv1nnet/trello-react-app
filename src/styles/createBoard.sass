@@ -1,0 +1,46 @@
+@import 'media/_mediaCreateBoard.sass'
+@import 'vars.sass'
+
+.modal-bg
+  height: 100%
+  width: 100%
+  position: fixed
+  background-color: black
+  top: 0
+  left: 0
+  opacity: .4
+  z-index: 999
+
+.new-board
+  input[type="text"]
+    line-height: 1.8em
+  .access-label
+    cursor: pointer
+    line-height: 30px
+    max-width: 100px
+    width: 100%
+    margin-top: 20px
+    margin-bottom: 0
+    transition: .3s all ease
+    &[for="private"]
+      border: 1px solid $main-color-red
+    &[for="public"]
+      border: 1px solid $main-color-green
+  input[type="radio"]:checked
+    & + .access-label
+      color: white
+      &[for="private"]
+        background-color: $main-color-red
+      &[for="public"]
+        background-color: $main-color-green
+
+    
+.create-board-close-btn-container
+  .icon-container
+    cursor: pointer
+    position: absolute
+    width: 24px
+    top: 5px
+    right: 5px
+    z-index: 1050
+    

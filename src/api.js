@@ -27,12 +27,17 @@ const api = {
       setAuthHeaders(token);
       return axios.post('http://192.168.0.11:3111/user/confirmation');
     },
-    validateToken: (token) => {
+    verifyToken: (token) => {
       setAuthHeaders(token);
-      return axios.post('http://192.168.0.11:3111/user/validate_token');
+      return axios.post('http://192.168.0.11:3111/user/verify_user');
     },
   },
-
+  board: {
+    loadBoards: (token) => {
+      setAuthHeaders(token);
+      return axios.post('http://192.168.0.11:3111/board/all');
+    },
+  },
 };
 
 export default api;

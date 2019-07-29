@@ -4,7 +4,7 @@ class UserBoardsPage extends Component {
   render() {
     return (
       <div>
-        
+        <h1>All boards page</h1>
       </div>
     );
   }

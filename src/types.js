@@ -1,4 +1,5 @@
 export const userActionTypes = {
+  VERIFY_TOKEN: 'VERIFY_TOKEN',
   LOGGEDIN: 'LOGGEDIN',
   LOGGEDOUT: 'LOGGEDOUT',
   SIGNEDUP: 'SIGNEDUP',

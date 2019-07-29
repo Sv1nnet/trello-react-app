@@ -243,6 +243,24 @@ router.post('/login', (req, res) => {
   }).catch(err => res.status(400).json({ err: err.message }));
 });
 
+// Verify user via token
+router.post('/verify_user', (req, res) => {
+  const token = req.header('Authorization').split(' ')[1];
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) return res.status(401).send({ err: 'Invalid token' });
+
+    // Delete auth token from user.tokens that we got from current client session
+    User.findById({ _id: decoded._id })
+      .then((user) => {
+        console.log('verified');
+        res.status(200).send();
+      })
+      .catch((err) => {
+        res.status(500).send({ err: 'Could not verify token' });
+      });
+  });
+});
+
 // Logout
 router.post('/logout', (req, res) => {
   const token = req.header('Authorization').split(' ')[1];
@@ -265,6 +283,7 @@ router.post('/logout', (req, res) => {
       },
     )
       .then((user) => {
+        console.log('logged out');
         res.status(200).send();
       })
       .catch((err) => {

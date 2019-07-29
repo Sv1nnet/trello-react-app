@@ -48,7 +48,14 @@ const UserSchema = new Schema({
   },
   boards: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+      },
+      title: {
+        type: String,
+        required: true,
+      },
     },
   ],
   tokens: [
