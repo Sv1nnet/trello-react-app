@@ -164,7 +164,7 @@ class AuthFormHolder extends Component {
 
         if (response) { // If has response from with server
           if (response.status === 200) {
-            if (!response.confirmed) { // If user is not confirmed tell him confirm his email
+            if (response.confirmed === false) { // If user is not confirmed tell him confirm his email
               const { message } = response.data;
 
               this.setState(state => ({
@@ -181,8 +181,24 @@ class AuthFormHolder extends Component {
                   },
                 },
               }));
+            } else {
+              this.setState(state => ({
+                ...state,
+                status: {
+                  err: {
+                    message: '',
+                    statusCode: undefined,
+                  },
+                  loading: false,
+                  success: {
+                    statusCode: undefined,
+                    message: '',
+                  },
+                },
+              }));
             }
           } else { // If user provided wrong email or password
+            console.log('response error', response);
             this.setState(state => ({
               ...state,
               status: {

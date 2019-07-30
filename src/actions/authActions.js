@@ -9,9 +9,12 @@ const {
   EMAIL_CONFIRMED,
   RESET_PASSWORD,
   FORGOT_PASSWORD,
+  TOKEN_VERIFIED,
+  TOKEN_VERIFIED_FAILED,
   RESET_PASSWORD_FAILED,
   SIGNINGUP_FAILED,
   LOGGING_FAILED,
+  LOGGEDOUT_FAILED,
   EMAIL_CONFIRMATION_FAILED,
   FORGOT_PASSWORD_FAILED,
 } = userActionTypes;
@@ -56,12 +59,22 @@ const login = ({ email, password }) => (dispatch, getState) => {
     });
 };
 
-const logout = token => (dispatch, getState) => api.auth.logout(token)
+const verifyToken = token => (dispatch, getState) => api.auth.verifyToken(token)
   .then((res) => {
-    dispatch({ type: LOGGEDIN, data: res });
+    console.log('verifying');
+    return dispatch({ type: TOKEN_VERIFIED, data: res }).data;
   })
   .catch((err) => {
-    dispatch({ type: LOGGING_FAILED, data: err });
+    console.log('error', err.response);
+    return dispatch({ type: TOKEN_VERIFIED_FAILED, data: err.response }).data;
+  });
+
+const logout = token => (dispatch, getState) => api.auth.logout(token)
+  .then((res) => {
+    dispatch({ type: LOGGEDOUT, data: res });
+  })
+  .catch((err) => {
+    dispatch({ type: LOGGEDOUT_FAILED, data: err });
   });
 
 // eslint-disable-next-line object-curly-newline
@@ -97,6 +110,7 @@ const confirmEmail = token => (dispatch, getState) => api.auth.confirmEmail(toke
 export default {
   login,
   signup,
+  verifyToken,
   forgotPassword,
   resetPassword,
   logout,

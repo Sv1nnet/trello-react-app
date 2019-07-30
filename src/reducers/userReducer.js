@@ -38,6 +38,10 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
       };
+    case userActionTypes.TOKEN_VERIFIED:
+      return {
+        ...state,
+      };
     case userActionTypes.EMAIL_CONFIRMED:
     case userActionTypes.LOGGEDIN:
       data = { ...action.data.data };
@@ -69,8 +73,17 @@ const userReducer = (state = initialState, action) => {
       localStorage.setItem('user', JSON.stringify(newState));
       console.log('new state', newState);
 
-      return newState;
+      return {
+        ...newState,
+      };
     case userActionTypes.LOGGEDOUT:
+      return {
+        ...initialState,
+      };
+
+    case userActionTypes.VERIFY_TOKEN_FAILED:
+      localStorage.setItem('user', '');
+
       return {
         ...initialState,
       };
@@ -79,7 +92,9 @@ const userReducer = (state = initialState, action) => {
         ...state,
       };
     default:
-      return { ...state };
+      return {
+        ...state,
+      };
   }
 };
 
