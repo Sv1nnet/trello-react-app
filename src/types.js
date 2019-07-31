@@ -4,6 +4,7 @@ export const userActionTypes = {
   LOGGEDIN: 'LOGGEDIN',
   LOGGEDOUT: 'LOGGEDOUT',
   SIGNEDUP: 'SIGNEDUP',
+  BOARD_ADDED: 'BOARD_ADDED',
   EMAIL_CONFIRMED: 'EMAIL_CONFIRMED',
   RESET_PASSWORD: 'RESET_PASSWORD',
   FORGOT_PASSWORD: 'FORGOT_PASSWORD',
@@ -17,6 +18,8 @@ export const userActionTypes = {
 
 export const boardActionTypes = {
   DOWNLOADED: 'DOWNLOADED',
+  CREATED: 'CREATED',
+  CREATE_FAILED: 'CREATE_FAILED',
 };
 
 export const formActionTypes = {

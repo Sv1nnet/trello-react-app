@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const CardSchema = new Schema({
   column: {
-    types: Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   title: {
@@ -20,7 +20,7 @@ const CardSchema = new Schema({
   },
 });
 
-const Card = mongoose.model('card', CardSchema);
+const Card = mongoose.model('cards', CardSchema);
 
 module.exports = {
   CardSchema,

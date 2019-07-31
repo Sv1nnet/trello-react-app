@@ -13,7 +13,6 @@ class AuthNav extends Component {
 
   componentDidMount() {
     const { routeInfo } = this.props;
-    console.log(routeInfo);
     const { pathname } = routeInfo.location;
     if (pathname === '/user/forgot_password') {
       routeInfo.history.push('/');

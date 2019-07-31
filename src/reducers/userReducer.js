@@ -39,8 +39,22 @@ const userReducer = (state = initialState, action) => {
         ...state,
       };
     case userActionTypes.TOKEN_VERIFIED:
+      data = { ...action.data.data };
       return {
         ...state,
+        userData: {
+          ...state.userData,
+          boards: data.boards,
+        },
+      };
+    case userActionTypes.BOARD_ADDED:
+      data = { ...action.data.data };
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          boards: data.boards,
+        },
       };
     case userActionTypes.EMAIL_CONFIRMED:
     case userActionTypes.LOGGEDIN:
@@ -53,20 +67,7 @@ const userReducer = (state = initialState, action) => {
           nickname: data.nickname,
           firstName: data.firstName,
           lastName: data.lastName,
-          boards: [
-            // {
-            //   id: 'idnumberone',
-            //   title: 'Board one',
-            // },
-            // {
-            //   id: 'idnumbertwo',
-            //   title: 'Board two',
-            // },
-            // {
-            //   id: 'idnumberthree',
-            //   title: 'Board three',
-            // },
-          ],
+          boards: data.boards,
         },
         token: data.token,
       };

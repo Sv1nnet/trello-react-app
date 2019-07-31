@@ -249,11 +249,10 @@ router.post('/verify_user', (req, res) => {
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) return res.status(401).send({ err: 'Invalid token' });
 
-    // Delete auth token from user.tokens that we got from current client session
     User.findById({ _id: decoded._id })
       .then((user) => {
         console.log('verified');
-        res.status(200).send();
+        res.status(200).send({ boards: user.boards });
       })
       .catch((err) => {
         res.status(500).send({ err: 'Could not verify token' });

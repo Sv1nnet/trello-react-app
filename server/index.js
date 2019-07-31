@@ -17,6 +17,7 @@ dotenv.config();
 
 const { mongoose } = require('./db/mongoose');
 const { userRouter } = require('./routes/user');
+const { boardRouter } = require('./routes/board');
 
 const app = express();
 const port = process.env.PORT;
@@ -28,12 +29,15 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use((req, res, next) => {
   console.log('Incoming requst', req.url);
   next();
 });
 
 app.use('/user', userRouter);
+app.use('/board', boardRouter);
 
 app.listen(port, () => {
   console.log(`Started on port ${port}`);

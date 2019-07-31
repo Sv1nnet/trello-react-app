@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { userActionTypes } from '../types';
 import api from '../api';
 

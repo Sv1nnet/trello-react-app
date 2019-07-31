@@ -48,11 +48,11 @@ class UserNavbar extends Component {
       ...state,
       searchText: '',
     }),
-      () => {
-        // After we clear search input we need return focus to it
-        if (getComputedStyle(navSearchInput.current.inputElement.current).display !== 'none') navSearchInput.current.inputElement.current.focus();
-        if (getComputedStyle(searchCardsInput.current.inputElement.current).display !== 'none') searchCardsInput.current.inputElement.current.focus();
-      });
+    () => {
+      // After we clear search input we need return focus to it
+      if (getComputedStyle(navSearchInput.current.inputElement.current).display !== 'none') navSearchInput.current.inputElement.current.focus();
+      if (getComputedStyle(searchCardsInput.current.inputElement.current).display !== 'none') searchCardsInput.current.inputElement.current.focus();
+    });
   }
 
   // This works on small screen. Search button showed instead of search text input so when we click the button search popup appears

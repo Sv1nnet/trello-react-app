@@ -27,7 +27,7 @@ const BoardSchema = new Schema({
   marks: [MarkSchema],
   chat: {
     type: Schema.Types.ObjectId,
-    required: true,
+    // required: true,
   },
   members: [
     {
@@ -38,7 +38,7 @@ const BoardSchema = new Schema({
     },
   ],
   readOnly: {
-    type: Schema.Types.ObjectId,
+    type: Boolean,
     required: true,
   },
   columns: [ColumnSchema],
@@ -74,7 +74,7 @@ BoardSchema.methods.removeColumn = function removeColumn(columnId) {
   board.columns = board.columns.filter(column => column === columnId);
 };
 
-const Board = mongoose.Model('board', BoardSchema);
+const Board = mongoose.model('boards', BoardSchema);
 
 module.exports = {
   Board,

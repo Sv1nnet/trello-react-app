@@ -3,23 +3,82 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/createBoard.sass';
+import CreateBoardForm from '../forms/CreateBoardForm';
+import actions from '../../actions/boardActions';
+import Messages from '../utils/Messages';
 
 const CreateBoard = (props) => {
-  const [state, setState] = useState({ boardTitle: '' });
+  const [state, setState] = useState({
+    err: {
+      status: undefined,
+      message: undefined,
+    },
+    description: '',
+    title: '',
+    access: 'private',
+    newBoardId: null,
+    boardCreated: false,
+  });
   const { close } = props;
 
   const handleChange = (e) => {
-    setState({ ...state, boardTitle: e.target.value });
+    setState({ ...state, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log('submited', state);
+    const { token } = props;
+    props.createBoard({ token, title: state.title, access: state.access, description: state.description })
+      .then((res) => {
+        // If there is response from server
+        if (res) {
+          // If board was successfully created
+          if (res.status === 200) {
+            setState({
+              err: {
+                status: undefined,
+                message: undefined,
+              },
+              access: 'private',
+              title: '',
+              boardCreated: true,
+              newBoardId: res.data.id,
+            });
+            close();
+          } else {
+            // If error occured while creating board
+            setState({
+              ...state,
+              err: {
+                status: res.status,
+                message: res.data.err,
+              },
+            });
+          }
+        } else {
+          // If there is no respnse from server
+          setState({
+            ...state,
+            err: {
+              status: 500,
+              message: 'No connection with server',
+            },
+          });
+        }
+      });
   };
+
+  const closeMessage = () => {
+    setState({ ...state, err: { status: undefined, message: undefined } });
+  };
+
+  if (state.boardCreated) return <Redirect to={`/board/${state.newBoardId}`} />;
 
   return (
     <>
@@ -38,27 +97,8 @@ const CreateBoard = (props) => {
             </div>
 
             <div className="col-12 col-sm-12">
-              <form className="new-board" action="/board" onSubmit={handleSubmit}>
-                <input onChange={handleChange} className="w-100 px-2" type="text" name="title" id="title" placeholder="Add a title of the board" value={state.boardTitle} />
-
-                <div className="container">
-                  <div className="row justify-content-center">
-                    <div className="col-4">
-                      <input type="radio" name="accessType" value="private" id="private" hidden defaultChecked />
-                      <label className="access-label text-center" htmlFor="private">Private</label>
-                    </div>
-                    <div className="col-4">
-                      <input type="radio" name="accessType" value="public" id="public" hidden />
-                      <label className="access-label text-center" htmlFor="public">Public</label>
-                    </div>
-                  </div>
-
-                  <div className="row mt-4 justify-content-center">
-                    <button type="submit" className="col-12 btn btn-primary">Create</button>
-                  </div>
-                </div>
-
-              </form>
+              {state.err.message && <Messages.ErrorMessage message={state.err.message} closeMessage={closeMessage} />}
+              <CreateBoardForm handleSubmit={handleSubmit} handleChange={handleChange} title={state.title} description={state.description} />
             </div>
 
           </div>
@@ -69,4 +109,12 @@ const CreateBoard = (props) => {
   );
 };
 
-export default CreateBoard;
+const mapStateToProps = state => ({
+  token: state.user.token.token,
+});
+
+const mapDispatchToProps = dispatch => ({
+  createBoard: (token, data) => dispatch(actions.createBoard(token, data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateBoard);

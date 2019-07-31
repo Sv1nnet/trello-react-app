@@ -45,12 +45,26 @@ const initialState = {
 };
 
 const boardReducer = (state = initialState, action) => {
+  let data;
   switch (action.type) {
     case boardActionTypes.DOWNLOADED:
       return {
         ...state,
       };
-
+    case boardActionTypes.CREATED:
+      data = { ...action.data.data };
+      return {
+        id: data.id,
+        owner: data.owner,
+        history: [],
+        description: '',
+        private: undefined,
+        marks: [],
+        cards: [],
+        members: [],
+        readOnly: true,
+        columns: [],
+      };
     default:
       return { ...state };
   }
