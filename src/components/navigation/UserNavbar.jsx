@@ -48,11 +48,11 @@ class UserNavbar extends Component {
       ...state,
       searchText: '',
     }),
-    () => {
-      // After we clear search input we need return focus to it
-      if (getComputedStyle(navSearchInput.current.inputElement.current).display !== 'none') navSearchInput.current.inputElement.current.focus();
-      if (getComputedStyle(searchCardsInput.current.inputElement.current).display !== 'none') searchCardsInput.current.inputElement.current.focus();
-    });
+      () => {
+        // After we clear search input we need return focus to it
+        if (getComputedStyle(navSearchInput.current.inputElement.current).display !== 'none') navSearchInput.current.inputElement.current.focus();
+        if (getComputedStyle(searchCardsInput.current.inputElement.current).display !== 'none') searchCardsInput.current.inputElement.current.focus();
+      });
   }
 
   // This works on small screen. Search button showed instead of search text input so when we click the button search popup appears
@@ -202,7 +202,9 @@ class UserNavbar extends Component {
               <PopupContainer popupToClose="boardsPopupActive" targetClasses={['dropdown-boards', 'boards-title']} extraClasses={['dropdown-boards']} removeElement={handlePopupBtnClick} userData={{ email, nickname }}>
                 <h5 className="mt-2 w-100 boards-title text-secondary text-center">Boards</h5>
 
-                {boards.map(board => <BoardListItem key={board.id} id={board.id} title={board.title} />)}
+                <div style={{ maxHeight: `${window.innerHeight - 140}px` }} className="board-list-container">
+                  {boards.map(board => <BoardListItem key={board.id} id={board.id} title={board.title} />)}
+                </div>
 
                 <div className="col-12 px-0 text-center dropdown-board-list-item pt-2">
                   <a onClick={openCreateBoard} href="/">Create a new board</a>
