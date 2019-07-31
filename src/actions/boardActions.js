@@ -12,6 +12,17 @@ const createBoard = ({ token, title, access, description }) => (dispatch, getSta
     });
 };
 
+const loadAllBoards = token => (dispatch, getState) => {
+  return api.board.loadAllBoards(token)
+    .then((res) => {
+      return dispatch({ type: boardActionTypes.ALL_BOARDS_DOWNLOADED, data: res }).data;
+    })
+    .catch((err) => {
+      return dispatch({ type: boardActionTypes.ALL_BOARDS_DOWNLOADING_FAILED, data: err.response }).data;
+    });
+};
+
 export default {
   createBoard,
+  loadAllBoards,
 };

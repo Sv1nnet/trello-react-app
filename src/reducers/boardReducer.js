@@ -47,7 +47,7 @@ const initialState = {
 const boardReducer = (state = initialState, action) => {
   let data;
   switch (action.type) {
-    case boardActionTypes.DOWNLOADED:
+    case boardActionTypes.ALL_BOARDS_DOWNLOADED:
       return {
         ...state,
       };

@@ -72,10 +72,12 @@ class UserNavbar extends Component {
   }
 
   // Show or hide user popup component. Also, we pass it to removeElement prop of userPopup
-  handlePopupBtnClick = (popup) => {
+  handlePopupBtnClick = (e, popupToClose) => {
+    const popupType = popupToClose || e.target.dataset.popupType;
+
     this.setState(state => ({
       ...state,
-      [popup]: !state[popup],
+      [popupType]: !state[popupType],
     }));
   }
 
@@ -138,7 +140,7 @@ class UserNavbar extends Component {
           </li>
 
           <li className="nav-item dropdown nav-button">
-            <button onClick={() => handlePopupBtnClick('boardsPopupActive')} type="button" className="nav-link text-white">Boards</button>
+            <button onClick={handlePopupBtnClick} data-popup-type="boardsPopupActive" type="button" className="nav-link text-white">Boards</button>
           </li>
 
           <div className="logo-container text-center">
@@ -166,7 +168,7 @@ class UserNavbar extends Component {
           </li>
 
           <li className="nav-item nav-button user-logo">
-            <button onClick={() => handlePopupBtnClick('userPopupActive')} type="button" className="nav-link p-0 w-100 text-primary rounded-circle bg-white text-center font-weight-bold">{emailInitials || 'US'}</button>
+            <button onClick={handlePopupBtnClick} data-popup-type="userPopupActive" type="button" className="nav-link p-0 w-100 text-primary rounded-circle bg-white text-center font-weight-bold">{emailInitials || 'US'}</button>
           </li>
 
           {/* Further I placed dropdown menu for navigation. Search specifically in dropdown-menu container and User menu, Boards list as separeted components out of dropdown-menu container */}

@@ -33,7 +33,7 @@ const api = {
     },
   },
   board: {
-    loadBoards: (token) => {
+    loadAllBoards: (token) => {
       setAuthHeaders(token);
       return axios.post('http://192.168.0.11:3111/board/all');
     },

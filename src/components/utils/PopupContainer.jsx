@@ -36,7 +36,7 @@ class PopupContainer extends Component {
       return;
     }
 
-    if (mounted) removeElement(popupToClose);
+    if (mounted) removeElement(event, popupToClose);
     else this.setState(state => ({ ...state, mounted: true })); // We need this line because once user icon was clicked popup component also handles this click event and close himself. So we set mounted true after the very first lick event was invoked
   }
 
