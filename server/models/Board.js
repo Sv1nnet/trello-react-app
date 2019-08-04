@@ -19,7 +19,7 @@ const BoardSchema = new Schema({
   description: {
     type: String,
   },
-  private: {
+  isPrivate: {
     type: Boolean,
     required: true,
   },
@@ -37,7 +37,7 @@ const BoardSchema = new Schema({
       },
     },
   ],
-  readOnly: {
+  isReadOnly: {
     type: Boolean,
     required: true,
   },

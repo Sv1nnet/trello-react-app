@@ -50,7 +50,6 @@ const CreateBoard = (props) => {
               boardCreated: true,
               newBoardId: res.data.id,
             });
-            close();
           } else {
             // If error occured while creating board
             setState({
@@ -78,7 +77,10 @@ const CreateBoard = (props) => {
     setState({ ...state, err: { status: undefined, message: undefined } });
   };
 
-  if (state.boardCreated) return <Redirect to={`/board/${state.newBoardId}`} />;
+  if (state.boardCreated) {
+    close();
+    return <Redirect to={`/board/${state.newBoardId}`} />;
+  }
 
   return (
     <>

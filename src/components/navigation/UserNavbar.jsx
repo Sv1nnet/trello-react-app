@@ -125,7 +125,12 @@ class UserNavbar extends Component {
       closeCreateBoard,
       openCreateBoard,
     } = this;
-    const { searchText, userPopupActive, boardsPopupActive, createBoardActive } = state;
+    const {
+      searchText,
+      userPopupActive,
+      boardsPopupActive,
+      createBoardActive,
+    } = state;
     const { nickname, email, boards } = props.user;
     const emailInitials = `${nickname[0]}${nickname[1]}`.toUpperCase();
 
@@ -156,6 +161,7 @@ class UserNavbar extends Component {
               <SearchInput
                 ref={navSearchInput}
                 inputValue={searchText}
+                placeholder="Search"
                 onChange={handleOnSearchChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
@@ -180,6 +186,7 @@ class UserNavbar extends Component {
 
                   <SearchInput
                     ref={searchCardsInput}
+                    placeholder="Search"
                     onChange={handleOnSearchChange}
                     inputValue={searchText}
                     onCrossBtnClick={clearInput}

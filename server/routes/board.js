@@ -28,25 +28,25 @@ router.get('/all', (req, res) => {
   });
 });
 
-// router.get('/:id', (req, res) => {
-//   const token = req.headers.authorization.split(' ')[1];
-
-//   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-//     if (err) {
-//       res.status(400).send({ err: 'Invalid token' });
-//     } else {
-//       User.findById({ _id: decoded._id })
-//         .then((user) => {
-//           const { boards } = user;
-//           res.status(200).send({ boards });
-//         })
-//         .catch((err) => {
-//           console.log('Error findig user', err);
-//           res.status(400).send({ err });
-//         });
-//     }
-//   });
-// });
+router.get('/:id', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  console.log(req.query);
+  // jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+  //   if (err) {
+  //     res.status(400).send({ err: 'Invalid token' });
+  //   } else {
+  //     User.findById({ _id: decoded._id })
+  //       .then((user) => {
+  //         const { boards } = user;
+  //         res.status(200).send({ boards });
+  //       })
+  //       .catch((err) => {
+  //         console.log('Error findig user', err);
+  //         res.status(400).send({ err });
+  //       });
+  //   }
+  // });
+});
 
 router.post('/', (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
@@ -66,8 +66,8 @@ router.post('/', (req, res) => {
               title: req.body.title,
               members: [user._id],
               description: req.body.description,
-              private: req.body.access === 'private',
-              readOnly: true,
+              isPrivate: req.body.access === 'private',
+              isReadOnly: true,
             });
 
             board.save()
@@ -81,9 +81,10 @@ router.post('/', (req, res) => {
               })
               .then(doc => res.status(200).send({
                 id: board._id,
+                title: board.title,
                 owner: user.nickname,
                 description: board.description,
-                private: board.private,
+                isPrivate: board.isPrivate,
                 marks: board.marks,
                 boards: user.boards,
               }));
