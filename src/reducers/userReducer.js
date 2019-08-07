@@ -86,7 +86,8 @@ const userReducer = (state = initialState, action) => {
       localStorage.setItem('user', '');
 
       return {
-        ...initialState,
+        userData: {},
+        token: {},
       };
     case userActionTypes.EMAIL_CONFIRMATION_FAILED:
       return {

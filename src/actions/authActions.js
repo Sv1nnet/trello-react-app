@@ -9,7 +9,7 @@ const {
   RESET_PASSWORD,
   FORGOT_PASSWORD,
   TOKEN_VERIFIED,
-  TOKEN_VERIFIED_FAILED,
+  VERIFY_TOKEN_FAILED,
   RESET_PASSWORD_FAILED,
   SIGNINGUP_FAILED,
   LOGGING_FAILED,
@@ -65,7 +65,7 @@ const verifyToken = token => (dispatch, getState) => api.auth.verifyToken(token)
   })
   .catch((err) => {
     console.log('error', err.response);
-    return dispatch({ type: TOKEN_VERIFIED_FAILED, data: err.response }).data;
+    return dispatch({ type: VERIFY_TOKEN_FAILED, data: err.response }).data;
   });
 
 const logout = token => (dispatch, getState) => api.auth.logout(token)
