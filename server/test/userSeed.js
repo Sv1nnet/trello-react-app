@@ -16,7 +16,10 @@ const userOne = new User({
   password: '12345678',
   nickname: 'nick_1',
   tokens: [],
-  boards: [new ObjectID().toHexString()],
+  boards: [{
+    id: new ObjectID().toHexString(),
+    title: 'User one board',
+  }],
 });
 initNewUser(userOne, false);
 
@@ -26,7 +29,10 @@ const userTwo = new User({
   password: '12345678',
   nickname: 'nick_2',
   tokens: [],
-  boards: [new ObjectID().toHexString()],
+  boards: [{
+    id: new ObjectID().toHexString(),
+    title: 'User two board',
+  }],
 });
 initNewUser(userTwo, false);
 

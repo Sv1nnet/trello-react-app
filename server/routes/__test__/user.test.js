@@ -7,7 +7,7 @@ const { ObjectID } = require('mongodb');
 
 const { app } = require('../../index');
 const { User } = require('../../models/User');
-const { users, populateUsers, initNewUser } = require('../../test/seed');
+const { users, populateUsers, initNewUser } = require('../../test/userSeed');
 
 function userRequests() {
   beforeEach(populateUsers);
@@ -364,7 +364,11 @@ function userRequests() {
       request(app)
         .post('/user/reset_password')
         .set('Authorization', `Bearer ${token.token}`)
-        .send()
+        .send({
+          credentials: {
+            password: 'newpass',
+          },
+        })
         .expect(200)
         .expect((res) => {
           User.findById(newUser._id)
@@ -404,7 +408,7 @@ function userRequests() {
           expect(res.body.message).to.equal('Reset password email has been sent');
           User.findById(newUser._id)
             .then((user) => {
-              expect(user.tokens.find(userToken => userToken.access === 'reset')).to.equal(undefined);
+              expect(user.tokens.find(userToken => userToken.access === 'reset')).to.not.equal(undefined);
             })
             .catch(err => done(err));
         })

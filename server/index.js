@@ -32,7 +32,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
-  console.log('Incoming requst', req.url);
+  console.log('Incoming request', req.url);
   next();
 });
 

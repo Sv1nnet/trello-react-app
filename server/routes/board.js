@@ -61,6 +61,8 @@ router.post('/', (req, res) => {
       User.findById({ _id: decoded._id })
         .then((user) => {
           if (user) {
+            console.log('user found', user._id);
+
             const board = new Board({
               owner: user._id,
               title: req.body.title,
@@ -84,6 +86,7 @@ router.post('/', (req, res) => {
                 title: board.title,
                 owner: user.nickname,
                 description: board.description,
+                members: [user._id],
                 isPrivate: board.isPrivate,
                 marks: board.marks,
                 boards: user.boards,

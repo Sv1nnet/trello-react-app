@@ -159,8 +159,10 @@ router.post('/forgot_password', (req, res) => {
     sendResetPasswordEmail(user)
       .then(() => {
         // console.log('reset token', user.tokens.find(token => token.access === 'reset'));
-        user.save().then(user => console.log('user safe')).catch(err => console.log('user already exists'));
-        res.status(200).send({ message: 'Reset password email has been sent' });
+        user.save().then((user) => {
+          console.log('user saved');
+          res.status(200).send({ message: 'Reset password email has been sent' });
+        }).catch(err => console.log('could not save user with a new password'));
       })
       .catch((err) => {
         console.log('Error while sending email', err);

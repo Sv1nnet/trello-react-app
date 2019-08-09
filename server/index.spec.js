@@ -7,7 +7,7 @@ const { ObjectID } = require('mongodb');
 
 const { app } = require('./index');
 const { User } = require('./models/User');
-const { users, populateUsers, initNewUser } = require('./test/seed');
+const { users, populateUsers, initNewUser } = require('./test/userSeed');
 
 const { userRequests } = require('./routes/__test__/user.test');
 
