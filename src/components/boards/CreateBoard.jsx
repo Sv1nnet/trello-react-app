@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -48,7 +49,7 @@ const CreateBoard = (props) => {
               access: 'private',
               title: '',
               boardCreated: true,
-              newBoardId: res.data.id,
+              newBoardId: res.data._id,
             });
           } else {
             // If error occured while creating board

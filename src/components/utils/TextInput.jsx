@@ -3,13 +3,19 @@ import '../../styles/searchInput.sass';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-class SearchInput extends Component {
+class TextInput extends Component {
   constructor(props) {
     super(props);
 
     this.inputElement = React.createRef();
     this.crossBtn = React.createRef();
     this.searchBtn = React.createRef();
+  }
+
+  componentDidMount() {
+    const { props } = this;
+
+    if (props.selectOnMounted) this.inputElement.current.select();
   }
 
   onFocus = (e) => {
@@ -40,6 +46,7 @@ class SearchInput extends Component {
     const { props } = this;
 
     if (props.onCrossBtnClick) props.onCrossBtnClick(e);
+    if (props.focusedAfterCleared) this.inputElement.current.focus();
   }
 
   render() {
@@ -52,19 +59,35 @@ class SearchInput extends Component {
       inputValue = emptyValue,
       onSearchBtnClick,
       onChange,
+      placeholder,
+      id,
+      name,
+      classList,
     } = props;
 
     const { onFocus, onBlur, onCrossBtnClick } = this;
 
     return (
       <div className="search-input-container position-relative">
-        <input ref={this.inputElement} style={{ color: textColor }} onChange={onChange} onFocus={onFocus} onBlur={onBlur} type="text" className="nav-link" placeholder="Search" value={inputValue} />
+        <input
+          ref={this.inputElement}
+          style={{ color: textColor }}
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          type="text"
+          className={`nav-link ${classList}`}
+          placeholder={placeholder || 'Search'}
+          value={inputValue}
+          id={id || ''}
+          name={name || ''}
+        />
 
-        <div ref={this.crossBtn} className="icon-container">
+        <div ref={this.crossBtn} className={`icon-container ${inputValue && 'active'}`}>
           <FontAwesomeIcon style={{ display: hideCrossBtn ? 'none' : '' }} onClick={onCrossBtnClick} className="dropdown-search-icon clear-input-button" icon={faTimes} />
         </div>
 
-        <div ref={this.searchBtn} className="icon-container active">
+        <div ref={this.searchBtn} className={`icon-container ${!inputValue && 'active'}`}>
           <FontAwesomeIcon style={{ display: hideSearchBtn ? 'none' : '' }} onClick={onSearchBtnClick} className="dropdown-search-icon search-button" icon={faSearch} />
         </div>
       </div>
@@ -72,4 +95,4 @@ class SearchInput extends Component {
   }
 }
 
-export default SearchInput;
+export default TextInput;

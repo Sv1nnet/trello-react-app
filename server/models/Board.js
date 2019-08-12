@@ -31,8 +31,16 @@ const BoardSchema = new Schema({
   },
   members: [
     {
-      id: {
+      _id: {
         type: Schema.Types.ObjectId,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+      },
+      nickname: {
+        type: String,
         required: true,
       },
     },

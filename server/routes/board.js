@@ -18,10 +18,11 @@ router.get('/all', (req, res) => {
       User.findById({ _id: decoded._id })
         .then((user) => {
           const { boards } = user;
+          // console.log('boards request', boards);
           res.status(200).send({ boards });
         })
         .catch((err) => {
-          console.log('Error findig user', err);
+          console.log('Error finding user', err);
           res.status(400).send({ err });
         });
     }
@@ -29,23 +30,38 @@ router.get('/all', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  const token = req.headers.authorization.split(' ')[1];
-  console.log(req.query);
-  // jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-  //   if (err) {
-  //     res.status(400).send({ err: 'Invalid token' });
-  //   } else {
-  //     User.findById({ _id: decoded._id })
-  //       .then((user) => {
-  //         const { boards } = user;
-  //         res.status(200).send({ boards });
-  //       })
-  //       .catch((err) => {
-  //         console.log('Error findig user', err);
-  //         res.status(400).send({ err });
-  //       });
-  //   }
-  // });
+  const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+  const boardId = req.params.id;
+  Board.findById(boardId)
+    .then((board) => {
+      if (board) {
+        if (!board.isPrivate) {
+          return res.status(200).send(board);
+        }
+
+        if (token) {
+          jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+              res.status(400).send({ err: 'Invalid token' });
+            } else {
+              const isMember = !!board.members.find(member => member._id.toString() === decoded._id.toString());
+
+              if (isMember) {
+                res.status(200).send(board);
+              } else {
+                res.status(403).send({ err: 'You have no access to this board' });
+              }
+            }
+          });
+        } else {
+          res.status(403).send({ err: 'You have no access to this board' });
+        }
+      } else {
+        res.status(400).send({ err: 'Could not find the board' });
+      }
+    })
+    .catch(() => res.status(400).send({ err: 'Could not find the board' }));
 });
 
 router.post('/', (req, res) => {
@@ -61,12 +77,16 @@ router.post('/', (req, res) => {
       User.findById({ _id: decoded._id })
         .then((user) => {
           if (user) {
-            console.log('user found', user._id);
-
             const board = new Board({
               owner: user._id,
               title: req.body.title,
-              members: [user._id],
+              members: [
+                {
+                  _id: user._id,
+                  email: user.email,
+                  nickname: user.nickname,
+                },
+              ],
               description: req.body.description,
               isPrivate: req.body.access === 'private',
               isReadOnly: true,
@@ -75,21 +95,26 @@ router.post('/', (req, res) => {
             board.save()
               .then((board) => {
                 user.boards.push({
-                  id: board._id,
+                  _id: board._id,
                   title: board.title,
-                  description: board.description,
                 });
                 return user.save().catch(err => console.log('Error saving user with new board', err));
               })
               .then(doc => res.status(200).send({
-                id: board._id,
+                _id: board._id,
                 title: board.title,
                 owner: user.nickname,
                 description: board.description,
-                members: [user._id],
+                members: [{
+                  _id: user._id,
+                  email: user.email,
+                  nickname: user.nickname,
+                }],
                 isPrivate: board.isPrivate,
+                isReadOnly: board.isReadOnly,
                 marks: board.marks,
                 boards: user.boards,
+                columns: user.columns,
               }));
           } else {
             res.status(400).json({ err: 'Could not find the user' });
@@ -97,7 +122,7 @@ router.post('/', (req, res) => {
         })
         .catch((err) => {
           console.log(err);
-          res.status(400).json({ err })
+          res.status(400).json({ err });
         });
     }
   });

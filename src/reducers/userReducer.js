@@ -21,7 +21,7 @@
  *   statusText: 'OK' for example,
  * }
  */
-import { userActionTypes } from '../types';
+import { userActionTypes, boardActionTypes } from '../types';
 
 const user = localStorage.getItem('user');
 const initialState = user ? JSON.parse(user) : {
@@ -92,6 +92,15 @@ const userReducer = (state = initialState, action) => {
     case userActionTypes.EMAIL_CONFIRMATION_FAILED:
       return {
         ...state,
+      };
+    case userActionTypes.ALL_BOARDS_DOWNLOADED:
+      data = { ...action.data.data };
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          boards: [...data.boards],
+        },
       };
     default:
       return {

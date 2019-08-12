@@ -10,7 +10,7 @@ class AuthFormHolder extends Component {
   constructor(props) {
     super(props);
 
-    this._mounted = false; // For preventing acyn actions if component unmounted
+    this._mounted = false; // For preventing async actions if component unmounted
   }
 
   state = {
@@ -107,10 +107,10 @@ class AuthFormHolder extends Component {
     const { signup } = formActions;
 
     signup(userData)
-      .then((response) => {
-        if (response) { // If has response from with server
-          if (response.status === 200) { // If signup is successful
-            const { message } = response.data;
+      .then((res) => {
+        if (res) { // If has res from with server
+          if (res.status === 200) { // If signup is successful
+            const { message } = res.data;
 
             this.setState(state => ({
               ...state,
@@ -142,12 +142,12 @@ class AuthFormHolder extends Component {
                 loading: false,
                 err: {
                   ...state.err,
-                  message: response.data.err,
+                  message: res.data.err,
                 },
               },
             }));
           }
-        } else { // If has no response from the server
+        } else { // If has no res from the server
           this.handleNoConnection();
         }
       });
@@ -159,13 +159,13 @@ class AuthFormHolder extends Component {
     const { login } = formActions;
 
     login(userData)
-      .then((response) => {
+      .then((res) => {
         if (!this._mounted) return; // Prevent unmounted component from async action like setState
 
-        if (response) { // If has response from with server
-          if (response.status === 200) {
-            if (response.confirmed === false) { // If user is not confirmed tell him confirm his email
-              const { message } = response.data;
+        if (res) { // If has res from with server
+          if (res.status === 200) {
+            if (res.confirmed === false) { // If user is not confirmed tell him confirm his email
+              const { message } = res.data;
 
               this.setState(state => ({
                 ...state,
@@ -198,7 +198,7 @@ class AuthFormHolder extends Component {
               }));
             }
           } else { // If user provided wrong email or password
-            console.log('response error', response);
+            console.log('res error', res);
             this.setState(state => ({
               ...state,
               status: {
@@ -206,12 +206,12 @@ class AuthFormHolder extends Component {
                 loading: false,
                 err: {
                   ...state.err,
-                  message: response.data.err,
+                  message: res.data.err,
                 },
               },
             }));
           }
-        } else { // If has no response from the server
+        } else { // If has no res from the server
           this.handleNoConnection();
         }
       });
@@ -223,11 +223,11 @@ class AuthFormHolder extends Component {
     const { forgotPassword } = formActions;
 
     forgotPassword(userData)
-      .then((response) => {
-        if (response) { // If has response from with server
-          if (response.status === 200) {
-            if (!response.confirmed) {
-              const { message } = response.data;
+      .then((res) => {
+        if (res) { // If has res from with server
+          if (res.status === 200) {
+            if (!res.confirmed) {
+              const { message } = res.data;
               this.setState(state => ({
                 ...state,
                 status: {
@@ -251,7 +251,7 @@ class AuthFormHolder extends Component {
                 loading: false,
                 err: {
                   ...state.err,
-                  message: response.data.err,
+                  message: res.data.err,
                 },
               },
             }));
@@ -356,7 +356,7 @@ class AuthFormHolder extends Component {
         {err.statusCode === 200 && <Messages.InfoMessage message={success.message} closeMessage={closeMessage} clearInputs />}
         {success.statusCode === 200 && <Messages.SuccessMessage message={success.message} closeMessage={closeMessage} clearInputs />}
 
-        {loading && <Loader.FormLoader />}
+        {loading && <Loader.FormLoader bg />}
       </>
     );
   }

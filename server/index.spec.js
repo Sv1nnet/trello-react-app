@@ -10,5 +10,7 @@ const { User } = require('./models/User');
 const { users, populateUsers, initNewUser } = require('./test/userSeed');
 
 const { userRequests } = require('./routes/__test__/user.test');
+const { boardRequests } = require('./routes/__test__/board.test');
 
 userRequests();
+boardRequests();

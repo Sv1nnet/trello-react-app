@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/navbar.sass';
+import '../../styles/popupContainer.sass';
 
 /*
  *
@@ -9,8 +12,15 @@ import '../../styles/navbar.sass';
  */
 
 class PopupContainer extends Component {
+  constructor(props) {
+    super(props);
+
+    this.containerElement = React.createRef();
+  }
+
   state = {
     showPopup: true,
+    shouldCloseItself: false,
     mounted: false,
   }
 
@@ -30,24 +40,36 @@ class PopupContainer extends Component {
   windowClick = (event) => {
     const { removeElement, targetClasses, popupToClose } = this.props;
     const { mounted } = this.state;
-    const targetIsPopup = targetClasses && !!targetClasses.find(className => event.target.classList.contains(className));
+    const targetIsPopup = targetClasses && !!targetClasses.find(className => event.target.classList.contains(className) || event.target.parentElement.classList.contains(className));
 
     if (targetIsPopup) {
       return;
     }
 
-    if (mounted) removeElement(event, popupToClose);
+    if (mounted && removeElement) removeElement(event, popupToClose);
     else this.setState(state => ({ ...state, mounted: true })); // We need this line because once user icon was clicked popup component also handles this click event and close himself. So we set mounted true after the very first lick event was invoked
   }
 
+  closeSelf = (event) => {
+    const { removeElement, popupToClose } = this.props;
+    const { mounted } = this.state;
+
+    if (mounted && removeElement) removeElement(event, popupToClose);
+    else this.setState(() => ({ shouldCloseItself: true }));
+  }
+
   render() {
-    const { props } = this;
-    const { children } = props;
-    const { extraClasses } = props;
+    // eslint-disable-next-line react/destructuring-assignment
+    if (this.state.shouldCloseItself) return null;
+
+    const { props, containerElement } = this;
+    const { children, extraClasses, closeBtn } = props;
 
     return (
-      <div className={`dropdown-menu ${extraClasses && extraClasses.join(' ')} active`}>
+      <div ref={containerElement} className={`dropdown-menu ${extraClasses ? extraClasses.join(' ') : ''} active`}>
         <div className="container-fluid">
+
+          {closeBtn && <FontAwesomeIcon onClick={this.closeSelf} className="popup-close-btn" icon={faTimes} />}
 
           <div className="row">
             {children}

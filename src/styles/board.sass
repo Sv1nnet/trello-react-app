@@ -1,0 +1,158 @@
+@import './_vars.sass'
+@import './media/_mediaBoard.sass'
+
+.board-controls-container
+  width: 100%
+  min-height: 50px
+  background-color: #0000001c
+  padding-top: 8px
+  padding-bottom: 8px
+
+.board-control-item-divider
+  display: inline-block
+  height: 20px
+  background-color: white
+  width: 1px
+
+.board-control-button
+  font-weight: normal
+  height: 35px
+  background-color: transparent
+  &.active
+    background-color: transparentize(black, .75)  !important
+
+.board-title
+  font-weight: bold
+  font-size: 22px
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.board-control-item-title
+  margin-left: 15px
+.board-control-access-item
+  // margin-left: 15px
+
+.board-access
+  min-width: 90px
+  margin: 0 5px
+  
+  
+.board-lists-container
+  // position: absolute
+  // white-space: nowrap
+  width: 100%
+  height: calc(100vh - 171px)
+  overflow-x: auto
+  overflow-y: hidden
+  // left: 0
+
+.board-controls-dropdown
+  background-color: $popup-background-light
+  display: block
+  top: 40px
+  width: 100%
+  &.board-controls-dropdown-members
+    max-height: calc(100vh - 100px)
+    overflow: hidden
+    .input-container
+      margin-top: 5px
+    .user-list
+      width: 95%
+      margin: 15px auto 0
+
+.board-controls-container
+  .dropdown-menu
+    .popup-title
+      font-size: 1.1em
+      display: block
+      width: 95%
+      margin: 0 auto
+      padding-bottom: 5px
+      border-bottom: 1px solid #bfbfbf
+      text-align: center
+    .input-container, .board-control-popup-btn
+      margin: 15px auto 0
+      width: 95%
+      label
+        margin-top: 0
+        font-size: .8em
+        font-weight: bold
+        margin-bottom: .1em
+      input
+        padding: 5px 7px
+        display: inline-block
+        width: 100%
+
+.board-list-container
+  max-height: calc(100vh - 140px)
+
+.access-dropdown-inputs-container
+  display: flex
+  justify-content: center
+  text-align: center
+  width: 100%
+  .access-input-container
+    margin: 0 15px
+    max-width: 150px
+    span
+      display: block
+      margin-top: 5px
+      line-height: 1.2em
+.access-label
+  cursor: pointer
+  line-height: 35px
+  max-width: 100px
+  width: 100%
+  margin: 20px auto 0
+  transition: .3s all ease
+  &[for="private"], &[for="readonly"]
+    border: 1px solid $main-color-red
+  &[for="public"], &[for="editable"]
+    border: 1px solid $main-color-green
+input[type="radio"]:checked
+  & + .access-label
+    color: white
+    &[for="private"], &[for="readonly"]
+      background-color: $main-color-red
+    &[for="public"], &[for="editable"]
+      background-color: $main-color-green
+
+.user-list
+  overflow: auto
+  display: block
+  max-height: calc(100vh - 240px)
+  .list-group-item
+    padding: .5em 0
+    border: none
+    overflow: hidden
+    background-color: $popup-background-light
+    // background: grey
+.user-logo-container
+  .user-logo
+    width: 40px
+    line-height: 40px
+    display: inline-block
+.credentials-container
+  line-height: 1.1
+  overflow: hidden
+  flex: 1 0 200px
+  margin-left: 10px
+  span
+    width: 100%
+    display: inline-block
+    overflow: hidden
+  .credentials-email
+    font-size: 1em
+    word-wrap: break-word
+  .credentials-nickname
+    font-size: 1.1em
+    font-weight: bold
+.member-controls
+  text-align: right
+  .member-control-btn
+    display: inline-block
+    height: 40px
+    width: 40px
+    svg
+      transform: scale(1.5)

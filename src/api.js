@@ -35,12 +35,16 @@ const api = {
   board: {
     loadAllBoards: (token) => {
       setAuthHeaders(token);
-      return axios.post('http://192.168.0.11:3111/board/all');
+      return axios.get('http://192.168.0.11:3111/board/all');
     },
     createBoard: (token, data) => {
       setAuthHeaders(token);
       console.log('data in api', data);
       return axios.post('http://192.168.0.11:3111/board', data);
+    },
+    getBoard: (token, id) => {
+      setAuthHeaders(token);
+      return axios.get(`http://192.168.0.11:3111/board/${id}`);
     },
   },
 };

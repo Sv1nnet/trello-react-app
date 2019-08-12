@@ -1,15 +1,17 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThList, faHome } from '@fortawesome/free-solid-svg-icons';
-import SearchInput from '../utils/SearchInput';
+import SearchInput from '../utils/TextInput';
 import '../../styles/navbar.sass';
 import PopupContainer from '../utils/PopupContainer';
 import BoardListItem from '../boards/BoardListItem';
 import CreateBoard from '../boards/CreateBoard';
-import actions from '../../actions/authActions';
+import authActions from '../../actions/authActions';
+import boardActions from '../../actions/boardActions';
 
 class UserNavbar extends Component {
   constructor(props) {
@@ -74,11 +76,25 @@ class UserNavbar extends Component {
   // Show or hide user popup component. Also, we pass it to removeElement prop of userPopup
   handlePopupBtnClick = (e, popupToClose) => {
     const popupType = popupToClose || e.target.dataset.popupType;
+    const { props } = this;
 
-    this.setState(state => ({
-      ...state,
-      [popupType]: !state[popupType],
-    }));
+    // If we open all boards popup then we need download all board from the server
+    if (popupType === 'boardsPopupActive') {
+      this.setState(state => ({
+        ...state,
+        [popupType]: !state[popupType],
+      }),
+      () => { // Load all boards if popup opened
+        if (this.state[popupType]) {
+          props.loadAllBoards(props.token.token);
+        }
+      });
+    } else {
+      this.setState(state => ({
+        ...state,
+        [popupType]: !state[popupType],
+      }));
+    }
   }
 
   openCreateBoard = (e) => {
@@ -211,8 +227,8 @@ class UserNavbar extends Component {
               <PopupContainer popupToClose="boardsPopupActive" targetClasses={['dropdown-boards', 'boards-title']} extraClasses={['dropdown-boards']} removeElement={handlePopupBtnClick} userData={{ email, nickname }}>
                 <h5 className="mt-2 w-100 boards-title text-secondary text-center">Boards</h5>
 
-                <div style={{ maxHeight: `${window.innerHeight - 140}px` }} className="board-list-container">
-                  {boards.map(board => <BoardListItem key={board.id} id={board.id} title={board.title} />)}
+                <div className="board-list-container">
+                  {boards.map(board => <BoardListItem key={board._id} id={board._id} title={board.title} />)}
                 </div>
 
                 <div className="col-12 px-0 text-center dropdown-board-list-item pt-2">
@@ -254,7 +270,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  logout: token => dispatch(actions.logout(token)),
+  logout: token => dispatch(authActions.logout(token)),
+  loadAllBoards: token => dispatch(boardActions.loadAllBoards(token)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserNavbar);

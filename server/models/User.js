@@ -48,7 +48,7 @@ const UserSchema = new Schema({
   },
   boards: [
     {
-      id: {
+      _id: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
       },

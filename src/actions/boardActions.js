@@ -4,7 +4,7 @@ import api from '../api';
 const createBoard = ({ token, title, access, description }) => (dispatch, getState) => {
   return api.board.createBoard(token, { title, access, description })
     .then((res) => {
-      dispatch({ type: userActionTypes.BOARD_ADDED, data: res });
+      dispatch({ type: userActionTypes.BOARD_ADDED, data: res }); // Add board to user reducer
       return dispatch({ type: boardActionTypes.CREATED, data: res }).data;
     })
     .catch((err) => {
@@ -15,10 +15,10 @@ const createBoard = ({ token, title, access, description }) => (dispatch, getSta
 const loadAllBoards = token => (dispatch, getState) => {
   return api.board.loadAllBoards(token)
     .then((res) => {
-      return dispatch({ type: boardActionTypes.ALL_BOARDS_DOWNLOADED, data: res }).data;
+      return dispatch({ type: userActionTypes.ALL_BOARDS_DOWNLOADED, data: res }).data;
     })
     .catch((err) => {
-      return dispatch({ type: boardActionTypes.ALL_BOARDS_DOWNLOADING_FAILED, data: err.response }).data;
+      return dispatch({ type: userActionTypes.ALL_BOARDS_DOWNLOADING_FAILED, data: err.response }).data;
     });
 };
 
