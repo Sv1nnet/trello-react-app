@@ -58,7 +58,7 @@ class App extends Component {
 
     return (
       <div className="App">
-        {state.loading && <Loader.PageLoader />}
+        {state.loading && <Loader.PageLoader bg />}
         {state.isAuthenticated && !state.loading && <AuthenticatedRoutes />}
         {!state.isAuthenticated && !state.loading && <GuestRoutes />}
       </div>
