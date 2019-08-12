@@ -43,7 +43,7 @@ const MembersForm = (props) => {
           <li key={member.email} className="list-group-item d-flex align-items-center user-list-item">
 
             <div className="user-logo-container">
-              <span className="p-0 text-primary rounded-circle bg-danger text-center font-weight-bold user-logo">{(`${member.nickname[0]}${member.nickname[1]}`).toUpperCase()}</span>
+              <span className="p-0 ml-1 text-primary rounded-circle bg-white text-center font-weight-bold user-logo">{(`${member.nickname[0]}${member.nickname[1]}`).toUpperCase()}</span>
             </div>
 
             <div className="credentials-container">

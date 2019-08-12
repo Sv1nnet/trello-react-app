@@ -1,8 +1,10 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -14,6 +16,8 @@ import RenameBoardForm from '../forms/RenameBoardForm';
 import ReadonlyAccessBoardForm from '../forms/ReadonlyAccessBoardForm';
 import PublicAccessBoardForm from '../forms/PublicAccessBoardForm';
 import MembersForm from '../forms/MembersForm';
+import boardActions from '../../actions/boardActions';
+import Messages from '../utils/Messages';
 
 class Board extends Component {
   state = {
@@ -27,6 +31,7 @@ class Board extends Component {
         message: '',
         statusCode: undefined,
       },
+      redirect: false,
     },
     popup: {
       isRenamePopupActive: false,
@@ -38,7 +43,61 @@ class Board extends Component {
   }
 
   componentDidMount() {
+    console.log('Board mounted');
+    const { getBoard, token, match } = this.props;
 
+    getBoard(token.token, match.params.id)
+      .then((res) => {
+        console.log('board downloaded', res);
+
+        if (res.status !== 200) {
+          this.setState(state => ({
+            ...state,
+            status: {
+              loading: false,
+              success: { // for success resquests
+                message: '',
+                statusCode: undefined,
+              },
+              err: {
+                message: res.data.err,
+                statusCode: res.status,
+              },
+            },
+          }));
+        } else {
+          this.setState(state => ({
+            ...state,
+            status: {
+              loading: false,
+              success: {
+                message: res.data.message,
+                statusCode: res.status,
+              },
+              err: { // for resquests errors
+                message: '',
+                statusCode: undefined,
+              },
+            },
+          }));
+        }
+      });
+  }
+
+  componentDidUpdate() {
+    console.log('Board updated');
+    const { state } = this;
+    const {
+      getBoard,
+      token,
+      match,
+      board,
+    } = this.props;
+
+    if (!state.status.err.message && match.params.id !== board._id) {
+      getBoard(token.token, match.params.id)
+        .then((data) => console.log('board downloaded', data));
+    }
   }
 
   handlePopupBtnClick = (e, popupToClose) => {
@@ -59,6 +118,20 @@ class Board extends Component {
     });
   }
 
+  closeMessage = () => {
+    this.setState(state => ({
+      ...state,
+      status: {
+        ...state.status,
+        err: {
+          message: '',
+          statusCode: undefined,
+        },
+        redirect: true,
+      },
+    }));
+  }
+
   render() {
     const { props, state, handlePopupBtnClick } = this;
     const { board } = props;
@@ -67,9 +140,25 @@ class Board extends Component {
       isReadOnly,
       isPrivate,
       members,
+      columns,
+      cards,
     } = board;
 
+    console.log('props', this.props);
+    if (state.status.redirect) return <Redirect to="/board/all" />;
     if (state.status.loading) return <Loader.PageLoader bg />;
+    if (state.status.err.message) return <Messages.ErrorMessage message={state.status.err.message} closeMessage={this.closeMessage} />;
+
+    const sortedColumns = columns.sort((columnOne, columnTwo) => {
+      if (columnOne.position < columnTwo.position) return -1;
+      if (columnOne.position > columnTwo.position) return 1;
+      return 0;
+    });
+
+    const lists = sortedColumns.map((column) => {
+      const thisColumnCards = cards.filter(card => card.column === column._id);
+      return <CardsList key={column._id} cards={thisColumnCards} listTitle={column.title} />;
+    });
 
     return (
       <div className="board-container position-relative">
@@ -128,8 +217,7 @@ class Board extends Component {
         </div>
 
         <div className="board-lists-container d-flex align-items-start">
-          <CardsList />
-          <CardsList />
+          {lists}
 
           <div className="add-new-column-button-container">
             <a href="/" className="btn btn-sm btn-block">
@@ -145,11 +233,12 @@ class Board extends Component {
 }
 
 const mapStateToProps = state => ({
+  token: state.user.token,
   board: state.board,
 });
 
 const mapDispatchToProps = dispatch => ({
-
+  getBoard: (token, id) => dispatch(boardActions.getBoard(token, id)),
 });
 
-export default connect(mapStateToProps)(Board);
+export default connect(mapStateToProps, mapDispatchToProps)(Board);

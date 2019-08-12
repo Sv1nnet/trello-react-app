@@ -27,46 +27,117 @@ const initialState = {
     },
   ],
   chat: 'gdfgfhgfjhjdghfghf',
-  cards: [],
+  cards: [
+    // {
+    //   _id: '1230',
+    //   column: 'qweqweqweqwe',
+    //   position: 1,
+    //   title: 'Card two',
+    // },
+    // {
+    //   _id: '1231',
+    //   column: 'qweqweqweqwe',
+    //   position: 0,
+    //   title: 'Card one',
+    // },
+    // {
+    //   _id: '1232',
+    //   column: 'qweqweqweqwe',
+    //   position: 3,
+    //   title: 'Card four',
+    // },
+    // {
+    //   _id: '1233',
+    //   column: 'qweqweqweqwe',
+    //   position: 2,
+    //   title: 'Card three',
+    // },
+    // {
+    //   _id: '1234',
+    //   column: 'ewqewqewqewq',
+    //   position: 0,
+    //   title: 'Card one',
+    // },
+    // {
+    //   _id: '1235',
+    //   column: 'ewqewqewqewq',
+    //   position: 1,
+    //   title: 'Card two',
+    // },
+    // {
+    //   _id: '1236',
+    //   column: 'qweewqqweewq',
+    //   position: 0,
+    //   title: 'Card three',
+    // },
+    // {
+    //   _id: '1237',
+    //   column: 'qweewqqweewq',
+    //   position: 2,
+    //   title: 'Card one',
+    // },
+    // {
+    //   _id: '1238',
+    //   column: 'qweewqqweewq',
+    //   position: 1,
+    //   title: 'Card two',
+    // },
+  ],
   members: [
-    {
-      _id: 'kdsjafklasjdklfjsdlfsd',
-      email: 'one@member.com',
-      nickname: 'MemberOne',
-    },
-    {
-      _id: 'kdsjafklasjdsafjsdlfsd',
-      email: 'two@member.com',
-      nickname: 'MemberTwo',
-    },
-    {
-      _id: 'kdsjafkdajdklfjsdlfsd',
-      email: 'three@member.com',
-      nickname: 'MemberThree',
-    },
-    {
-      _id: 'kdsjgfklasjdklfjsdlfsd',
-      email: 'for@member.com',
-      nickname: 'MemberFor',
-    },
-    {
-      _id: 'kdsjafkasasjdklfjsdlfsd',
-      email: 'five@member.com',
-      nickname: 'MemberFive',
-    },
-    {
-      _id: 'kdsjafkfddjdklfjsdlfsd',
-      email: 'six@member.com',
-      nickname: 'MemberSix',
-    },
-    {
-      _id: 'kdsjafklasjdklfjaslfsd',
-      email: 'seven@member.com',
-      nickname: 'MemberSeven',
-    },
+    // {
+    //   _id: 'kdsjafklasjdklfjsdlfsd',
+    //   email: 'one@member.com',
+    //   nickname: 'MemberOne',
+    // },
+    // {
+    //   _id: 'kdsjafklasjdsafjsdlfsd',
+    //   email: 'two@member.com',
+    //   nickname: 'MemberTwo',
+    // },
+    // {
+    //   _id: 'kdsjafkdajdklfjsdlfsd',
+    //   email: 'three@member.com',
+    //   nickname: 'MemberThree',
+    // },
+    // {
+    //   _id: 'kdsjgfklasjdklfjsdlfsd',
+    //   email: 'for@member.com',
+    //   nickname: 'MemberFor',
+    // },
+    // {
+    //   _id: 'kdsjafkasasjdklfjsdlfsd',
+    //   email: 'five@member.com',
+    //   nickname: 'MemberFive',
+    // },
+    // {
+    //   _id: 'kdsjafkfddjdklfjsdlfsd',
+    //   email: 'six@member.com',
+    //   nickname: 'MemberSix',
+    // },
+    // {
+    //   _id: 'kdsjafklasjdklfjaslfsd',
+    //   email: 'seven@member.com',
+    //   nickname: 'MemberSeven',
+    // },
   ],
   isReadOnly: false,
-  columns: [],
+  columns: [
+    // {
+    //   _id: 'qweqweqweqwe',
+    //   title: 'List two',
+    //   position: 1,
+    // },
+    // {
+    //   _id: 'ewqewqewqewq',
+    //   title: 'List one',
+    //   position: 0,
+    // },
+    // {
+    //   _id: 'qweewqqweewq',
+    //   title: 'List three',
+    //   position: 2,
+    // },
+  ],
 };
 // const initialState = {
 //   id: '',
@@ -94,11 +165,26 @@ const boardReducer = (state = initialState, action) => {
         title: data.title,
         history: [],
         description: '',
-        isPrivate: undefined,
+        isPrivate: data.isPrivate,
         marks: data.marks,
         cards: data.cards,
         members: data.members,
-        isReadOnly: true,
+        isReadOnly: data.isReadOnly,
+        columns: data.columns,
+      };
+    case boardActionTypes.BOARD_DOWNLOADED:
+      data = { ...action.data.data };
+      return {
+        _id: data._id,
+        owner: data.owner,
+        title: data.title,
+        history: [],
+        description: '',
+        isPrivate: data.isPrivate,
+        marks: data.marks,
+        cards: data.cards,
+        members: data.members,
+        isReadOnly: data.isReadOnly,
         columns: data.columns,
       };
     default:

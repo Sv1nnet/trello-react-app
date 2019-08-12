@@ -113,8 +113,8 @@ router.post('/', (req, res) => {
                 isPrivate: board.isPrivate,
                 isReadOnly: board.isReadOnly,
                 marks: board.marks,
-                boards: user.boards,
-                columns: user.columns,
+                boards: board.boards,
+                columns: board.columns,
               }));
           } else {
             res.status(400).json({ err: 'Could not find the user' });

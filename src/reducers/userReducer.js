@@ -53,7 +53,7 @@ const userReducer = (state = initialState, action) => {
         ...state,
         userData: {
           ...state.userData,
-          boards: data.boards,
+          boards: [...state.userData.boards, { _id: data._id, title: data.title }],
         },
       };
     case userActionTypes.EMAIL_CONFIRMED:

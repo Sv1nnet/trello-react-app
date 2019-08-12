@@ -21,6 +21,8 @@ export const userActionTypes = {
 export const boardActionTypes = {
   CREATED: 'CREATED',
   CREATE_FAILED: 'CREATE_FAILED',
+  BOARD_DOWNLOADED: 'BOARD_DOWNLOADED',
+  BOARD_DOWNLOAD_FAILED: 'BOARD_DOWNLOAD_FAILED',
 };
 
 export const formActionTypes = {
