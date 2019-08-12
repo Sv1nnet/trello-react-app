@@ -14,9 +14,9 @@ class App extends Component {
     isAuthenticated: false,
   }
 
-  // We need verify user every time he comes to the app to ensure he has right to get content.
+  // We need to verify user every time he comes to the app to ensure he has right to get content.
   // So we need to know what routs to show a user.
-  // Here we check if token exists. If so we need verify it.
+  // Here we check if token exists. If so we need to verify it.
   // If token is veryfied then set state of App isAuthenticated and show AuthenticatedRoutes.
   // Otherwise set state !isAuthenticated and show GuestRoutes.
   componentDidMount() {
@@ -58,7 +58,7 @@ class App extends Component {
 
     return (
       <div className="App">
-        {state.loading && <Loader.FormLoader />}
+        {state.loading && <Loader.PageLoader />}
         {state.isAuthenticated && !state.loading && <AuthenticatedRoutes />}
         {!state.isAuthenticated && !state.loading && <GuestRoutes />}
       </div>
