@@ -7,7 +7,7 @@ const MessageContaner = (props) => {
     <>
       <div className="message-container">
         <div style={styles} className="message message-error">
-          {children};
+          {children}
         </div>
       </div>
       <div className="position-absolute w-100 h-100 bg-white loader-bg" />
