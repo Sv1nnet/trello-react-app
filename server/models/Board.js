@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 const mongoose = require('mongoose');
 const { ColumnSchema } = require('./Column');
 const { CardSchema } = require('./Card');
@@ -67,9 +69,11 @@ BoardSchema.methods.setName = function setName(name) {
   board.name = name;
 };
 
-BoardSchema.methods.switchReadOnly = function switchReadOnly(readOnly) {
+BoardSchema.methods.updateBoard = function updateBoard(updateData) {
   const board = this;
-  board.readOnly = readOnly;
+  for (const prop in updateData) {
+    board[prop] = updateData[prop];
+  }
 };
 
 BoardSchema.methods.addColumn = function addColumn(columnId) {

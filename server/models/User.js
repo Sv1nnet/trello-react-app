@@ -189,6 +189,16 @@ UserSchema.methods.generateJWT = function generateJWT() {
   }, process.env.JWT_SECRET);
 };
 
+UserSchema.methods.updateBoardTitle = function updateBoardTitle(boardToUpdate) {
+  const user = this;
+  user.boards = user.boards.map((board) => {
+    if (board._id.toHexString() === boardToUpdate._id.toHexString()) {
+      board.title = boardToUpdate.title;
+    }
+    return board;
+  });
+};
+
 const User = mongoose.model('users', UserSchema);
 
 module.exports = {
