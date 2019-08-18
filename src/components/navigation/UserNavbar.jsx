@@ -247,7 +247,7 @@ class UserNavbar extends Component {
           {
             boardsPopupActive
             && (
-              <PopupContainer popupToClose="boardsPopupActive" targetClasses={['dropdown-boards', 'boards-title']} extraClasses={['dropdown-boards']} removeElement={handlePopupBtnClick} userData={{ email, nickname }}>
+              <PopupContainer popupToClose="boardsPopupActive" classesToNotClosePopup={['dropdown-boards', 'boards-title']} extraClasses={['dropdown-boards']} removeElement={handlePopupBtnClick} userData={{ email, nickname }}>
                 <h5 className="mt-2 w-100 boards-title text-secondary text-center">Boards</h5>
 
                 <div className="board-list-container">
@@ -264,7 +264,7 @@ class UserNavbar extends Component {
           {
             userPopupActive
             && (
-              <PopupContainer popupToClose="userPopupActive" targetClasses={['dropdown-user', 'user-credentials']} extraClasses={['dropdown-user']} removeElement={handlePopupBtnClick} userData={{ email, nickname }}>
+              <PopupContainer popupToClose="userPopupActive" classesToNotClosePopup={['user-credentials']} targetClasses={['dropdown-user', 'user-credentials']} extraClasses={['dropdown-user']} removeElement={handlePopupBtnClick} userData={{ email, nickname }}>
                 <div className="col-12 dropdown-user-credentials pt-2 border-bottom">
                   <p className="user-credentials text-center">{`${email} (${nickname})`}</p>
                 </div>
