@@ -1,11 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThList, faHome } from '@fortawesome/free-solid-svg-icons';
-import SearchInput from '../utils/TextInput';
+import TextInput from '../utils/TextInput';
 import '../../styles/navbar.sass';
 import PopupContainer from '../utils/PopupContainer';
 import BoardListItem from '../boards/BoardListItem';
@@ -17,6 +18,7 @@ class UserNavbar extends Component {
   constructor(props) {
     super(props);
 
+    this.searchBtn = React.createRef();
     this.searchBar = React.createRef();
     this.navSearchInput = React.createRef();
     this.searchCardsInput = React.createRef();
@@ -37,7 +39,12 @@ class UserNavbar extends Component {
 
   // Handle blur event for search input
   handleBlur = (e) => {
-    if (!e.target.value) {
+    if (getComputedStyle(this.navSearchInput.current.inputElement.current).display !== 'none') {
+      if (!e.target.value) {
+        e.target.classList.remove('active');
+        this.searchBar.current.classList.remove('active');
+      }
+    } else if (!e.target.value && e.target === this.searchBtn.current) {
       e.target.classList.remove('active');
       this.searchBar.current.classList.remove('active');
     }
@@ -50,17 +57,29 @@ class UserNavbar extends Component {
       ...state,
       searchText: '',
     }),
-      () => {
-        // After we clear search input we need return focus to it
-        if (getComputedStyle(navSearchInput.current.inputElement.current).display !== 'none') navSearchInput.current.inputElement.current.focus();
-        if (getComputedStyle(searchCardsInput.current.inputElement.current).display !== 'none') searchCardsInput.current.inputElement.current.focus();
-      });
+    () => {
+      // After we clear search input we need return focus to it
+      if (getComputedStyle(navSearchInput.current.inputElement.current).display !== 'none') navSearchInput.current.inputElement.current.focus();
+      if (getComputedStyle(searchCardsInput.current.inputElement.current).display !== 'none') searchCardsInput.current.inputElement.current.focus();
+    });
   }
 
   // This works on small screen. Search button showed instead of search text input so when we click the button search popup appears
   handleSearchButtonClick = (e) => {
-    this.searchBar.current.classList.add('active');
-    this.searchCardsInput.current.inputElement.current.focus();
+    const isSearchBarActive = this.searchBar.current.classList.contains('active');
+
+    if (isSearchBarActive) {
+      this.setState(state => ({
+        ...state,
+        searchText: '',
+      }),
+      () => {
+        this.searchBar.current.classList.remove('active');
+      });
+    } else {
+      this.searchBar.current.classList.add('active');
+      this.searchCardsInput.current.inputElement.current.focus();
+    }
   }
 
   // Just set new state when value in search input changes
@@ -118,9 +137,12 @@ class UserNavbar extends Component {
 
     const { logout, token } = this.props;
 
-    logout(token.token).then(() => {
-      console.log('logged out');
-    });
+    logout(token.token)
+      .then(() => {
+        console.log('logged out');
+      })
+      .catch(err => console.log('logout error', err));
+
     window.localStorage.setItem('user', '');
     window.location.reload();
   }
@@ -132,6 +154,7 @@ class UserNavbar extends Component {
       handleFocus,
       handleBlur,
       searchBar,
+      searchBtn,
       searchCardsInput,
       navSearchInput,
       handleSearchButtonClick,
@@ -148,7 +171,7 @@ class UserNavbar extends Component {
       createBoardActive,
     } = state;
     const { nickname, email, boards } = props.user;
-    const emailInitials = `${nickname[0]}${nickname[1]}`.toUpperCase();
+    const emailInitials = nickname && `${nickname[0]}${nickname[1]}`.toUpperCase();
 
     return (
       <>
@@ -174,7 +197,7 @@ class UserNavbar extends Component {
           <li className="nav-item nav-button dropdown search-button">
             <div className="nav-search-input-container">
 
-              <SearchInput
+              <TextInput
                 ref={navSearchInput}
                 inputValue={searchText}
                 placeholder="Search"
@@ -186,7 +209,7 @@ class UserNavbar extends Component {
               />
 
             </div>
-            <input onClick={handleSearchButtonClick} type="button" className="nav-link text-white" value="Search" />
+            <input ref={searchBtn} onClick={handleSearchButtonClick} type="button" className="nav-link text-white" value="Search" />
           </li>
 
           <li className="nav-item nav-button user-logo">
@@ -200,7 +223,7 @@ class UserNavbar extends Component {
               <div className="row">
                 <div className="col dropdown-search-container my-1">
 
-                  <SearchInput
+                  <TextInput
                     ref={searchCardsInput}
                     placeholder="Search"
                     onChange={handleOnSearchChange}
@@ -263,6 +286,25 @@ class UserNavbar extends Component {
     );
   }
 }
+
+UserNavbar.propTypes = {
+  user: PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    nickname: PropTypes.string.isRequired,
+    boards: PropTypes.arrayOf(
+      PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+      }).isRequired,
+    ).isRequired,
+  }).isRequired,
+  token: PropTypes.shape({
+    access: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  logout: PropTypes.func.isRequired,
+  loadAllBoards: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = state => ({
   user: state.user.userData,

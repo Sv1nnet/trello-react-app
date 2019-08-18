@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import '../../styles/searchInput.sass';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -21,8 +22,10 @@ class TextInput extends Component {
   onFocus = (e) => {
     const { props } = this;
 
-    this.searchBtn.current.classList.remove('active');
-    this.crossBtn.current.classList.add('active');
+    if (props.inputValue || (!props.inputValue && props.hideSearchBtn)) {
+      this.searchBtn.current.classList.remove('active');
+      this.crossBtn.current.classList.add('active');
+    }
 
     if (props.onFocus) props.onFocus(e);
   }
@@ -39,6 +42,9 @@ class TextInput extends Component {
   }
 
   onSearchBtnClick = () => {
+    const { props } = this;
+
+    if (props.onSearchBtnClick) props.onSearchBtnClick();
     this.inputElement.current.focus();
   }
 
@@ -46,7 +52,7 @@ class TextInput extends Component {
     const { props } = this;
 
     if (props.onCrossBtnClick) props.onCrossBtnClick(e);
-    if (props.focusedAfterCleared) this.inputElement.current.focus();
+    if (props.focuseAfterCleared) this.inputElement.current.focus();
   }
 
   render() {
@@ -57,7 +63,6 @@ class TextInput extends Component {
       hideCrossBtn,
       textColor = emptyValue,
       inputValue = emptyValue,
-      onSearchBtnClick,
       onChange,
       placeholder,
       id,
@@ -65,7 +70,15 @@ class TextInput extends Component {
       classList,
     } = props;
 
-    const { onFocus, onBlur, onCrossBtnClick } = this;
+    const {
+      onFocus,
+      onBlur,
+      onCrossBtnClick,
+      onSearchBtnClick,
+    } = this;
+
+    const crossBtnActive = inputValue ? 'active' : '';
+    const searchBtnActive = !inputValue ? 'active' : '';
 
     return (
       <div className="search-input-container position-relative">
@@ -83,16 +96,28 @@ class TextInput extends Component {
           name={name || ''}
         />
 
-        <div ref={this.crossBtn} className={`icon-container ${inputValue && 'active'}`}>
+        <div ref={this.crossBtn} className={`icon-container ${crossBtnActive}`}>
           <FontAwesomeIcon style={{ display: hideCrossBtn ? 'none' : '' }} onClick={onCrossBtnClick} className="dropdown-search-icon clear-input-button" icon={faTimes} />
         </div>
 
-        <div ref={this.searchBtn} className={`icon-container ${!inputValue && 'active'}`}>
+        <div ref={this.searchBtn} className={`icon-container ${searchBtnActive}`}>
           <FontAwesomeIcon style={{ display: hideSearchBtn ? 'none' : '' }} onClick={onSearchBtnClick} className="dropdown-search-icon search-button" icon={faSearch} />
         </div>
       </div>
     );
   }
 }
+
+TextInput.propTypes = {
+  hideSearchBtn: PropTypes.bool,
+  hideCrossBtn: PropTypes.bool,
+  textColor: PropTypes.string,
+  inputValue: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
+  id: PropTypes.string,
+  name: PropTypes.string,
+  classList: PropTypes.string,
+};
 
 export default TextInput;
