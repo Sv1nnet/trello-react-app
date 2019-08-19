@@ -19,7 +19,6 @@ router.get('/all', (req, res) => {
       User.findById({ _id: decoded._id })
         .then((user) => {
           const { boards } = user;
-          // console.log('boards request', boards);
           res.status(200).send({ boards });
         })
         .catch((err) => {
@@ -172,6 +171,28 @@ router.post('/', (req, res) => {
           res.status(400).json({ err });
         });
     }
+  });
+});
+
+router.get('/find_users/:email', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const { email } = req.params;
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(400).send({ err: 'Invalid token' });
+    }
+
+    User.find({})
+      .then((users) => {
+        const foundUsers = users.filter(user => user.email.toLowerCase().indexOf(email.toLowerCase()) !== -1);
+
+        res.status(200).send({ users: foundUsers });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send({ err: 'Error on the server' });
+      });
   });
 });
 

@@ -4,6 +4,7 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,10 +13,10 @@ import '../../styles/board.sass';
 import Loader from '../utils/Loader';
 import PopupContainer from '../utils/PopupContainer';
 import CardsList from '../lists/CardsList';
-import RenameBoardForm from '../forms/RenameBoardForm';
-import ReadonlyAccessBoardForm from '../forms/ReadonlyAccessBoardForm';
-import PublicAccessBoardForm from '../forms/PublicAccessBoardForm';
-import MembersForm from '../forms/MembersForm';
+import RenameBoardForm from '../forms/boardForms/RenameBoardForm';
+import ReadonlyAccessBoardForm from '../forms/boardForms/ReadonlyAccessBoardForm';
+import PublicAccessBoardForm from '../forms/boardForms/PublicAccessBoardForm';
+import MembersForm from '../forms/boardForms/MembersForm';
 import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
 
@@ -23,15 +24,15 @@ class Board extends Component {
   state = {
     status: {
       loading: false,
-      success: { // for success resquests
+      success: { // for success resquest
         message: '',
         statusCode: undefined,
       },
-      err: { // for resquests errors
+      err: { // for resquest errors
         message: '',
         statusCode: undefined,
       },
-      redirect: false,
+      redirect: false, // If we can get access to a board then set this true to redirect to all boards page
     },
     popup: {
       isRenamePopupActive: false,
@@ -43,49 +44,46 @@ class Board extends Component {
   }
 
   componentDidMount() {
-    console.log('Board mounted');
     const { getBoard, token, match } = this.props;
 
     getBoard(token.token, match.params.id)
       .then((res) => {
-        console.log('board downloaded', res);
+        this.setState(state => ({
+          ...state,
+          status: {
+            loading: false,
+            success: {
+              message: res.data.message,
+              statusCode: res.status,
+            },
+            err: {
+              message: '',
+              statusCode: undefined,
+            },
+          },
+        }));
+      })
+      .catch((err) => {
+        console.log('error in board', err);
 
-        if (res.status !== 200) {
-          this.setState(state => ({
-            ...state,
-            status: {
-              loading: false,
-              success: { // for success resquests
-                message: '',
-                statusCode: undefined,
-              },
-              err: {
-                message: res.data.err,
-                statusCode: res.status,
-              },
+        this.setState(state => ({
+          ...state,
+          status: {
+            loading: false,
+            success: {
+              message: '',
+              statusCode: undefined,
             },
-          }));
-        } else {
-          this.setState(state => ({
-            ...state,
-            status: {
-              loading: false,
-              success: {
-                message: res.data.message,
-                statusCode: res.status,
-              },
-              err: { // for resquests errors
-                message: '',
-                statusCode: undefined,
-              },
+            err: {
+              message: err.message,
+              statusCode: err.status,
             },
-          }));
-        }
+          },
+        }));
       });
   }
 
   componentDidUpdate() {
-    console.log('Board updated');
     const { state } = this;
     const {
       getBoard,
@@ -96,7 +94,24 @@ class Board extends Component {
 
     if (!state.status.err.message && match.params.id !== board._id) {
       getBoard(token.token, match.params.id)
-        .then((data) => console.log('board downloaded', data));
+        .catch((err) => {
+          console.log('error in board', err);
+
+          this.setState(prevState => ({
+            ...prevState,
+            status: {
+              loading: false,
+              success: {
+                message: '',
+                statusCode: undefined,
+              },
+              err: {
+                message: err.message,
+                statusCode: err.status,
+              },
+            },
+          }));
+        });
     }
   }
 
@@ -108,11 +123,13 @@ class Board extends Component {
         ...state,
       };
 
+      const targetPopupOpened = state.popup[popupType];
+
       for (const field in state.popup) {
         newState.popup[field] = false;
       }
 
-      newState.popup[popupType] = !state.popup[popupType];
+      if (!targetPopupOpened) newState.popup[popupType] = !state.popup[popupType];
 
       return newState;
     });
@@ -133,7 +150,12 @@ class Board extends Component {
   }
 
   render() {
-    const { props, state, handlePopupBtnClick } = this;
+    const {
+      props,
+      state,
+      handlePopupBtnClick,
+      closeMessage,
+    } = this;
     const { board } = props;
     const {
       title,
@@ -144,10 +166,9 @@ class Board extends Component {
       cards,
     } = board;
 
-    console.log('props', this.props);
     if (state.status.redirect) return <Redirect to="/board/all" />;
     if (state.status.loading) return <Loader.PageLoader bg />;
-    if (state.status.err.message) return <Messages.ErrorMessage message={state.status.err.message} closeMessage={this.closeMessage} />;
+    if (state.status.err.message) return <Messages.ErrorMessage message={state.status.err.message} closeMessage={closeMessage} />;
 
     const sortedColumns = columns.sort((columnOne, columnTwo) => {
       if (columnOne.position < columnTwo.position) return -1;
@@ -170,7 +191,7 @@ class Board extends Component {
 
           <div className="d-flex flex-wrap align-items-center board-control-item board-control-item-title board-control-access-item">
             <span className="board-control-item-divider" />
-            <button onClick={handlePopupBtnClick} data-popup-type="isReadonlyPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isReadonlyPopupActive ? 'active' : ''}`}>{isReadOnly ? 'Read-only' : 'Editable'}</button>
+            <button onClick={handlePopupBtnClick} data-popup-type="isReadonlyPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isReadonlyPopupActive ? 'active' : ''}`}>{isReadOnly ? 'Readonly' : 'Editable'}</button>
             <span className="board-control-item-divider" />
             <button onClick={handlePopupBtnClick} data-popup-type="isPrivatePopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access  ${state.popup.isPrivatePopupActive ? 'active' : ''}`}>{isPrivate ? 'Private' : 'Public'}</button>
             <span className="board-control-item-divider" />
@@ -186,31 +207,31 @@ class Board extends Component {
 
 
           {state.popup.isRenamePopupActive && (
-            <PopupContainer removeElement={handlePopupBtnClick} targetClasses={['rename-board-input', 'board-control-popup-btn', 'clear-input-button']} closeBtn extraClasses={['board-controls-dropdown']}>
-              <RenameBoardForm boardTitle={title} />
+            <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown']}>
+              <RenameBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isRenamePopupActive'); }} boardTitle={title} />
             </PopupContainer>
           )}
 
           {state.popup.isReadonlyPopupActive && (
-            <PopupContainer removeElement={handlePopupBtnClick} closeBtn targetClasses={['access-label', 'access-input', 'board-control-popup-btn']} extraClasses={['board-controls-dropdown', 'board-controls-dropdown-readonly']}>
-              <ReadonlyAccessBoardForm isReadOnly={isReadOnly} />
+            <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-readonly']}>
+              <ReadonlyAccessBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isReadonlyPopupActive'); }} isReadOnly={isReadOnly} />
             </PopupContainer>
           )}
 
           {state.popup.isPrivatePopupActive && (
-            <PopupContainer removeElement={handlePopupBtnClick} closeBtn targetClasses={['access-label', 'access-input', 'board-control-popup-btn']} extraClasses={['board-controls-dropdown', 'board-controls-dropdown-private']}>
-              <PublicAccessBoardForm isPrivate={isPrivate} />
+            <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-private']}>
+              <PublicAccessBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isPrivatePopupActive'); }} isPrivate={isPrivate} />
             </PopupContainer>
           )}
 
           {state.popup.isMembersPopupActive && (
-            <PopupContainer removeElement={handlePopupBtnClick} closeBtn targetClasses={['members-board-input']} extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
-              <MembersForm members={members} />
+            <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
+              <MembersForm closePopup={(e) => { handlePopupBtnClick(e, 'isMembersPopupActive'); }} members={members} />
             </PopupContainer>
           )}
 
           {/* {state.isMenuPopupActive && (
-            <PopupContainer removeElement={handlePopupBtnClick} closeBtn targetClasses={['members-board-input']} extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
+            <PopupContainer removeElement={handlePopupBtnClick} closeBtn classesToNotClosePopup={['members-board-input']} extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
               <MembersForm members={members} />
             </PopupContainer>
           )} */}
@@ -231,6 +252,22 @@ class Board extends Component {
     );
   }
 }
+
+Board.propTypes = {
+  token: PropTypes.shape({
+    access: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  board: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    isReadOnly: PropTypes.bool.isRequired,
+    isPrivate: PropTypes.bool.isRequired,
+    members: PropTypes.array.isRequired,
+    columns: PropTypes.array.isRequired,
+    cards: PropTypes.array.isRequired,
+  }).isRequired,
+  getBoard: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = state => ({
   token: state.user.token,

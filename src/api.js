@@ -46,6 +46,14 @@ const api = {
       setAuthHeaders(token);
       return axios.get(`http://192.168.0.11:3111/board/${id}`);
     },
+    updateBoard: (token, id, data) => {
+      setAuthHeaders(token);
+      return axios.post(`http://192.168.0.11:3111/board/${id}`, data);
+    },
+    findUsers: (token, email) => {
+      setAuthHeaders(token);
+      return axios.get(`http://192.168.0.11:3111/board/find_users/${email}`);
+    }
   },
 };
 
