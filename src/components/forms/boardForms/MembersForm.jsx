@@ -129,7 +129,7 @@ class MembersForm extends Component {
   /*
    * Clear input value and add members to the state from props.
    * We need set members this way to prevent deleted member from removing
-   * from this current list. We need this to be able to return member to the board
+   * from current list of members. We need this to be able to return member to the board
    * if he was removed accidentally
    */
   clearInput = () => {
