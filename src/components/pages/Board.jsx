@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable jsx-a11y/label-has-for */

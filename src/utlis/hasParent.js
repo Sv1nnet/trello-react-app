@@ -6,7 +6,8 @@
  */
 
 function hasParent(parent, child) {
-  /* We need check if child exists because close message methode invokes before this function
+  /*
+   * We need check if child exists because close message method invokes before this function
    * and child is deletes from DOM doesn't exist, so it throws error.
    * And to prevent throwing error or unexpected closing popup
    * it should return true.

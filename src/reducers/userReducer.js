@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 /*
  * Data we get from server once user logged in
  * {

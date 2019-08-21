@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { boardActionTypes, userActionTypes } from '../types';
 import api from '../api';
 import createErrorResponseObject from '../utlis/createErrorResponseObject';
