@@ -1,16 +1,23 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/cardsList.sass';
 import CardFace from '../cards/CardFace';
 
-// class CardsList extends Component {
-//   render() {
 
-//   }
-// }
+const propTypes = {
+  cards: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  listTitle: PropTypes.string.isRequired,
+};
+
 
 const CardsList = ({ cards, listTitle }) => {
   const sortedCards = cards.sort((cardOne, cardTwo) => {
@@ -21,7 +28,7 @@ const CardsList = ({ cards, listTitle }) => {
 
   return (
     <div className="cards-list-container">
-      <h5 className="d-block w-100">{listTitle}</h5>
+      <h5 className="d-block mb-0">{listTitle}</h5>
       <div className="cards-container">
         {sortedCards.map(card => <CardFace key={card._id} cardTitle={card.title} />)}
       </div>
@@ -36,11 +43,15 @@ const CardsList = ({ cards, listTitle }) => {
 };
 
 const mapStateToProps = state => ({
-
+  
 });
 
 const mapDispatchToProps = dispatch => ({
-
+  
 });
+
+
+CardsList.propTypes = propTypes;
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(CardsList);

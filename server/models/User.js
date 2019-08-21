@@ -199,6 +199,21 @@ UserSchema.methods.updateBoardTitle = function updateBoardTitle(boardToUpdate) {
   });
 };
 
+UserSchema.methods.addBoard = function addBoard(board) {
+  const user = this;
+  user.boards.push(board);
+
+  return user.boards;
+};
+
+UserSchema.methods.removeBoard = function removeBoard(board) {
+  const user = this;
+  user.boards = user.boards.filter(userBoard => userBoard._id.toHexString() !== board._id);
+
+  console.log('Boards after removed', user.boards);
+  return user.boards;
+};
+
 const User = mongoose.model('users', UserSchema);
 
 module.exports = {

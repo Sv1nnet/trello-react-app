@@ -1,14 +1,25 @@
 import React, { useState } from 'react';
-import { formActionTypes } from '../../types';
+import PropTypes from 'prop-types';
+import { formActionTypes } from '../../../types';
+
+
+const propTypes = {
+  userData: PropTypes.shape({
+    email: PropTypes.string.isRequired,
+  }).isRequired,
+  formMethods: PropTypes.shape({
+    onChange: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
 
 const ForgotPasswordForm = (props) => {
   const [mounted, setMounted] = useState(false);
 
   const { formMethods, userData } = props;
   const { onChange, onSubmit } = formMethods;
-  const {
-    email,
-  } = userData;
+  const { email } = userData;
 
   // Fadein component
   setTimeout(() => setMounted(true), 50);
@@ -24,5 +35,9 @@ const ForgotPasswordForm = (props) => {
     </form>
   );
 };
+
+
+ForgotPasswordForm.propTypes = propTypes;
+
 
 export default ForgotPasswordForm;

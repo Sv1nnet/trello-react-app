@@ -4,20 +4,29 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/createBoard.sass';
-import CreateBoardForm from '../forms/CreateBoardForm';
+import CreateBoardForm from '../forms/boardForms/CreateBoardForm';
 import actions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
+
+
+const propTypes = {
+  close: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired,
+  createBoard: PropTypes.func.isRequired,
+};
+
 
 const CreateBoard = (props) => {
   const [state, setState] = useState({
     err: {
       status: undefined,
-      message: undefined,
+      message: '',
     },
     description: '',
     title: '',
@@ -37,45 +46,30 @@ const CreateBoard = (props) => {
     const { token } = props;
     props.createBoard({ token, title: state.title, access: state.access, description: state.description })
       .then((res) => {
-        // If there is response from server
-        if (res) {
-          // If board was successfully created
-          if (res.status === 200) {
-            setState({
-              err: {
-                status: undefined,
-                message: undefined,
-              },
-              access: 'private',
-              title: '',
-              boardCreated: true,
-              newBoardId: res.data._id,
-            });
-          } else {
-            // If error occured while creating board
-            setState({
-              ...state,
-              err: {
-                status: res.status,
-                message: res.data.err,
-              },
-            });
-          }
-        } else {
-          // If there is no response from server
-          setState({
-            ...state,
-            err: {
-              status: 500,
-              message: 'No connection with server',
-            },
-          });
-        }
+        setState({
+          err: {
+            status: undefined,
+            message: '',
+          },
+          access: 'private',
+          title: '',
+          boardCreated: true,
+          newBoardId: res.data._id,
+        });
+      })
+      .catch((err) => {
+        setState({
+          ...state,
+          err: {
+            message: err.message,
+            status: err.status,
+          },
+        });
       });
   };
 
   const closeMessage = () => {
-    setState({ ...state, err: { status: undefined, message: undefined } });
+    setState({ ...state, err: { status: undefined, message: '' } });
   };
 
   if (state.boardCreated) {
@@ -120,5 +114,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   createBoard: (token, data) => dispatch(actions.createBoard(token, data)),
 });
+
+
+CreateBoard.propTypes = propTypes;
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateBoard);

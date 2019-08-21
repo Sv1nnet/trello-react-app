@@ -3,41 +3,76 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import TextInput from '../../utils/TextInput';
 import Loader from '../../utils/Loader';
 import actions from '../../../actions/boardActions';
 import Messages from '../../utils/Messages';
+import UserList from '../../lists/UserListItem';
+
+
+const propTypes = {
+  boardId: PropTypes.string.isRequired,
+  owner: PropTypes.string.isRequired,
+  members: PropTypes.arrayOf(PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    nickname: PropTypes.string.isRequired,
+  })).isRequired,
+  token: PropTypes.shape({
+    access: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  findUsers: PropTypes.func.isRequired,
+  addMember: PropTypes.func.isRequired,
+  removeMember: PropTypes.func.isRequired,
+  updateMembers: PropTypes.func.isRequired,
+};
+
 
 class MembersForm extends Component {
-  state = {
-    inputValue: '',
-    getUsersInterval: undefined,
-    status: {
-      loading: false,
-      success: {
-        message: '',
-        data: undefined,
-        statusCode: undefined,
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      inputValue: '',
+      getUsersInterval: undefined,
+      members: props.members,
+      status: {
+        loading: false,
+        success: {
+          message: '',
+          data: undefined,
+          statusCode: undefined,
+        },
+        err: {
+          message: '',
+          statusCode: undefined,
+        },
       },
-      err: {
-        message: '',
-        statusCode: undefined,
-      },
-    },
+    };
   }
 
+  componentDidMount() {
+    const { updateMembers } = this.props;
+
+    // Get board members once component was mounted (members form was opened)
+    updateMembers();
+  }
+
+  /*
+   * Every change event we should clearTimeout.
+   * After value was updated we find users with findUsers function
+   */
   handleChange = (e) => {
     const { target } = e;
-    const { inputValue, timeout } = this.state;
+    const { timeout } = this.state;
 
     clearTimeout(timeout);
     this.setState(state => ({
       ...state,
       inputValue: target.value,
     }),
-    () => { this.findUsers(inputValue); });
+    () => { this.findUsers(); });
   }
 
   handleSubmit = (e) => {
@@ -45,10 +80,65 @@ class MembersForm extends Component {
     this.findUsers();
   }
 
+  // Add member to this board
+  handleAddMember = (member) => {
+    const { addMember, token, boardId } = this.props;
+
+    return addMember(token.token, boardId, member)
+      .catch((err) => {
+        this.setState(state => ({
+          ...state,
+          status: {
+            loading: false,
+            success: {
+              ...state.status.success,
+            },
+            err: {
+              message: err.message,
+              statusCode: err.status,
+            },
+          },
+        }));
+        return Promise.reject(err);
+      });
+  }
+
+  // Remove member from this board
+  handleRemoveMember = (member) => {
+    const { removeMember, token, boardId } = this.props;
+
+    return removeMember(token.token, boardId, member)
+      .catch((err) => {
+        this.setState(state => ({
+          ...state,
+          status: {
+            loading: false,
+            success: {
+              ...state.status.success,
+            },
+            err: {
+              message: err.message,
+              statusCode: err.status,
+            },
+          },
+        }));
+        return Promise.reject(err);
+      });
+  }
+
+  /*
+   * Clear input value and add members to the state from props.
+   * We need set members this way to prevent deleted member from removing
+   * from this current list. We need this to be able to return member to the board
+   * if he was removed accidentally
+   */
   clearInput = () => {
+    const { updateMembers, members } = this.props;
+
     this.setState(state => ({
       ...state,
       inputValue: '',
+      members,
       status: {
         loading: false,
         success: {
@@ -62,23 +152,31 @@ class MembersForm extends Component {
         },
       },
     }));
+
+    updateMembers();
   }
 
+  /*
+   * If value is epmty or '.' error occures on a server. So firstly we check what inputValue
+   * equals to. Then send request and if it was successful put found users into state.
+   * Searching users gets started in 500ms after onChange in input occured.
+   */
   findUsers = () => {
-    const { findUsers, token } = this.props;
     const { inputValue } = this.state;
+    const { findUsers, token, updateMembers, members } = this.props;
 
-    if (inputValue) {
+    if (inputValue && inputValue !== '.') {
       const timeout = setTimeout(() => {
         findUsers(token.token, inputValue)
           .then((data) => {
+            // Set results
             this.setState(state => ({
               ...state,
               status: {
                 ...state.status,
                 loading: false,
                 success: {
-                  message: 'Users laoded',
+                  message: data.data.message,
                   data: data.data.users,
                   statusCode: 200,
                 },
@@ -86,6 +184,7 @@ class MembersForm extends Component {
             }));
           })
           .catch((err) => {
+            // Set error
             this.setState(state => ({
               ...state,
               status: {
@@ -99,6 +198,7 @@ class MembersForm extends Component {
             }));
           });
 
+        // Show loader
         this.setState(state => ({
           ...state,
           timeout,
@@ -109,13 +209,16 @@ class MembersForm extends Component {
         }));
       }, 500);
 
+      // Set timeout
       this.setState(state => ({
         ...state,
         timeout,
       }));
     } else {
+      // If user deletes all input then clear success status in order to only show members
       this.setState(state => ({
         ...state,
+        members,
         status: {
           ...state.status,
           success: {
@@ -125,11 +228,13 @@ class MembersForm extends Component {
           },
         },
       }));
+
+      updateMembers();
     }
   }
 
-  closeMessage = (clearInput) => {
-    console.log(clearInput);
+  // Close error message
+  closeMessage = () => {
     this.setState(state => ({
       ...state,
       status: {
@@ -143,8 +248,10 @@ class MembersForm extends Component {
   }
 
   render() {
-    const { members } = this.props;
-    const { inputValue, status } = this.state;
+    const { boardId, owner } = this.props;
+    const { members, inputValue, status } = this.state;
+    // IF we have success request object then show user list from it.
+    // Otherwise show user list from prop - list of board members
     const users = status.success.statusCode === 200 ? status.success.data : members;
 
     return (
@@ -170,34 +277,25 @@ class MembersForm extends Component {
         <ul className="list-group user-list">
 
           {users.length > 0
-            ? users.map(user => (
-              <li key={user.email} className="list-group-item d-flex align-items-center user-list-item">
+            ? users.map((user) => {
+              // Users that came from props doesn't have boards prop.
+              // If users came from search request we need check if they are board members
+              // by searching current board id in their boards
+              const isMember = user.boards ? !!user.boards.find(board => board._id === boardId) : true;
 
-                <div className="user-logo-container">
-                  <span className="p-0 ml-1 text-primary rounded-circle bg-white text-center font-weight-bold user-logo">{(`${user.nickname[0]}${user.nickname[1]}`).toUpperCase()}</span>
-                </div>
-
-                <div className="credentials-container">
-                  <div className="credentials-email-container">
-                    <span className="credentials-nickname">
-                      {user.nickname}
-                    </span>
-                  </div>
-                  <div className="credentails-nickname-container">
-                    <span className="credentials-email">
-                      {user.email}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="member-controls">
-                  <button type="button" className="member-control-btn btn btn-sm btn-danger">
-                    <FontAwesomeIcon icon={faTimes} />
-                  </button>
-                </div>
-
-              </li>
-            ))
+              return (
+                <UserList
+                  addMember={this.handleAddMember}
+                  removeMember={this.handleRemoveMember}
+                  key={user._id}
+                  userId={user._id}
+                  email={user.email}
+                  nickname={user.nickname}
+                  isMember={isMember}
+                  isOwner={owner === user._id}
+                />
+              );
+            })
             : <h5 className="text-center text-danger">No users found</h5>}
         </ul>
 
@@ -213,24 +311,18 @@ class MembersForm extends Component {
   }
 }
 
-MembersForm.propTypes = {
-  members: PropTypes.arrayOf(PropTypes.shape({
-    email: PropTypes.string.isRequired,
-    nickname: PropTypes.string.isRequired,
-  })).isRequired,
-  token: PropTypes.shape({
-    access: PropTypes.string.isRequired,
-    token: PropTypes.string.isRequired,
-  }).isRequired,
-  findUsers: PropTypes.func.isRequired,
-};
-
 const mapStateToProps = state => ({
   token: state.user.token,
 });
 
 const mapDispatchToProps = dispatch => ({
   findUsers: (token, email) => dispatch(actions.findUsers(token, email)),
+  addMember: (token, boardId, member) => dispatch(actions.addMember(token, boardId, member)),
+  removeMember: (token, boardId, member) => dispatch(actions.removeMember(token, boardId, member)),
 });
+
+
+MembersForm.propTypes = propTypes;
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(MembersForm);

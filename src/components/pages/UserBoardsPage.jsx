@@ -1,9 +1,24 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import actions from '../../actions/boardActions';
 import BoardListItem from '../boards/BoardListItem';
 import CreateBoard from '../boards/CreateBoard';
+import '../../styles/allBoards.sass';
+
+
+const propTypes = {
+  token: PropTypes.string.isRequired,
+  boards: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  loadAllBoards: PropTypes.func.isRequired,
+};
+
 
 class UserBoardsPage extends Component {
   state = {
@@ -27,42 +42,29 @@ class UserBoardsPage extends Component {
 
     props.loadAllBoards(token)
       .then((res) => {
-        if (res) {
-          if (res.status === 200) {
-            const { message } = res.data;
+        console.log('all boards response', res);
+        const { message } = res.data;
 
-            this.setState(state => ({
-              ...state,
-              status: {
-                loading: false,
-                success: {
-                  message,
-                  statusCode: 200,
-                },
-              },
-            }));
-          }
-        } else {
-          this.setState(state => ({
-            ...state,
-            status: {
-              loading: false,
-              err: {
-                message: 'No connection with server',
-                statusCode: 500,
-              },
+        this.setState(state => ({
+          ...state,
+          status: {
+            loading: false,
+            success: {
+              message,
+              statusCode: 200,
             },
-          }));
-        }
+          },
+        }));
       })
       .catch((err) => {
+        console.log('all boards error', err);
         this.setState(state => ({
           ...state,
           status: {
             loading: false,
             err: {
-              message: err,
-              statusCode: 200,
+              message: err.message,
+              statusCode: err.status,
             },
           },
         }));
@@ -94,8 +96,8 @@ class UserBoardsPage extends Component {
       <div className="container-fluid">
         <h3 className="text-center text-white mt-3">Boards</h3>
 
-        <div style={{ maxHeight: `${window.innerHeight - 164}px` }} className="row overflow-auto">
-          {boards.map(board => (
+        <div className="row overflow-auto all-boards-container">
+          {boards && boards.map(board => (
             <div key={board._id} className="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-2">
               <BoardListItem id={board._id} title={board.title} />
             </div>
@@ -111,7 +113,7 @@ class UserBoardsPage extends Component {
       </div>
     );
   }
-};
+}
 
 const mapStateToProps = state => ({
   boards: state.user.userData.boards,
@@ -121,5 +123,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   loadAllBoards: token => dispatch(actions.loadAllBoards(token)),
 });
+
+
+UserBoardsPage.propTypes = propTypes;
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserBoardsPage);

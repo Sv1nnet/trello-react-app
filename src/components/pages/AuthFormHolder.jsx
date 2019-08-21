@@ -1,9 +1,22 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isEmail } from 'validator';
 import Loader from '../utils/Loader';
 import actions from '../../actions/authActions';
 import Messages from '../utils/Messages';
+
+
+const propTypes = {
+  switchForm: PropTypes.func.isRequired,
+  authForm: PropTypes.func.isRequired,
+  formActions: PropTypes.shape({
+    signup: PropTypes.func.isRequired,
+    login: PropTypes.func.isRequired,
+    forgotPassword: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
 
 // I use this component with state that stores user input data in order to save data if user switches form
 class AuthFormHolder extends Component {
@@ -108,48 +121,33 @@ class AuthFormHolder extends Component {
 
     signup(userData)
       .then((res) => {
-        if (res) { // If has res from with server
-          if (res.status === 200) { // If signup is successful
-            const { message } = res.data;
+        const { message } = res.data;
 
-            this.setState(state => ({
-              ...state,
-              userData: {
-                email: '',
-                nickname: '',
-                password: '',
-                confirmPassword: '',
-                firstName: '',
-                lastName: '',
-              },
-              status: {
-                loading: false,
-                err: {
-                  statusCode: undefined,
-                  message: '',
-                },
-                success: {
-                  statusCode: 200,
-                  message,
-                },
-              },
-            }));
-          } else { // Signup failed
-            this.setState(state => ({
-              ...state,
-              status: {
-                ...state.status,
-                loading: false,
-                err: {
-                  ...state.err,
-                  message: res.data.err,
-                },
-              },
-            }));
-          }
-        } else { // If has no res from the server
-          this.handleNoConnection();
-        }
+        this.setState(state => ({
+          ...state,
+          userData: {
+            email: '',
+            nickname: '',
+            password: '',
+            confirmPassword: '',
+            firstName: '',
+            lastName: '',
+          },
+          status: {
+            loading: false,
+            err: {
+              message: '',
+              statusCode: undefined,
+            },
+            success: {
+              statusCode: res.status,
+              message,
+            },
+          },
+        }));
+      })
+      .catch((err) => {
+        this.handleRequestError(err);
       });
   }
 
@@ -162,58 +160,42 @@ class AuthFormHolder extends Component {
       .then((res) => {
         if (!this._mounted) return; // Prevent unmounted component from async action like setState
 
-        if (res) { // If has res from with server
-          if (res.status === 200) {
-            if (res.confirmed === false) { // If user is not confirmed tell him confirm his email
-              const { message } = res.data;
+        if (res.data.confirmed === false) { // If user is not confirmed tell him confirm his email
+          const { message } = res.data;
 
-              this.setState(state => ({
-                ...state,
-                status: {
-                  err: {
-                    ...state.status.err,
-                    statusCode: 200,
-                  },
-                  loading: false,
-                  success: {
-                    statusCode: undefined,
-                    message,
-                  },
-                },
-              }));
-            } else {
-              this.setState(state => ({
-                ...state,
-                status: {
-                  err: {
-                    message: '',
-                    statusCode: undefined,
-                  },
-                  loading: false,
-                  success: {
-                    statusCode: undefined,
-                    message: '',
-                  },
-                },
-              }));
-            }
-          } else { // If user provided wrong email or password
-            console.log('res error', res);
-            this.setState(state => ({
-              ...state,
-              status: {
-                ...state.status,
-                loading: false,
-                err: {
-                  ...state.err,
-                  message: res.data.err,
-                },
+          this.setState(state => ({
+            ...state,
+            status: {
+              err: {
+                ...state.status.err,
+                statusCode: 200,
               },
-            }));
-          }
-        } else { // If has no res from the server
-          this.handleNoConnection();
+              loading: false,
+              success: {
+                statusCode: res.status,
+                message,
+              },
+            },
+          }));
+        } else { // If user is comfirmed and passed correct email and password then login
+          this.setState(state => ({
+            ...state,
+            status: {
+              err: {
+                message: '',
+                statusCode: undefined,
+              },
+              loading: false,
+              success: {
+                message: '',
+                statusCode: undefined,
+              },
+            },
+          }));
         }
+      })
+      .catch((err) => {
+        this.handleRequestError(err);
       });
   }
 
@@ -224,53 +206,36 @@ class AuthFormHolder extends Component {
 
     forgotPassword(userData)
       .then((res) => {
-        if (res) { // If has res from with server
-          if (res.status === 200) {
-            if (!res.confirmed) {
-              const { message } = res.data;
-              this.setState(state => ({
-                ...state,
-                status: {
-                  err: {
-                    ...state.status.err,
-                    statusCode: 200,
-                  },
-                  loading: false,
-                  success: {
-                    statusCode: undefined,
-                    message,
-                  },
-                },
-              }));
-            }
-          } else {
-            this.setState(state => ({
-              ...state,
-              status: {
-                ...state.status,
-                loading: false,
-                err: {
-                  ...state.err,
-                  message: res.data.err,
-                },
-              },
-            }));
-          }
-        } else { // If has noresponse from with server
-          this.handleNoConnection();
-        }
+        const { message } = res.data;
+        this.setState(state => ({
+          ...state,
+          status: {
+            err: {
+              ...state.status.err,
+              statusCode: 200,
+            },
+            loading: false,
+            success: {
+              message,
+              statusCode: undefined,
+            },
+          },
+        }));
+      })
+      .catch((err) => {
+        this.handleRequestError(err);
       });
   }
 
-  handleNoConnection = () => {
+  handleRequestError = (err) => {
     this.setState(state => ({
       ...state,
       status: {
         ...state.status,
         loading: false,
         err: {
-          statusCode: 503,
-          message: 'No connection with the server',
+          statusCode: err.status,
+          message: err.message,
         },
       },
     }));
@@ -351,10 +316,10 @@ class AuthFormHolder extends Component {
 
         {/* If error occured show an error message */}
         {/* If user did not managed to login because he did confirm his email show info message */}
-        {/* If operation seccessed show seccuess message */}
+        {/* If operation seccessed (err have to not have a statusCode) show success message */}
         {err.message && <Messages.ErrorMessage message={err.message} closeMessage={closeMessage} />}
         {err.statusCode === 200 && <Messages.InfoMessage message={success.message} closeMessage={closeMessage} clearInputs />}
-        {success.statusCode === 200 && <Messages.SuccessMessage message={success.message} closeMessage={closeMessage} clearInputs />}
+        {success.statusCode === 200 && !err.statusCode && <Messages.SuccessMessage message={success.message} closeMessage={closeMessage} clearInputs />}
 
         {loading && <Loader.FormLoader bg />}
       </>
@@ -367,8 +332,11 @@ const mapDispatchToProps = dispatch => ({
     signup: userData => dispatch(actions.signup(userData)),
     login: userData => dispatch(actions.login(userData)),
     forgotPassword: userData => dispatch(actions.forgotPassword(userData)),
-    logout: token => dispatch(actions.logout(token)),
   },
 });
+
+
+AuthFormHolder.propTypes = propTypes;
+
 
 export default connect(null, mapDispatchToProps)(AuthFormHolder);

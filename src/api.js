@@ -53,7 +53,19 @@ const api = {
     findUsers: (token, email) => {
       setAuthHeaders(token);
       return axios.get(`http://192.168.0.11:3111/board/find_users/${email}`);
-    }
+    },
+    getMembers: (token, id) => {
+      setAuthHeaders(token);
+      return axios.get(`http://192.168.0.11:3111/board/${id}/get_members`);
+    },
+    addMember: (token, id, data) => {
+      setAuthHeaders(token);
+      return axios.post(`http://192.168.0.11:3111/board/${id}/add_member`, data);
+    },
+    removeMember: (token, id, data) => {
+      setAuthHeaders(token);
+      return axios.post(`http://192.168.0.11:3111/board/${id}/remove_member`, data);
+    },
   },
 };
 

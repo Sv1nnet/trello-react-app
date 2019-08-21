@@ -1,6 +1,16 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
+import PropTypes from 'prop-types';
+
+
+const propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+};
+
 
 // eslint-disable-next-line object-curly-newline
 const CreateBoardForm = ({ handleSubmit, handleChange, title, description }) => {
@@ -34,5 +44,9 @@ const CreateBoardForm = ({ handleSubmit, handleChange, title, description }) => 
     </form>
   );
 };
+
+
+CreateBoardForm.propTypes = propTypes;
+
 
 export default CreateBoardForm;

@@ -1,7 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import '../../styles/boardListItem.sass';
+
+
+const propTypes = {
+  id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+};
+
 
 const BoardListItem = (props) => {
   const { id, title } = props;
@@ -14,5 +22,9 @@ const BoardListItem = (props) => {
     </div>
   );
 };
+
+
+BoardListItem.propTypes = propTypes;
+
 
 export default BoardListItem;

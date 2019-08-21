@@ -1,14 +1,29 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Messages from '../utils/Messages';
 import action from '../../actions/authActions';
+
+
+const propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      confToken: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  confirmEmail: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
 
 // This component just sends confirm request so it has to have loading state initialy. We render the component when user comes from email link to confirm his email.
 class ConfirmationPage extends Component {
   constructor(props) {
     super(props);
 
-    this._mounted = false; // For preventing acyn actions if component unmounted
+    this._mounted = false; // For preventing async actions if component unmounted
   }
 
   state = {
@@ -82,5 +97,9 @@ class ConfirmationPage extends Component {
 const mapDispatchToProps = dispatch => ({
   confirmEmail: token => dispatch(action.confirmEmail(token)),
 });
+
+
+ConfirmationPage.propTypes = propTypes;
+
 
 export default connect(null, mapDispatchToProps)(ConfirmationPage);

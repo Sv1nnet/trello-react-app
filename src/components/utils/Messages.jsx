@@ -1,7 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import '../../styles/messages.sass';
 
-const MessageContaner = (props) => {
+
+const messageContainerPropTypes = {
+  styles: PropTypes.object,
+  containerBorder: PropTypes.string.isRequired,
+};
+
+const MessageContainer = (props) => {
   const { children, styles, containerBorder } = props;
   return (
     <>
@@ -15,6 +22,18 @@ const MessageContaner = (props) => {
   );
 };
 
+MessageContainer.propTypes = messageContainerPropTypes;
+
+
+const messagePropTypes = {
+  message: PropTypes.string.isRequired,
+  closeMessage: PropTypes.func,
+  styles: PropTypes.object,
+  btn: PropTypes.bool,
+  loadingTextAnimation: PropTypes.bool,
+  clearInputs: PropTypes.func,
+};
+
 const ErrorMessage = (props) => {
   const {
     message,
@@ -24,14 +43,18 @@ const ErrorMessage = (props) => {
     loadingTextAnimation,
     clearInputs,
   } = props;
+  const animationClassName = loadingTextAnimation ? 'loading-text' : '';
   return (
-    <MessageContaner style={styles} containerBorder="message-error">
+    <MessageContainer style={styles} containerBorder="message-error">
       <h4 className="bg-danger">Error</h4>
-      <h5 className={`${loadingTextAnimation && 'loading-text'} mt-4 w-100`}>{message}</h5>
+      <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
       {btn !== false && <button onClick={() => closeMessage(clearInputs)} onKeyPress={() => closeMessage(clearInputs)} type="button" className="btn btn-danger bg-danger my-3">OK</button>}
-    </MessageContaner>
+    </MessageContainer>
   );
 };
+
+ErrorMessage.propTypes = messagePropTypes;
+
 
 const InfoMessage = (props) => {
   const {
@@ -42,14 +65,18 @@ const InfoMessage = (props) => {
     loadingTextAnimation,
     clearInputs,
   } = props;
+  const animationClassName = loadingTextAnimation ? 'loading-text' : '';
   return (
-    <MessageContaner style={styles} containerBorder="message-info">
+    <MessageContainer style={styles} containerBorder="message-info">
       <h4 className="bg-primary">Info</h4>
-      <h5 className={`${loadingTextAnimation && 'loading-text'} mt-4 w-100`}>{message}</h5>
+      <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
       {btn !== false && <button onClick={() => closeMessage(clearInputs)} onKeyPress={() => closeMessage(clearInputs)} type="button" className="btn btn-primary bg-primary my-3">OK</button>}
-    </MessageContaner>
+    </MessageContainer>
   );
 };
+
+InfoMessage.propTypes = messagePropTypes;
+
 
 const SuccessMessage = (props) => {
   const {
@@ -60,13 +87,17 @@ const SuccessMessage = (props) => {
     loadingTextAnimation,
     clearInputs,
   } = props;
+  const animationClassName = loadingTextAnimation ? 'loading-text' : '';
   return (
-    <MessageContaner style={styles} containerBorder="message-success">
+    <MessageContainer style={styles} containerBorder="message-success">
       <h4 className="bg-success">Success</h4>
-      <h5 className={`${loadingTextAnimation && 'loading-text'} mt-4 w-100`}>{message}</h5>
+      <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
       {btn !== false && <button onClick={() => closeMessage(clearInputs)} onKeyPress={() => closeMessage(clearInputs)} type="button" className="btn btn-success bg-success my-3">OK</button>}
-    </MessageContaner>
+    </MessageContainer>
   );
 };
+
+SuccessMessage.propTypes = messagePropTypes;
+
 
 export default { ErrorMessage, InfoMessage, SuccessMessage };

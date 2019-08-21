@@ -1,16 +1,27 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { formActionTypes } from '../../types';
+import { formActionTypes } from '../../../types';
 
-const LoginForm = (props) => {
+
+const propTypes = {
+  userData: PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+  }).isRequired,
+  formMethods: PropTypes.shape({
+    onChange: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+  }).isRequired,
+  switchForm: PropTypes.func.isRequired,
+};
+
+
+const LoginForm = ({ formMethods, userData, switchForm }) => {
   const [mounted, setMounted] = useState(false);
 
-  const { formMethods, userData, switchForm } = props;
   const { onChange, onSubmit } = formMethods;
-  const {
-    email,
-    password,
-  } = userData;
+  const { email, password } = userData;
 
   // Fadein component
   setTimeout(() => setMounted(true), 50);
@@ -33,5 +44,9 @@ const LoginForm = (props) => {
     </form>
   );
 };
+
+
+LoginForm.propTypes = propTypes;
+
 
 export default LoginForm;

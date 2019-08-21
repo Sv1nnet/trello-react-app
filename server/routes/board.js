@@ -187,11 +187,113 @@ router.get('/find_users/:email', (req, res) => {
       .then((users) => {
         const foundUsers = users.filter(user => user.email.toLowerCase().indexOf(email.toLowerCase()) !== -1);
 
-        res.status(200).send({ users: foundUsers });
+        res.status(200).send({ users: foundUsers, message: 'Request success' });
       })
       .catch((err) => {
         console.log(err);
         res.status(500).send({ err: 'Error on the server' });
+      });
+  });
+});
+
+router.post('/:id/add_member', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const { member } = req.body;
+  const boardId = req.params.id;
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(400).send({ err: 'Invalid token' });
+    }
+
+    try {
+      const board = await Board.findById(boardId);
+
+      const isOwner = board.owner.toHexString() === decoded._id;
+      
+      if (isOwner) {
+        const user = await User.findById(member);
+
+        if (!board.members.find(boardMember => boardMember._id === member)) {
+
+          board.addMember({ _id: user._id, email: user.email, nickname: user.nickname });
+          user.addBoard({ _id: board.id, title: board.title });
+
+          const savedBoard = await board.save();
+
+          const savedUser = await user.save();
+
+          return res.status(200).send({ message: 'Member added', board: savedBoard });
+        }
+        return res.status(200).send({ message: 'Member already added', board });
+      }
+
+      res.status(400).send({ err: 'Only board owner can add members' });
+    } catch (e) {
+      res.status(400).send({ err: 'Could not add a member' });
+    }
+  });
+});
+
+router.post('/:id/remove_member', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const { member } = req.body;
+  const boardId = req.params.id;
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(400).send({ err: 'Invalid token' });
+    }
+
+    try {
+      const board = await Board.findById(boardId);
+
+      const isOwner = board.owner.toHexString() === decoded._id;
+      
+      if (isOwner) {
+        const user = await User.findById(member);
+
+        if (!board.members.find(boardMember => boardMember._id === member)) {
+
+          board.removeMember(user._id.toHexString());
+          user.removeBoard({ _id: board.id });
+
+          const savedBoard = await board.save();
+
+          const savedUser = await user.save();
+
+          return res.status(200).send({ message: 'Member removed', board: savedBoard });
+        }
+        return res.status(200).send({ message: 'Member already removed', board });
+      }
+
+      res.status(400).send({ err: 'Only board owner can remove members' });
+    } catch (e) {
+      res.status(400).send({ err: 'Could not remove a member' });
+    }
+  });
+});
+
+router.get('/:id/get_members', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const boardId = req.params.id;
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(400).send({ err: 'Invalid token' });
+    }
+
+    Board.findById(boardId)
+      .then((board) => {
+        if (board) {
+          return res.status(200).send({ members: board.members });
+        }
+
+        res.status(400).send({ err: 'Board is not found' });
+      })
+      .catch((err) => {
+        console.log('Could not find a board', err);
+        res.status(400).send({ err: 'Could not find a board' });
       });
   });
 });

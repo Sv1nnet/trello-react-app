@@ -20,6 +20,26 @@ import MembersForm from '../forms/boardForms/MembersForm';
 import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
 
+
+const propTypes = {
+  token: PropTypes.shape({
+    access: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  board: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    isReadOnly: PropTypes.bool.isRequired,
+    isPrivate: PropTypes.bool.isRequired,
+    members: PropTypes.array.isRequired,
+    columns: PropTypes.array.isRequired,
+    cards: PropTypes.array.isRequired,
+  }).isRequired,
+  getBoard: PropTypes.func.isRequired,
+  getMembers: PropTypes.func.isRequired,
+};
+
+
 class Board extends Component {
   state = {
     status: {
@@ -135,6 +155,15 @@ class Board extends Component {
     });
   }
 
+  updateMembers = () => {
+    const { getMembers, board, token } = this.props;
+
+    getMembers(token.token, board._id)
+      .catch((err) => {
+        console.log('getMembers error', err);
+      });
+  }
+
   closeMessage = () => {
     this.setState(state => ({
       ...state,
@@ -164,6 +193,8 @@ class Board extends Component {
       members,
       columns,
       cards,
+      owner,
+      _id,
     } = board;
 
     if (state.status.redirect) return <Redirect to="/board/all" />;
@@ -226,7 +257,7 @@ class Board extends Component {
 
           {state.popup.isMembersPopupActive && (
             <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
-              <MembersForm closePopup={(e) => { handlePopupBtnClick(e, 'isMembersPopupActive'); }} members={members} />
+              <MembersForm closePopup={(e) => { handlePopupBtnClick(e, 'isMembersPopupActive'); }} updateMembers={this.updateMembers} members={members} boardId={_id} owner={owner} />
             </PopupContainer>
           )}
 
@@ -253,22 +284,6 @@ class Board extends Component {
   }
 }
 
-Board.propTypes = {
-  token: PropTypes.shape({
-    access: PropTypes.string.isRequired,
-    token: PropTypes.string.isRequired,
-  }).isRequired,
-  board: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    isReadOnly: PropTypes.bool.isRequired,
-    isPrivate: PropTypes.bool.isRequired,
-    members: PropTypes.array.isRequired,
-    columns: PropTypes.array.isRequired,
-    cards: PropTypes.array.isRequired,
-  }).isRequired,
-  getBoard: PropTypes.func.isRequired,
-};
-
 const mapStateToProps = state => ({
   token: state.user.token,
   board: state.board,
@@ -276,6 +291,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getBoard: (token, id) => dispatch(boardActions.getBoard(token, id)),
+  getMembers: (token, id) => dispatch(boardActions.getMembers(token, id)),
 });
+
+
+Board.propTypes = propTypes;
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(Board);

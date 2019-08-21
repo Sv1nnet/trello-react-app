@@ -21,7 +21,7 @@
  *   statusText: 'OK' for example,
  * }
  */
-import { userActionTypes, boardActionTypes } from '../types';
+import { userActionTypes } from '../types';
 
 const user = localStorage.getItem('user');
 const initialState = user ? JSON.parse(user) : {
@@ -32,7 +32,9 @@ const initialState = user ? JSON.parse(user) : {
 const userReducer = (state = initialState, action) => {
   let data;
   let newState;
+
   console.log(action);
+
   switch (action.type) {
     case userActionTypes.SIGNEDUP:
       return {
@@ -45,6 +47,23 @@ const userReducer = (state = initialState, action) => {
         userData: {
           ...state.userData,
           boards: data.boards,
+        },
+      };
+    case userActionTypes.BOARD_TITLE_UPDATED:
+      data = { ...action.data.data };
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          boards: state.userData.boards.map((board) => {
+            if (board._id === data._id) {
+              return {
+                ...board,
+                title: data.title,
+              };
+            }
+            return board;
+          }),
         },
       };
     case userActionTypes.BOARD_ADDED:
@@ -72,14 +91,14 @@ const userReducer = (state = initialState, action) => {
         token: data.token,
       };
       localStorage.setItem('user', JSON.stringify(newState));
-      console.log('new state', newState);
 
       return {
         ...newState,
       };
     case userActionTypes.LOGGEDOUT:
       return {
-        ...initialState,
+        userData: {},
+        token: {},
       };
 
     case userActionTypes.VERIFY_TOKEN_FAILED:

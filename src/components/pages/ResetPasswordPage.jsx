@@ -1,9 +1,25 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import '../../styles/resetPasswordPage.sass';
 import Loader from '../utils/Loader';
 import actions from '../../actions/authActions';
 import Messages from '../utils/Messages';
+import ResetPasswordForm from '../forms/authForms/ResetPasswordForm';
+
+
+const propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      resetToken: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  resetPassword: PropTypes.func.isRequired,
+};
+
 
 class ResetPasswordPage extends Component {
   state = {
@@ -49,69 +65,48 @@ class ResetPasswordPage extends Component {
         status: {
           ...prevState.status,
           err: {
-            statusCode: undefined,
             message,
+            statusCode: undefined,
           },
         },
       }));
       return;
     }
 
-    props.resetPassword({ ...state.userData, token }).then((response) => {
-      if (response) {
-        if (response.status === 200) {
-          const responseMessage = response.data.message;
-
-          this.setState(prevState => ({
-            ...prevState,
-            userData: {
-              password: '',
-              confirmPassword: '',
+    props.resetPassword({ ...state.userData, token })
+      .then((res) => {
+        this.setState(prevState => ({
+          ...prevState,
+          userData: {
+            password: '',
+            confirmPassword: '',
+          },
+          status: {
+            loading: false,
+            err: {
+              message: '',
+              statusCode: undefined,
             },
-            status: {
-              loading: false,
-              err: {
-                message: '',
-                statusCode: undefined,
-              },
-              success: {
-                statusCode: 200,
-                message: responseMessage,
-              },
+            success: {
+              statusCode: res.status,
+              message: res.data.message,
             },
-          }));
-        } else {
-          const { err } = response.data;
-
-          this.setState(prevState => ({
-            ...prevState,
-            status: {
-              loading: false,
-              err: {
-                message: err,
-                statusCode: response.data.status,
-              },
-              success: {
-                statusCode: undefined,
-                message: '',
-              },
-            },
-          }));
-        }
-      } else { // Set error if no response from server
+          },
+        }));
+      })
+      .catch((err) => {
         this.setState(prevState => ({
           ...prevState,
           status: {
             ...prevState.status,
             loading: false,
             err: {
-              statusCode: 503,
-              message: 'No connection with the server',
+              statusCode: err.status,
+              message: err.message,
             },
           },
         }));
-      }
-    });
+      });
 
     this.setState(prevState => ({
       ...prevState,
@@ -127,7 +122,7 @@ class ResetPasswordPage extends Component {
       return 'Password is too short';
     }
     if (password !== confirmPassword) {
-      return 'Password and confirmed password are different';
+      return 'Confirmed password doesn\'t match to password';
     }
 
     return '';
@@ -172,20 +167,7 @@ class ResetPasswordPage extends Component {
         <div className="row justify-content-center align-items-center h-100">
           <div className="col-xs-12 col-sm-12 col-md-6 col-l-4 col-xl-4 px-0 text-center">
             <h2 className="bg-primary mb-0 py-1">Reset password</h2>
-            <form action="" onSubmit={onSubmit} className="reset-password px-15">
-
-              <label htmlFor="password" className="d-block w-100">
-                <input onChange={onChange} type="password" name="password" id="password" className="w-100 px-2" value={state.userData.password} required />
-                <span className="form-label-text">Password</span>
-              </label>
-
-              <label htmlFor="confirmPassword" className="d-block w-100">
-                <input onChange={onChange} type="password" name="confirmPassword" id="confirmPassword" className="w-100 px-2" value={state.userData.confirmPassword} required />
-                <span className="form-label-text">Confirm password</span>
-              </label>
-
-              <button type="submit" className="btn btn-primary btn-block my-4">Reset password</button>
-            </form>
+            <ResetPasswordForm formMethods={{ onChange, onSubmit }} userData={state.userData} />
             {state.status.loading && <Loader.FormLoader bgStyles={{ top: '0px' }} />}
             {state.status.err.message && <Messages.ErrorMessage message={state.status.err.message} closeMessage={closeMessage} />}
             {state.status.success.message && <Messages.SuccessMessage message={state.status.success.message} closeMessage={closeMessage} />}
@@ -199,5 +181,9 @@ class ResetPasswordPage extends Component {
 const mapDispatchToProps = dispatch => ({
   resetPassword: userData => dispatch(actions.resetPassword(userData)),
 });
+
+
+ResetPasswordPage.propTypes = propTypes;
+
 
 export default connect(null, mapDispatchToProps)(ResetPasswordPage);

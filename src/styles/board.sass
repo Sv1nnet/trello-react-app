@@ -127,33 +127,43 @@ input[type="radio"]:checked
     border: none
     overflow: hidden
     background-color: $popup-background-light
-    // background: grey
-.user-logo-container
-  .user-logo
-    width: 40px
-    line-height: 40px
-    display: inline-block
-    box-shadow: 0 0 2px grey
-.credentials-container
-  line-height: 1.1
-  overflow: hidden
-  flex: 1 0 200px
-  margin-left: 10px
-  span
-    width: 100%
-    display: inline-block
-    overflow: hidden
-  .credentials-email
-    font-size: 1em
-    word-wrap: break-word
-  .credentials-nickname
-    font-size: 1.1em
-    font-weight: bold
-.member-controls
-  text-align: right
-  .member-control-btn
-    display: inline-block
-    height: 40px
-    width: 40px
-    svg
-      transform: scale(1.5)
+    .user-logo-container
+      position: relative
+      .owner-icon-container
+        position: absolute
+        top: -12px
+        width: 45px
+        text-align: center
+        path
+          fill: $owner-crown-color
+      .user-logo
+        width: 45px
+        line-height: 45px
+        font-size: 1.2em
+        display: inline-block
+        box-shadow: 0 0 2px grey
+    .credentials-container
+      line-height: 1.1
+      overflow: hidden
+      flex: 1 0 200px
+      margin-left: 10px
+      span
+        width: 100%
+        display: inline-block
+        overflow: hidden
+        line-height: 1.35em
+      .credentials-email
+        font-size: 1em
+        word-wrap: break-word
+      .credentials-nickname
+        font-size: 1.1em
+        font-weight: bold
+    .member-controls
+      text-align: right
+      margin-right: 3px
+      .member-control-btn
+        display: inline-block
+        height: 40px
+        width: 40px
+        svg
+          transform: scale(1.5)

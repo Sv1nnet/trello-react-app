@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import hasParent from '../../utlis/hasParent';
@@ -11,6 +12,15 @@ import '../../styles/popupContainer.sass';
  * props.extraClasses - array of extra classes for main component container
  * props.popupToClose - name of state field that presents popup activator
  */
+
+
+const propTypes = {
+  classesToNotClosePopup: PropTypes.arrayOf(PropTypes.string),
+  extraClasses: PropTypes.arrayOf(PropTypes.string),
+  popupToClose: PropTypes.string,
+  closeBtn: PropTypes.bool,
+};
+
 
 class PopupContainer extends Component {
   constructor(props) {
@@ -89,5 +99,9 @@ class PopupContainer extends Component {
     );
   }
 }
+
+
+PopupContainer.propTypes = propTypes;
+
 
 export default PopupContainer;

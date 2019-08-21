@@ -9,6 +9,6 @@ const CardFace = ({ cardTitle }) => {
       </div>
     </div>
   );
-}
+};
 
 export default CardFace;

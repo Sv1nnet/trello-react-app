@@ -61,7 +61,7 @@ BoardSchema.methods.addMember = function addMember(memberId) {
 
 BoardSchema.methods.removeMember = function removeMember(memberId) {
   const board = this;
-  board.members = board.members.filter(member => member === memberId);
+  board.members = board.members.filter(member => member._id.toHexString() !== memberId);
 };
 
 BoardSchema.methods.setName = function setName(name) {

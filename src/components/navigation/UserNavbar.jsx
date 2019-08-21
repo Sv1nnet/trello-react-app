@@ -14,6 +14,27 @@ import CreateBoard from '../boards/CreateBoard';
 import authActions from '../../actions/authActions';
 import boardActions from '../../actions/boardActions';
 
+
+const propTypes = {
+  user: PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    nickname: PropTypes.string.isRequired,
+    boards: PropTypes.arrayOf(
+      PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+      }).isRequired,
+    ).isRequired,
+  }).isRequired,
+  token: PropTypes.shape({
+    access: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  logout: PropTypes.func.isRequired,
+  loadAllBoards: PropTypes.func.isRequired,
+};
+
+
 class UserNavbar extends Component {
   constructor(props) {
     super(props);
@@ -287,25 +308,6 @@ class UserNavbar extends Component {
   }
 }
 
-UserNavbar.propTypes = {
-  user: PropTypes.shape({
-    email: PropTypes.string.isRequired,
-    nickname: PropTypes.string.isRequired,
-    boards: PropTypes.arrayOf(
-      PropTypes.shape({
-        _id: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-      }).isRequired,
-    ).isRequired,
-  }).isRequired,
-  token: PropTypes.shape({
-    access: PropTypes.string.isRequired,
-    token: PropTypes.string.isRequired,
-  }).isRequired,
-  logout: PropTypes.func.isRequired,
-  loadAllBoards: PropTypes.func.isRequired,
-};
-
 const mapStateToProps = state => ({
   user: state.user.userData,
   token: state.user.token,
@@ -315,5 +317,9 @@ const mapDispatchToProps = dispatch => ({
   logout: token => dispatch(authActions.logout(token)),
   loadAllBoards: token => dispatch(boardActions.loadAllBoards(token)),
 });
+
+
+UserNavbar.propTypes = propTypes;
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserNavbar);

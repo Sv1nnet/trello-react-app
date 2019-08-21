@@ -1,5 +1,23 @@
 import React, { useState } from 'react';
-import { formActionTypes } from '../../types';
+import PropTypes from 'prop-types';
+import { formActionTypes } from '../../../types';
+
+
+const propTypes = {
+  userData: PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    nickname: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    confirmPassword: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+  }).isRequired,
+  formMethods: PropTypes.shape({
+    onChange: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
 
 const SignupForm = (props) => {
   const [mounted, setMounted] = useState(false);
@@ -54,5 +72,9 @@ const SignupForm = (props) => {
     </form>
   );
 };
+
+
+SignupForm.propTypes = propTypes;
+
 
 export default SignupForm;

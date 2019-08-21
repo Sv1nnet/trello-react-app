@@ -4,6 +4,20 @@ import '../../styles/searchInput.sass';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 
+
+const propTypes = {
+  hideSearchBtn: PropTypes.bool,
+  hideCrossBtn: PropTypes.bool,
+  textColor: PropTypes.string,
+  inputValue: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
+  id: PropTypes.string,
+  name: PropTypes.string,
+  classList: PropTypes.string,
+};
+
+
 class TextInput extends Component {
   constructor(props) {
     super(props);
@@ -108,16 +122,8 @@ class TextInput extends Component {
   }
 }
 
-TextInput.propTypes = {
-  hideSearchBtn: PropTypes.bool,
-  hideCrossBtn: PropTypes.bool,
-  textColor: PropTypes.string,
-  inputValue: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
-  id: PropTypes.string,
-  name: PropTypes.string,
-  classList: PropTypes.string,
-};
+
+TextInput.propTypes = propTypes;
+
 
 export default TextInput;

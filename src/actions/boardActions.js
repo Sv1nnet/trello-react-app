@@ -79,7 +79,9 @@ const updateBoard = (token, id, data) => (dispatch, getState) => {
 };
 
 const findUsers = (token, email) => (dispatch, getState) => {
-  return api.board.findUsers(token, email)
+  const encodedEmail = window.encodeURIComponent(email);
+
+  return api.board.findUsers(token, encodedEmail)
     .then((res) => {
       return dispatch({ type: boardActionTypes.BOARD_USERS_FOUND, data: res }).data;
     })
@@ -93,10 +95,66 @@ const findUsers = (token, email) => (dispatch, getState) => {
     });
 };
 
+const getMembers = (token, id) => (dispatch, getState) => {
+  return api.board.getMembers(token, id)
+    .then((res) => {
+      return dispatch({ type: boardActionTypes.BOARD_MEMBERS_RECEIVED, data: res }).data;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: boardActionTypes.BOARD_MEMBERS_RECEIVE_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
+
+const addMember = (token, id, userId) => (dispatch, getState) => {
+  const data = {
+    member: userId,
+  };
+
+  return api.board.addMember(token, id, data)
+    .then((res) => {
+      return dispatch({ type: boardActionTypes.BOARD_MEMBER_ADDED, data: res }).data;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: boardActionTypes.BOARD_MEMBER_ADD_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
+
+const removeMember = (token, id, userId) => (dispatch, getState) => {
+  const data = {
+    member: userId,
+  };
+
+  return api.board.removeMember(token, id, data)
+    .then((res) => {
+      return dispatch({ type: boardActionTypes.BOARD_MEMBER_REMOVED, data: res }).data;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: boardActionTypes.BOARD_MEMBER_REMOVE_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
+
 export default {
   createBoard,
   loadAllBoards,
   getBoard,
   updateBoard,
+  getMembers,
   findUsers,
+  addMember,
+  removeMember,
 };

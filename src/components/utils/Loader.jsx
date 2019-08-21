@@ -1,5 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import '../../styles/loaders.sass';
+
+
+const propTypes = {
+  bg: PropTypes.bool,
+  bgStyles: PropTypes.object,
+  bgClasses: PropTypes.arrayOf(PropTypes.string),
+};
+
 
 const Loader = (props) => {
   const { bg, bgStyles, bgClasses } = props;
@@ -29,5 +38,9 @@ const PageLoader = (props) => {
     <Loader bgClasses={['page-loader-bg']} bg={!!bg} bgStules={bgStyles} />
   );
 };
+
+
+Loader.propTypes = propTypes;
+
 
 export default { FormLoader, PageLoader };

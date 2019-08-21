@@ -1,5 +1,7 @@
+/* eslint-disable arrow-body-style */
 import { userActionTypes } from '../types';
 import api from '../api';
+import createErrorResponseObject from '../utlis/createErrorResponseObject';
 
 const {
   LOGGEDIN,
@@ -26,8 +28,17 @@ const resetPassword = ({ token, password }) => (dispatch, getState) => {
   };
 
   return api.auth.resetPassword(token, data)
-    .then(res => dispatch({ type: RESET_PASSWORD, data: res }).data)
-    .catch(err => dispatch({ type: RESET_PASSWORD_FAILED, data: err.response }).data);
+    .then((res) => {
+      return dispatch({ type: RESET_PASSWORD, data: res }).data;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: RESET_PASSWORD_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
 };
 
 const forgotPassword = ({ email }) => (dispatch, getState) => {
@@ -38,8 +49,17 @@ const forgotPassword = ({ email }) => (dispatch, getState) => {
   };
 
   return api.auth.forgotPassword(data)
-    .then(res => dispatch({ type: FORGOT_PASSWORD, data: res }).data)
-    .catch(err => dispatch({ type: FORGOT_PASSWORD_FAILED, data: err.response }).data);
+    .then((res) => {
+      return dispatch({ type: FORGOT_PASSWORD, data: res }).data;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: FORGOT_PASSWORD_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
 };
 
 const login = ({ email, password }) => (dispatch, getState) => {
@@ -51,21 +71,30 @@ const login = ({ email, password }) => (dispatch, getState) => {
   };
 
   return api.auth.login(data)
-    .then(res => dispatch({ type: LOGGEDIN, data: res }).data)
+    .then((res) => {
+      return dispatch({ type: LOGGEDIN, data: res }).data;
+    })
     .catch((err) => {
-      console.log('error', err.response);
-      return dispatch({ type: LOGGING_FAILED, data: err.response }).data;
+      return Promise.reject(
+        dispatch({
+          type: LOGGING_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
     });
 };
 
 const verifyToken = token => (dispatch, getState) => api.auth.verifyToken(token)
   .then((res) => {
-    console.log('verifying');
     return dispatch({ type: TOKEN_VERIFIED, data: res }).data;
   })
   .catch((err) => {
-    console.log('error', err.response);
-    return dispatch({ type: VERIFY_TOKEN_FAILED, data: err.response }).data;
+    return Promise.reject(
+      dispatch({
+        type: VERIFY_TOKEN_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    );
   });
 
 const logout = token => (dispatch, getState) => api.auth.logout(token)
@@ -73,7 +102,12 @@ const logout = token => (dispatch, getState) => api.auth.logout(token)
     dispatch({ type: LOGGEDOUT, data: res });
   })
   .catch((err) => {
-    dispatch({ type: LOGGEDOUT_FAILED, data: err });
+    return Promise.reject(
+      dispatch({
+        type: LOGGEDOUT_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    );
   });
 
 // eslint-disable-next-line object-curly-newline
@@ -89,21 +123,30 @@ const signup = ({ email, password, nickname, firstName, lastName }) => (dispatch
   };
 
   return api.auth.signup(data)
-    .then(res => dispatch({ type: SIGNEDUP, data: res }).data)
+    .then((res) => {
+      return dispatch({ type: SIGNEDUP, data: res }).data;
+    })
     .catch((err) => {
-      console.log('error', err.response);
-      return dispatch({ type: SIGNINGUP_FAILED, data: err.response }).data;
+      return Promise.reject(
+        dispatch({
+          type: SIGNINGUP_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
     });
 };
 
 const confirmEmail = token => (dispatch, getState) => api.auth.confirmEmail(token)
   .then((res) => {
-    console.log('res of confirm email', res);
     return dispatch({ type: EMAIL_CONFIRMED, data: res }).data;
   })
   .catch((err) => {
-    console.log('error of confirm email', err.response);
-    return dispatch({ type: EMAIL_CONFIRMATION_FAILED, data: err.response }).data;
+    return Promise.reject(
+      dispatch({
+        type: EMAIL_CONFIRMATION_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    );
   });
 
 export default {

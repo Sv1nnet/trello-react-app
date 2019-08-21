@@ -145,12 +145,12 @@ const initialState = {
 //   owner: '',
 //   history: [],
 //   description: '',
-//   isPrivate: undefined,
+//   isPrivate: true,
 //   marks: [],
 //   chat: '',
 //   cards: [],
 //   members: [],
-//   isReadOnly: undefined,
+//   isReadOnly: true,
 //   columns: [],
 // };
 
@@ -172,6 +172,7 @@ const boardReducer = (state = initialState, action) => {
         isReadOnly: data.isReadOnly,
         columns: data.columns,
       };
+    case boardActionTypes.BOARD_UPDATED:
     case boardActionTypes.BOARD_DOWNLOADED:
       data = { ...action.data.data };
       return {
@@ -187,6 +188,43 @@ const boardReducer = (state = initialState, action) => {
         isReadOnly: data.isReadOnly,
         columns: data.columns,
       };
+    case boardActionTypes.BOARD_MEMBER_ADDED:
+      data = { ...action.data.data };
+      return {
+        _id: data.board._id,
+        owner: data.board.owner,
+        title: data.board.title,
+        history: [],
+        description: '',
+        isPrivate: data.board.isPrivate,
+        marks: data.board.marks,
+        cards: data.board.cards,
+        members: data.board.members,
+        isReadOnly: data.board.isReadOnly,
+        columns: data.board.columns,
+      };
+    case boardActionTypes.BOARD_MEMBER_REMOVED:
+      data = { ...action.data.data };
+      return {
+        _id: data.board._id,
+        owner: data.board.owner,
+        title: data.board.title,
+        history: [],
+        description: '',
+        isPrivate: data.board.isPrivate,
+        marks: data.board.marks,
+        cards: data.board.cards,
+        members: data.board.members,
+        isReadOnly: data.board.isReadOnly,
+        columns: data.board.columns,
+      };
+    case boardActionTypes.BOARD_MEMBERS_RECEIVED:
+      data = { ...action.data.data };
+      return {
+        ...state,
+        members: data.members,
+      };
+    case boardActionTypes.BOARD_UPDATE_FAILED:
     default:
       return { ...state };
   }

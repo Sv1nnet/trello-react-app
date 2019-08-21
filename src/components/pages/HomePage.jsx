@@ -1,6 +1,23 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import '../../styles/homePage.sass';
 import AuthNav from '../navigation/AuthNav';
+
+
+const propTypes = {
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      confToken: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+};
+
 
 const HomePage = (props) => {
   const { location, history, match } = props;
@@ -23,5 +40,9 @@ const HomePage = (props) => {
     </div>
   );
 };
+
+
+HomePage.propTypes = propTypes;
+
 
 export default HomePage;

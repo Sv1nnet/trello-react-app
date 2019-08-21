@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
-import SignupForm from '../forms/SignupForm';
-import LoginForm from '../forms/LoginForm';
-import ResetPasswordForm from '../forms/ForgotPasswordForm';
+import PropTypes from 'prop-types';
+import SignupForm from '../forms/authForms/SignupForm';
+import LoginForm from '../forms/authForms/LoginForm';
+import ResetPasswordForm from '../forms/authForms/ForgotPasswordForm';
 import AuthFormHolder from '../pages/AuthFormHolder';
+
+
+const propTypes = {
+  routeInfo: PropTypes.shape({
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
+  }).isRequired,
+};
+
 
 class AuthNav extends Component {
   state = {
@@ -93,5 +104,9 @@ class AuthNav extends Component {
     );
   }
 }
+
+
+AuthNav.propTypes = propTypes;
+
 
 export default AuthNav;
