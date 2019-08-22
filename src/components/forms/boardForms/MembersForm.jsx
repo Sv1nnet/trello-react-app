@@ -11,8 +11,9 @@ import UserList from '../../lists/UserListItem';
 
 
 const propTypes = {
+  userId: PropTypes.string.isRequired,
   boardId: PropTypes.string.isRequired,
-  owner: PropTypes.string.isRequired,
+  ownerId: PropTypes.string.isRequired,
   members: PropTypes.arrayOf(PropTypes.shape({
     _id: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
@@ -248,7 +249,7 @@ class MembersForm extends Component {
   }
 
   render() {
-    const { boardId, owner } = this.props;
+    const { boardId, ownerId, userId } = this.props;
     const { members, inputValue, status } = this.state;
     // IF we have success request object then show user list from it.
     // Otherwise show user list from prop - list of board members
@@ -282,6 +283,8 @@ class MembersForm extends Component {
               // If users came from search request we need check if they are board members
               // by searching current board id in their boards
               const isMember = user.boards ? !!user.boards.find(board => board._id === boardId) : true;
+              const isOwner = ownerId === user._id;
+              const disabled = userId !== ownerId && userId !== user._id;
 
               return (
                 <UserList
@@ -292,7 +295,8 @@ class MembersForm extends Component {
                   email={user.email}
                   nickname={user.nickname}
                   isMember={isMember}
-                  isOwner={owner === user._id}
+                  isOwner={isOwner}
+                  disabled={disabled}
                 />
               );
             })
@@ -312,6 +316,7 @@ class MembersForm extends Component {
 }
 
 const mapStateToProps = state => ({
+  userId: state.user.userData._id,
   token: state.user.token,
 });
 

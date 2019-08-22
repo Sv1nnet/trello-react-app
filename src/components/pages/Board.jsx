@@ -256,7 +256,7 @@ class Board extends Component {
 
           {state.popup.isMembersPopupActive && (
             <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
-              <MembersForm closePopup={(e) => { handlePopupBtnClick(e, 'isMembersPopupActive'); }} updateMembers={this.updateMembers} members={members} boardId={_id} owner={owner} />
+              <MembersForm closePopup={(e) => { handlePopupBtnClick(e, 'isMembersPopupActive'); }} updateMembers={this.updateMembers} members={members} boardId={_id} ownerId={owner} />
             </PopupContainer>
           )}
 

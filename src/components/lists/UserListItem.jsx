@@ -15,7 +15,7 @@ const propTypes = {
 };
 
 
-const UserListItem = ({ userId, email, nickname, isMember, isOwner, addMember, removeMember }) => {
+const UserListItem = ({ userId, email, nickname, isMember, isOwner, disabled, addMember, removeMember }) => {
   const [state, setState] = useState({
     loading: false,
     isMember,
@@ -50,14 +50,20 @@ const UserListItem = ({ userId, email, nickname, isMember, isOwner, addMember, r
       );
     }
 
+    const isDisabled = {};
+
+    if (!isOwner && disabled) {
+      isDisabled.disabled = disabled;
+    }
+
     return state.isMember // If user is a board member then show remove-button otherwise show add-button
       ? ( // Remove member button
-        <button onClick={() => sendRequest(removeMember)} type="button" className="member-control-btn btn btn-sm btn-danger">
+        <button onClick={() => sendRequest(removeMember)} type="button" className="member-control-btn btn btn-sm btn-danger" {...isDisabled}>
           <FontAwesomeIcon className="w-100" icon={faTimes} />
         </button>
       )
       : ( // Add member button
-        <button onClick={() => sendRequest(addMember)} type="button" className="member-control-btn btn btn-sm btn-success">
+        <button onClick={() => sendRequest(addMember)} type="button" className="member-control-btn btn btn-sm btn-success" {...isDisabled}>
           <FontAwesomeIcon className="w-100" icon={faPlus} />
         </button>
       );
