@@ -56,7 +56,7 @@ const UserListItem = ({ userId, email, nickname, isMember, isOwner, disabled, ad
       isDisabled.disabled = disabled;
     }
 
-    return state.isMember // If user is a board member then show remove-button otherwise show add-button
+    return state.isMember// If user is a board member then show remove-button otherwise show add-button
       ? ( // Remove member button
         <button onClick={() => sendRequest(removeMember)} type="button" className="member-control-btn btn btn-sm btn-danger" {...isDisabled}>
           <FontAwesomeIcon className="w-100" icon={faTimes} />

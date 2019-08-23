@@ -11,22 +11,22 @@ import UserList from '../../lists/UserListItem';
 
 
 const propTypes = {
-  userId: PropTypes.string.isRequired,
-  boardId: PropTypes.string.isRequired,
-  ownerId: PropTypes.string.isRequired,
-  members: PropTypes.arrayOf(PropTypes.shape({
+  userId: PropTypes.string.isRequired, // current user id
+  boardId: PropTypes.string.isRequired, // current board id
+  ownerId: PropTypes.string.isRequired, // board owener id
+  members: PropTypes.arrayOf(PropTypes.shape({ // members that we get from redux-store
     _id: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
     nickname: PropTypes.string.isRequired,
   })).isRequired,
-  token: PropTypes.shape({
-    access: PropTypes.string.isRequired,
-    token: PropTypes.string.isRequired,
+  token: PropTypes.shape({ // token object
+    access: PropTypes.string.isRequired, // token access
+    token: PropTypes.string.isRequired, // token
   }).isRequired,
-  findUsers: PropTypes.func.isRequired,
-  addMember: PropTypes.func.isRequired,
-  removeMember: PropTypes.func.isRequired,
-  updateMembers: PropTypes.func.isRequired,
+  findUsers: PropTypes.func.isRequired, // find users by email
+  addMember: PropTypes.func.isRequired, // add user to board members
+  removeMember: PropTypes.func.isRequired, // remove user from board members
+  updateMembers: PropTypes.func.isRequired, // get board members from server and set them to redux-store
 };
 
 
@@ -57,7 +57,14 @@ class MembersForm extends Component {
     const { updateMembers } = this.props;
 
     // Get board members once component was mounted (members form was opened)
-    updateMembers();
+    updateMembers().then(() => {
+      const { members } = this.props;
+
+      this.setState(state => ({
+        ...state,
+        members,
+      }));
+    });
   }
 
   /*
@@ -73,7 +80,7 @@ class MembersForm extends Component {
       ...state,
       inputValue: target.value,
     }),
-    () => { this.findUsers(); });
+      () => { this.findUsers(); });
   }
 
   handleSubmit = (e) => {
@@ -106,9 +113,12 @@ class MembersForm extends Component {
 
   // Remove member from this board
   handleRemoveMember = (member) => {
-    const { removeMember, token, boardId } = this.props;
+    const { removeMember, token, boardId, updateMembers } = this.props;
 
     return removeMember(token.token, boardId, member)
+      .then(() => {
+        updateMembers();
+      })
       .catch((err) => {
         this.setState(state => ({
           ...state,
@@ -154,7 +164,28 @@ class MembersForm extends Component {
       },
     }));
 
-    updateMembers();
+    updateMembers().then(() => {
+      const { props } = this;
+      const updatedMmbers = props.members;
+
+      this.setState(state => ({
+        ...state,
+        inputValue: '',
+        members: updatedMmbers,
+        status: {
+          loading: false,
+          success: {
+            message: '',
+            data: undefined,
+            statusCode: undefined,
+          },
+          err: {
+            message: '',
+            statusCode: undefined,
+          },
+        },
+      }));
+    });
   }
 
   /*
@@ -164,39 +195,18 @@ class MembersForm extends Component {
    */
   findUsers = () => {
     const { inputValue } = this.state;
-    const { findUsers, token, updateMembers, members } = this.props;
+    const { findUsers, token } = this.props;
 
     if (inputValue && inputValue !== '.') {
       const timeout = setTimeout(() => {
         findUsers(token.token, inputValue)
           .then((data) => {
             // Set results
-            this.setState(state => ({
-              ...state,
-              status: {
-                ...state.status,
-                loading: false,
-                success: {
-                  message: data.data.message,
-                  data: data.data.users,
-                  statusCode: 200,
-                },
-              },
-            }));
+            this.handleResult(data);
           })
           .catch((err) => {
             // Set error
-            this.setState(state => ({
-              ...state,
-              status: {
-                ...state.status,
-                loading: false,
-                err: {
-                  message: err.message,
-                  statusCode: err.status,
-                },
-              },
-            }));
+            this.handleError(err);
           });
 
         // Show loader
@@ -217,20 +227,7 @@ class MembersForm extends Component {
       }));
     } else {
       // If user deletes all input then clear success status in order to only show members
-      this.setState(state => ({
-        ...state,
-        members,
-        status: {
-          ...state.status,
-          success: {
-            message: '',
-            data: undefined,
-            statusCode: undefined,
-          },
-        },
-      }));
-
-      updateMembers();
+      this.clearInput();
     }
   }
 
@@ -243,6 +240,35 @@ class MembersForm extends Component {
         err: {
           message: '',
           statusCode: undefined,
+        },
+      },
+    }));
+  }
+
+  handleError = (err) => {
+    this.setState(state => ({
+      ...state,
+      status: {
+        ...state.status,
+        loading: false,
+        err: {
+          message: err.message,
+          statusCode: err.status,
+        },
+      },
+    }));
+  }
+
+  handleResult = (data) => {
+    this.setState(state => ({
+      ...state,
+      status: {
+        ...state.status,
+        loading: false,
+        success: {
+          message: data.data.message,
+          data: data.data.users,
+          statusCode: 200,
         },
       },
     }));
@@ -279,12 +305,30 @@ class MembersForm extends Component {
 
           {users.length > 0
             ? users.map((user) => {
-              // Users that came from props doesn't have boards prop.
+              // Users that came from props (board members) don't have boards prop.
               // If users came from search request we need check if they are board members
               // by searching current board id in their boards
               const isMember = user.boards ? !!user.boards.find(board => board._id === boardId) : true;
               const isOwner = ownerId === user._id;
-              const disabled = userId !== ownerId && userId !== user._id;
+
+              // We want to let user remove himself from board member and add back if he removed accidentally
+              // So we need to find out if he is board member (isBoardMember), if current user in users array is the user logged in (isUserCurrentUser)
+              // and if logged in user is the board owner (isUserOwner).
+              // If logged in user is the board owner then user in list have to be enabled to click.
+              // But if user in list is the board owner then he can't be removed from the board, so he have to be disebled to click.
+              // Otherwise if current user in users array is not a logged in user or if he is not a board member and is logged in user then
+              // we have to not let add or remove current user in array.
+              const isBoardMember = !!members.find(member => member._id === user._id);
+              const isUserCurrentUser = userId === user._id;
+              const isUserOwner = userId === ownerId;
+
+              let disabled = false;
+
+              if (user.boards) {
+                disabled = isUserOwner ? isOwner : (!isUserCurrentUser || (!isBoardMember && isUserCurrentUser));
+              } else {
+                disabled = (userId !== ownerId && userId !== user._id);
+              }
 
               return (
                 <UserList

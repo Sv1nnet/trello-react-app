@@ -113,9 +113,6 @@ router.post('/:id', (req, res) => {
 router.post('/', (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
 
-  console.log('post on /board/');
-  console.log('req.body', req.body);
-
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       res.status(400).send({ err: 'Invalid token' });
@@ -211,10 +208,10 @@ router.post('/:id/add_member', (req, res) => {
 
       const isOwner = board.owner.toHexString() === decoded._id;
       
-      if (isOwner) {
+      if (isOwner || decoded._id === member) {
         const user = await User.findById(member);
 
-        if (!board.members.find(boardMember => boardMember._id === member)) {
+        if (!board.members.find(boardMember => boardMember._id.toHexString() === member)) {
 
           board.addMember({ _id: user._id, email: user.email, nickname: user.nickname });
           user.addBoard({ _id: board.id, title: board.title });
@@ -250,7 +247,7 @@ router.post('/:id/remove_member', (req, res) => {
 
       const isOwner = board.owner.toHexString() === decoded._id;
       
-      if (isOwner) {
+      if (isOwner || decoded._id === member) {
         const user = await User.findById(member);
 
         if (!board.members.find(boardMember => boardMember._id === member)) {

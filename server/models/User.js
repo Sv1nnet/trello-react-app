@@ -143,7 +143,6 @@ UserSchema.methods.generateResetPasswordToken = function generateResetPasswordTo
   } else {
     // If reset password token exists then detele the one and push a new one
     user.tokens = user.tokens.filter(token => token.access === 'reset');
-    console.log();
     user.tokens.push(resetPasswordToken);
   }
 };
@@ -210,7 +209,6 @@ UserSchema.methods.removeBoard = function removeBoard(board) {
   const user = this;
   user.boards = user.boards.filter(userBoard => userBoard._id.toHexString() !== board._id);
 
-  console.log('Boards after removed', user.boards);
   return user.boards;
 };
 

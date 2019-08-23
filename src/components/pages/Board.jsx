@@ -157,7 +157,8 @@ class Board extends Component {
   updateMembers = () => {
     const { getMembers, board, token } = this.props;
 
-    getMembers(token.token, board._id)
+    return getMembers(token.token, board._id)
+      .then(() => console.log('members updated'))
       .catch((err) => {
         console.log('getMembers error', err);
       });
