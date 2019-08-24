@@ -254,8 +254,36 @@ function boardRequests() {
                 .end((err) => {
                   if (err) return done(err);
 
-                  done(err);
+                  done();
                 });
+            });
+        });
+    });
+  });
+
+  describe('GET /board/find_users/:email', function () {
+    this.timeout(10000);
+
+
+    it('Should return list of users matched to email', (done) => {
+      const email = encodeURIComponent('svi_1');
+
+      User.findById(users[0]._id)
+        .then((user) => {
+          const token = user.tokens.find(userToken => userToken.access === 'auth');
+
+          request(app)
+            .get(`/board/find_users/${email}`)
+            .set('Authorization', `Bearer ${token.token}`)
+            .expect(200)
+            .expect((res) => {
+              expect(res.body.users.length).to.equal(1);
+              expect(res.body.users.every(user => user.email.indexOf(email) !== -1)).to.equal(true);
+            })
+            .end((err) => {
+              if (err) return done(err);
+
+              done();
             });
         });
     });
