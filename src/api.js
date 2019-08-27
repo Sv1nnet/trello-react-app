@@ -1,70 +1,83 @@
 import axios from 'axios';
 import setAuthHeaders from './utlis/setAuthHeaders';
 
+const ip = 'http://192.168.0.16:3111';
 const api = {
   auth: {
     signup: (data) => {
       setAuthHeaders();
-      return axios.post('http://192.168.0.11:3111/user/signup', data);
+      return axios.post(`${ip}/user/signup`, data);
     },
     login: (data) => {
       setAuthHeaders();
-      return axios.post('http://192.168.0.11:3111/user/login', data);
+      return axios.post(`${ip}/user/login`, data);
     },
     logout: (token) => {
       setAuthHeaders(token);
-      return axios.post('http://192.168.0.11:3111/user/logout');
+      return axios.post(`${ip}/user/logout`);
     },
     forgotPassword: (data) => {
       setAuthHeaders();
-      return axios.post('http://192.168.0.11:3111/user/forgot_password', data);
+      return axios.post(`${ip}/user/forgot_password`, data);
     },
     resetPassword: (token, data) => {
       setAuthHeaders(token);
-      return axios.post('http://192.168.0.11:3111/user/reset_password', data);
+      return axios.post(`${ip}/user/reset_password`, data);
     },
     confirmEmail: (token) => {
       setAuthHeaders(token);
-      return axios.post('http://192.168.0.11:3111/user/confirmation');
+      return axios.post(`${ip}/user/confirmation`);
     },
     verifyToken: (token) => {
       setAuthHeaders(token);
-      return axios.post('http://192.168.0.11:3111/user/verify_user');
+      return axios.post(`${ip}/user/verify_user`);
     },
   },
   board: {
     loadAllBoards: (token) => {
       setAuthHeaders(token);
-      return axios.get('http://192.168.0.11:3111/board/all');
+      return axios.get(`${ip}/board/all`);
     },
     createBoard: (token, data) => {
       setAuthHeaders(token);
-      console.log('data in api', data);
-      return axios.post('http://192.168.0.11:3111/board', data);
+      return axios.post(`${ip}/board`, data);
     },
-    getBoard: (token, id) => {
+    getBoard: (token, boardId) => {
       setAuthHeaders(token);
-      return axios.get(`http://192.168.0.11:3111/board/${id}`);
+      return axios.get(`${ip}/board/${boardId}`);
     },
-    updateBoard: (token, id, data) => {
+    updateBoard: (token, boardId, data) => {
       setAuthHeaders(token);
-      return axios.post(`http://192.168.0.11:3111/board/${id}`, data);
+      return axios.post(`${ip}/board/${boardId}`, data);
     },
     findUsers: (token, email) => {
       setAuthHeaders(token);
-      return axios.get(`http://192.168.0.11:3111/board/find_users/${email}`);
+      return axios.get(`${ip}/board/find_users/${email}`);
     },
-    getMembers: (token, id) => {
+    getMembers: (token, boardId) => {
       setAuthHeaders(token);
-      return axios.get(`http://192.168.0.11:3111/board/${id}/get_members`);
+      return axios.get(`${ip}/board/${boardId}/get_members`);
     },
-    addMember: (token, id, data) => {
+    addMember: (token, boardId, data) => {
       setAuthHeaders(token);
-      return axios.post(`http://192.168.0.11:3111/board/${id}/add_member`, data);
+      return axios.post(`${ip}/board/${boardId}/add_member`, data);
     },
-    removeMember: (token, id, data) => {
+    removeMember: (token, boardId, data) => {
       setAuthHeaders(token);
-      return axios.post(`http://192.168.0.11:3111/board/${id}/remove_member`, data);
+      return axios.post(`${ip}/board/${boardId}/remove_member`, data);
+    },
+    createColumn: (token, boardId, data) => {
+      setAuthHeaders(token);
+      return axios.post(`${ip}/board/${boardId}/create_column`, data);
+    },
+    updateColumn: (token, boardId, data) => {
+
+    },
+    deleteColumn: (token, boardId, data) => {
+
+    },
+    createCard: (token, boardId, columnId, data) => {
+
     },
   },
 };

@@ -6,8 +6,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/board.sass';
 import Loader from '../utils/Loader';
 import PopupContainer from '../utils/PopupContainer';
@@ -18,6 +16,7 @@ import PublicAccessBoardForm from '../forms/boardForms/PublicAccessBoardForm';
 import MembersForm from '../forms/boardForms/MembersForm';
 import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
+import ColumnList from '../lists/ColumnList';
 
 
 const propTypes = {
@@ -40,6 +39,12 @@ const propTypes = {
 
 
 class Board extends Component {
+  constructor(props) {
+    super(props);
+
+    this.addColumnContainer = React.createRef();
+  }
+
   state = {
     status: {
       loading: false,
@@ -85,20 +90,7 @@ class Board extends Component {
       .catch((err) => {
         console.log('error in board', err);
 
-        this.setState(state => ({
-          ...state,
-          status: {
-            loading: false,
-            success: {
-              message: '',
-              statusCode: undefined,
-            },
-            err: {
-              message: err.message,
-              statusCode: err.status,
-            },
-          },
-        }));
+        this.handleError(err);
       });
   }
 
@@ -116,20 +108,7 @@ class Board extends Component {
         .catch((err) => {
           console.log('error in board', err);
 
-          this.setState(prevState => ({
-            ...prevState,
-            status: {
-              loading: false,
-              success: {
-                message: '',
-                statusCode: undefined,
-              },
-              err: {
-                message: err.message,
-                statusCode: err.status,
-              },
-            },
-          }));
+          this.handleError(err);
         });
     }
   }
@@ -161,19 +140,37 @@ class Board extends Component {
       .then(() => console.log('members updated'))
       .catch((err) => {
         console.log('getMembers error', err);
+        this.handleError(err);
       });
   }
 
   closeMessage = () => {
-    this.setState(state => ({
-      ...state,
+    this.setState(prevState => ({
+      ...prevState,
       status: {
-        ...state.status,
+        ...prevState.status,
         err: {
           message: '',
           statusCode: undefined,
         },
         redirect: true,
+      },
+    }));
+  }
+
+  handleError = (err) => {
+    this.setState(prevState => ({
+      ...prevState,
+      status: {
+        loading: false,
+        success: {
+          message: '',
+          statusCode: undefined,
+        },
+        err: {
+          message: err.message,
+          statusCode: err.status,
+        },
       },
     }));
   }
@@ -185,7 +182,6 @@ class Board extends Component {
       handlePopupBtnClick,
       closeMessage,
     } = this;
-    const { board } = props;
     const {
       title,
       isReadOnly,
@@ -195,7 +191,7 @@ class Board extends Component {
       cards,
       owner,
       _id,
-    } = board;
+    } = props.board;
 
     if (state.status.redirect) return <Redirect to="/board/all" />;
     if (state.status.loading) return <Loader.PageLoader bg />;
@@ -213,73 +209,66 @@ class Board extends Component {
     });
 
     return (
-      <div className="board-container position-relative">
-        <div className="board-controls-container d-flex flex-wrap align-items-center">
+      <>
+        <div className="board-container position-relative">
+          <div className="board-controls-container d-flex flex-wrap align-items-center">
 
-          <div className="board-control-item board-control-item-title">
-            <button onClick={handlePopupBtnClick} data-popup-type="isRenamePopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-title ${state.popup.isRenamePopupActive ? 'active' : ''}`}>{title}</button>
-          </div>
+            <div className="board-control-item board-control-item-title">
+              <button onClick={handlePopupBtnClick} data-popup-type="isRenamePopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-title ${state.popup.isRenamePopupActive ? 'active' : ''}`}>{title}</button>
+            </div>
 
-          <div className="d-flex flex-wrap align-items-center board-control-item board-control-item-title board-control-access-item">
-            <span className="board-control-item-divider" />
-            <button onClick={handlePopupBtnClick} data-popup-type="isReadonlyPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isReadonlyPopupActive ? 'active' : ''}`}>{isReadOnly ? 'Readonly' : 'Editable'}</button>
-            <span className="board-control-item-divider" />
-            <button onClick={handlePopupBtnClick} data-popup-type="isPrivatePopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access  ${state.popup.isPrivatePopupActive ? 'active' : ''}`}>{isPrivate ? 'Private' : 'Public'}</button>
-            <span className="board-control-item-divider" />
-          </div>
+            <div className="d-flex flex-wrap align-items-center board-control-item board-control-item-title board-control-access-item">
+              <span className="board-control-item-divider" />
+              <button onClick={handlePopupBtnClick} data-popup-type="isReadonlyPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isReadonlyPopupActive ? 'active' : ''}`}>{isReadOnly ? 'Readonly' : 'Editable'}</button>
+              <span className="board-control-item-divider" />
+              <button onClick={handlePopupBtnClick} data-popup-type="isPrivatePopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access  ${state.popup.isPrivatePopupActive ? 'active' : ''}`}>{isPrivate ? 'Private' : 'Public'}</button>
+              <span className="board-control-item-divider" />
+            </div>
 
-          <div className="d-flex flex-wrap align-items-center board-control-item board-control-item-title">
-            <button onClick={handlePopupBtnClick} data-popup-type="isMembersPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isMembersPopupActive ? 'active' : ''}`}>Members</button>
-          </div>
+            <div className="d-flex flex-wrap align-items-center board-control-item board-control-item-title">
+              <button onClick={handlePopupBtnClick} data-popup-type="isMembersPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isMembersPopupActive ? 'active' : ''}`}>Members</button>
+            </div>
 
-          <div className="d-flex flex-wrap align-items-center ml-auto board-control-item board-control-item-title">
-            <button onClick={handlePopupBtnClick} data-popup-type="isMenuPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isMenuPopupActive ? 'active' : ''}`}>Menu</button>
-          </div>
+            <div className="d-flex flex-wrap align-items-center ml-auto board-control-item board-control-item-title">
+              <button onClick={handlePopupBtnClick} data-popup-type="isMenuPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isMenuPopupActive ? 'active' : ''}`}>Menu</button>
+            </div>
 
 
-          {state.popup.isRenamePopupActive && (
-            <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown']}>
-              <RenameBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isRenamePopupActive'); }} boardTitle={title} />
-            </PopupContainer>
-          )}
+            {state.popup.isRenamePopupActive && (
+              <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown']}>
+                <RenameBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isRenamePopupActive'); }} boardTitle={title} />
+              </PopupContainer>
+            )}
 
-          {state.popup.isReadonlyPopupActive && (
-            <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-readonly']}>
-              <ReadonlyAccessBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isReadonlyPopupActive'); }} isReadOnly={isReadOnly} />
-            </PopupContainer>
-          )}
+            {state.popup.isReadonlyPopupActive && (
+              <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-readonly']}>
+                <ReadonlyAccessBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isReadonlyPopupActive'); }} isReadOnly={isReadOnly} />
+              </PopupContainer>
+            )}
 
-          {state.popup.isPrivatePopupActive && (
-            <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-private']}>
-              <PublicAccessBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isPrivatePopupActive'); }} isPrivate={isPrivate} />
-            </PopupContainer>
-          )}
+            {state.popup.isPrivatePopupActive && (
+              <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-private']}>
+                <PublicAccessBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isPrivatePopupActive'); }} isPrivate={isPrivate} />
+              </PopupContainer>
+            )}
 
-          {state.popup.isMembersPopupActive && (
-            <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
-              <MembersForm closePopup={(e) => { handlePopupBtnClick(e, 'isMembersPopupActive'); }} updateMembers={this.updateMembers} members={members} boardId={_id} ownerId={owner} />
-            </PopupContainer>
-          )}
+            {state.popup.isMembersPopupActive && (
+              <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
+                <MembersForm closePopup={(e) => { handlePopupBtnClick(e, 'isMembersPopupActive'); }} updateMembers={this.updateMembers} members={members} boardId={_id} ownerId={owner} />
+              </PopupContainer>
+            )}
 
-          {/* {state.isMenuPopupActive && (
+            {/* {state.isMenuPopupActive && (
             <PopupContainer removeElement={handlePopupBtnClick} closeBtn classesToNotClosePopup={['members-board-input']} extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
               <MembersForm members={members} />
             </PopupContainer>
           )} */}
-        </div>
-
-        <div className="board-lists-container d-flex align-items-start">
-          {lists}
-
-          <div className="add-new-column-button-container">
-            <a href="/" className="btn btn-sm btn-block">
-              <span>
-                <FontAwesomeIcon className="add-icon" icon={faPlus} /> Add another list
-              </span>
-            </a>
           </div>
+
+          <ColumnList lists={lists} />
         </div>
-      </div>
+        {state.status.err.message && <Messages.ErrorMessage message={state.status.err.message} closeMessage={closeMessage} />}
+      </>
     );
   }
 }
@@ -290,8 +279,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBoard: (token, id) => dispatch(boardActions.getBoard(token, id)),
-  getMembers: (token, id) => dispatch(boardActions.getMembers(token, id)),
+  getBoard: (token, boardId) => dispatch(boardActions.getBoard(token, boardId)),
+  getMembers: (token, userId) => dispatch(boardActions.getMembers(token, userId)),
 });
 
 

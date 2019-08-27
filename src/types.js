@@ -36,6 +36,11 @@ export const boardActionTypes = {
   BOARD_MEMBER_REMOVE_FAILED: 'BOARD_MEMBER_REMOVE_FAILED',
 };
 
+export const columnActionTypes = {
+  COLUMN_CREATED: 'COLUMN_CREATED',
+  COLUMN_CREATE_FAILED: 'COLUMN_CREATE_FAILED',
+};
+
 export const formActionTypes = {
   LOGIN: 'LOGIN',
   SIGNUP: 'SIGNUP',

@@ -1,4 +1,4 @@
-import { boardActionTypes } from '../types';
+import { boardActionTypes, columnActionTypes } from '../types';
 
 
 const initialState = {
@@ -101,6 +101,12 @@ const boardReducer = (state = initialState, action) => {
       return {
         ...state,
         members: data.members,
+      };
+    case columnActionTypes.COLUMN_CREATED:
+      data = { ...action.data.data };
+      return {
+        ...state,
+        columns: [...state.columns, data.column],
       };
     case boardActionTypes.BOARD_UPDATE_FAILED:
     default:

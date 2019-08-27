@@ -8,7 +8,7 @@ const { ObjectID } = require('mongodb');
 const { app } = require('../../index');
 const { Board } = require('../../models/Board');
 const { User } = require('../../models/User');
-const { users, populateUsers } = require('../../test/userSeed');
+const { users, populateUsers, initNewUser } = require('../../test/userSeed');
 const { boards, populateBoards } = require('../../test/boardSeed');
 
 function boardRequests() {
@@ -261,7 +261,7 @@ function boardRequests() {
     });
   });
 
-  describe('GET /board/find_users/:email', function () {
+  describe('GET /board/find_users/:email', function() {
     this.timeout(10000);
 
 
@@ -279,6 +279,61 @@ function boardRequests() {
             .expect((res) => {
               expect(res.body.users.length).to.equal(1);
               expect(res.body.users.every(user => user.email.indexOf(email) !== -1)).to.equal(true);
+            })
+            .end((err) => {
+              if (err) return done(err);
+
+              done();
+            });
+        });
+    });
+
+    it('Should return 400 if token invalid', (done) => {
+      const email = encodeURIComponent('svi_1');
+
+      User.findById(users[0]._id)
+        .then((user) => {
+          const token = user.tokens.find(userToken => userToken.access === 'auth');
+
+          request(app)
+            .get(`/board/find_users/${email}`)
+            .set('Authorization', `Bearer ${token.token}a`)
+            .send()
+            .expect(400)
+            .expect((res) => {
+              expect(res.body.err).to.equal('Invalid token');
+            })
+            .end((err) => {
+              if (err) return done(err);
+
+              done();
+            });
+        });
+    });
+  });
+
+  describe('POST /board/:id/add_member', function() {
+    this.timeout(10000);
+
+    it('Should return 200 and saved board if user added', (done) => {
+      const newMember = users[1];
+
+      User.findById(users[0]._id)
+        .then((user) => {
+          const token = user.tokens.find(userToken => userToken.access === 'auth');
+
+          request(app)
+            .post(`/board/${user.boards[1]._id}/add_member`)
+            .set('Authorization', `Bearer ${token.token}`)
+            .send({ member: newMember._id })
+            .expect(200)
+            .expect((res) => {
+              Board.findById(user.boards[1]._id)
+                .then((board) => {
+                  expect(board.members.length).to.equal(2);
+                  expect(board.members[1]._id.toHexString()).to.equal(newMember._id.toHexString());
+                })
+                .catch(err => console.log(err));
             })
             .end((err) => {
               if (err) return done(err);

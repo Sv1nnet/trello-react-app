@@ -1,4 +1,4 @@
-import { boardActionTypes, userActionTypes } from '../types';
+import { boardActionTypes, userActionTypes, columnActionTypes } from '../types';
 import api from '../api';
 import createErrorResponseObject from '../utlis/createErrorResponseObject';
 
@@ -147,6 +147,25 @@ const removeMember = (token, id, userId) => (dispatch, getState) => {
     });
 };
 
+const createColumn = (token, boardId, column) => (dispatch, getState) => {
+  const columnData = {
+    column,
+  };
+
+  return api.board.createColumn(token, boardId, columnData)
+    .then((res) => {
+      return dispatch({ type: columnActionTypes.COLUMN_CREATED, data: res }).data;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: columnActionTypes.COLUMN_CREATE_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+}
+
 export default {
   createBoard,
   loadAllBoards,
@@ -156,4 +175,5 @@ export default {
   findUsers,
   addMember,
   removeMember,
+  createColumn,
 };

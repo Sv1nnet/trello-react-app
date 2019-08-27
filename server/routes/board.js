@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongoose');
 const _ = require('lodash');
 const { Board } = require('../models/Board');
+const { Column } = require('../models/Column');
 const { User } = require('../models/User');
 const { parseError } = require('../utils/parseError');
 
@@ -182,7 +183,9 @@ router.get('/find_users/:email', (req, res) => {
 
     User.find({})
       .then((users) => {
-        const foundUsers = users.filter(user => user.email.toLowerCase().indexOf(email.toLowerCase()) !== -1);
+        const foundUsers = users
+          .filter(user => user.email.toLowerCase().indexOf(email.toLowerCase()) !== -1)
+          .map(user => _.pick(user, ['_id', 'boards', 'email', 'nickname']));
 
         res.status(200).send({ users: foundUsers, message: 'Request success' });
       })
@@ -205,9 +208,8 @@ router.post('/:id/add_member', (req, res) => {
 
     try {
       const board = await Board.findById(boardId);
-
       const isOwner = board.owner.toHexString() === decoded._id;
-      
+
       if (isOwner || decoded._id === member) {
         const user = await User.findById(member);
 
@@ -246,7 +248,7 @@ router.post('/:id/remove_member', (req, res) => {
       const board = await Board.findById(boardId);
 
       const isOwner = board.owner.toHexString() === decoded._id;
-      
+
       if (isOwner || decoded._id === member) {
         const user = await User.findById(member);
 
@@ -292,6 +294,49 @@ router.get('/:id/get_members', (req, res) => {
         console.log('Could not find a board', err);
         res.status(400).send({ err: 'Could not find a board' });
       });
+  });
+});
+
+router.post('/:id/create_column', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const boardId = req.params.id;
+  const { column } = req.body;
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(400).send({ err: 'Invalid token' });
+    }
+
+    try {
+      const board = await Board.findById(boardId)
+        .catch((err) => {
+          console.log('Could not find a board', err);
+          return Promise.reject(new Error('Could not create a column'));
+        });
+
+      const isOwner = decoded._id === board.owner.toHexString();
+      const isMember = isOwner || board.members.find(member => member._id.toHexString() === decoded._id);
+
+      if (isOwner || (isMember && !board.isReadOnly)) {
+        const newColumn = await new Column({ ...column }).save().catch((err) => {
+          console.log('Could not save column', err);
+          return Promise.reject(new Error('Could not create a new column'));
+        });
+        board.addColumn(newColumn);
+
+        await board.save().catch((err) => {
+          console.log('Could not save board with a new column', err);
+          return Promise.reject(new Error('Could not save the board with a new column'));
+        });
+
+        return res.status(200).send({ column: _.pick(newColumn, ['_id', 'title', 'position']) });
+      }
+
+      res.status(400).send({ err: 'Only board owner can add new columns' });
+    } catch (e) {
+      console.log('Send error response', e);
+      res.status(400).send({ err: e.message });
+    }
   });
 });
 

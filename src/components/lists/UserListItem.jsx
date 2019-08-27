@@ -21,6 +21,13 @@ const UserListItem = ({ userId, email, nickname, isMember, isOwner, disabled, ad
     isMember,
   });
 
+  let title;
+  if (!isOwner) {
+    title = isMember ? 'Remove this member' : 'Add member';
+  } else {
+    title = 'The board owner can not be removed';
+  }
+
   const sendRequest = (request) => {
     request(userId)
       .then(() => setState({ ...state, loading: false, isMember: !state.isMember }))
@@ -44,7 +51,7 @@ const UserListItem = ({ userId, email, nickname, isMember, isOwner, disabled, ad
     // If uesr owner then we can't remove him from baord member so we need disable button
     if (isOwner) {
       return (
-        <button type="button" className="member-control-btn btn btn-sm btn-danger owner" disabled>
+        <button type="button" className="member-control-btn btn btn-sm btn-danger owner" title={title} disabled>
           <FontAwesomeIcon className="w-100" icon={faTimes} />
         </button>
       );
@@ -58,12 +65,12 @@ const UserListItem = ({ userId, email, nickname, isMember, isOwner, disabled, ad
 
     return state.isMember// If user is a board member then show remove-button otherwise show add-button
       ? ( // Remove member button
-        <button onClick={() => sendRequest(removeMember)} type="button" className="member-control-btn btn btn-sm btn-danger" {...isDisabled}>
+        <button onClick={() => sendRequest(removeMember)} type="button" className="member-control-btn btn btn-sm btn-danger" title={title} {...isDisabled}>
           <FontAwesomeIcon className="w-100" icon={faTimes} />
         </button>
       )
       : ( // Add member button
-        <button onClick={() => sendRequest(addMember)} type="button" className="member-control-btn btn btn-sm btn-success" {...isDisabled}>
+        <button onClick={() => sendRequest(addMember)} type="button" className="member-control-btn btn btn-sm btn-success" title={title} {...isDisabled}>
           <FontAwesomeIcon className="w-100" icon={faPlus} />
         </button>
       );

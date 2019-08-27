@@ -76,9 +76,9 @@ BoardSchema.methods.updateBoard = function updateBoard(updateData) {
   }
 };
 
-BoardSchema.methods.addColumn = function addColumn(columnId) {
+BoardSchema.methods.addColumn = function addColumn(column) {
   const board = this;
-  board.columns.push(columnId);
+  board.columns.push(column);
 };
 
 BoardSchema.methods.removeColumn = function removeColumn(columnId) {

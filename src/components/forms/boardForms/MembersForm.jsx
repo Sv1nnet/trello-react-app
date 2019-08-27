@@ -20,7 +20,7 @@ const propTypes = {
     nickname: PropTypes.string.isRequired,
   })).isRequired,
   token: PropTypes.shape({ // token object
-    access: PropTypes.string.isRequired, // token access
+    access: PropTypes.string.isRequired, // token access type
     token: PropTypes.string.isRequired, // token
   }).isRequired,
   findUsers: PropTypes.func.isRequired, // find users by email
@@ -80,7 +80,7 @@ class MembersForm extends Component {
       ...state,
       inputValue: target.value,
     }),
-      () => { this.findUsers(); });
+    () => { this.findUsers(); });
   }
 
   handleSubmit = (e) => {
@@ -314,14 +314,14 @@ class MembersForm extends Component {
               // We want to let user remove himself from board member and add back if he removed accidentally
               // So we need to find out if he is board member (isBoardMember), if current user in users array is the user logged in (isUserCurrentUser)
               // and if logged in user is the board owner (isUserOwner).
-              // If logged in user is the board owner then user in list have to be enabled to click.
-              // But if user in list is the board owner then he can't be removed from the board, so he have to be disebled to click.
-              // Otherwise if current user in users array is not a logged in user or if he is not a board member and is logged in user then
-              // we have to not let add or remove current user in array.
               const isBoardMember = !!members.find(member => member._id === user._id);
               const isUserCurrentUser = userId === user._id;
               const isUserOwner = userId === ownerId;
 
+              // If logged in user is the board owner then user in list have to be enabled to click.
+              // But if user in list is the board owner then he can't be removed from the board, so he have to be disebled to click.
+              // Otherwise if current user in users array is not a logged in user or if he is not a board member and is logged in user then
+              // we have to not let add or remove current user in array.
               let disabled = false;
 
               if (user.boards) {
