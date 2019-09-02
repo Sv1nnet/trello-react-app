@@ -81,9 +81,15 @@ BoardSchema.methods.addColumn = function addColumn(column) {
   board.columns.push(column);
 };
 
-BoardSchema.methods.removeColumn = function removeColumn(columnId) {
+BoardSchema.methods.updateColumn = async function addColumn(columnId, dataToUpdate) {
   const board = this;
-  board.columns = board.columns.filter(column => column === columnId);
+  const columnToUpdate = board.columns.find(column => column._id.toHexString() === columnId);
+  columnToUpdate.update(dataToUpdate);
+};
+
+BoardSchema.methods.deleteColumn = function deleteColumn(columnId) {
+  const board = this;
+  board.columns = board.columns.filter(column => column._id.toHexString() !== columnId);
 };
 
 const Board = mongoose.model('boards', BoardSchema);

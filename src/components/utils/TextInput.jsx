@@ -15,6 +15,20 @@ const propTypes = {
   id: PropTypes.string,
   name: PropTypes.string,
   classList: PropTypes.string,
+  focusAfterCleared: PropTypes.bool,
+  focusAfterActivated: PropTypes.bool,
+};
+
+const defaultProps = {
+  hideSearchBtn: false,
+  hideCrossBtn: false,
+  textColor: '',
+  placeholder: '',
+  id: '',
+  name: '',
+  classList: '',
+  focusAfterCleared: false,
+  focusAfterActivated: false,
 };
 
 
@@ -30,6 +44,7 @@ class TextInput extends Component {
   componentDidMount() {
     const { props } = this;
 
+    if (props.focusAfterActivated) this.inputElement.current.focus();
     if (props.selectOnMounted) this.inputElement.current.select();
   }
 
@@ -66,7 +81,7 @@ class TextInput extends Component {
     const { props } = this;
 
     if (props.onCrossBtnClick) props.onCrossBtnClick(e);
-    if (props.focuseAfterCleared) this.inputElement.current.focus();
+    if (props.focusAfterCleared) this.inputElement.current.focus();
   }
 
   render() {
@@ -123,6 +138,7 @@ class TextInput extends Component {
 }
 
 
+TextInput.defaultProps = defaultProps;
 TextInput.propTypes = propTypes;
 
 

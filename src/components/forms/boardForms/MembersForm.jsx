@@ -296,7 +296,7 @@ class MembersForm extends Component {
             name="titlename"
             id="titlename"
             placeholder="Find user by email"
-            focuseAfterCleared
+            focusAfterCleared
             selectOnMounted
           />
         </div>

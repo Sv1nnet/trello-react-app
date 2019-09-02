@@ -50,6 +50,8 @@ const boardReducer = (state = initialState, action) => {
         isReadOnly: data.isReadOnly,
         columns: data.columns,
       };
+    case columnActionTypes.COLUMN_DELETED:
+    case columnActionTypes.COLUMN_UPDATED:
     case boardActionTypes.BOARD_UPDATED:
     case boardActionTypes.BOARD_DOWNLOADED:
       data = { ...action.data.data };

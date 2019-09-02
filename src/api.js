@@ -70,11 +70,13 @@ const api = {
       setAuthHeaders(token);
       return axios.post(`${ip}/board/${boardId}/create_column`, data);
     },
-    updateColumn: (token, boardId, data) => {
-
+    updateColumn: (token, boardId, columnId, data) => {
+      setAuthHeaders(token);
+      return axios.post(`${ip}/board/${boardId}/update_column/${columnId}`, data);
     },
-    deleteColumn: (token, boardId, data) => {
-
+    deleteColumn: (token, boardId, columnId) => {
+      setAuthHeaders(token);
+      return axios.post(`${ip}/board/${boardId}/delete_column/${columnId}`);
     },
     createCard: (token, boardId, columnId, data) => {
 

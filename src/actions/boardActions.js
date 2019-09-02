@@ -164,7 +164,43 @@ const createColumn = (token, boardId, column) => (dispatch, getState) => {
         }).data,
       );
     });
-}
+};
+
+const deleteColumn = (token, boardId, columnId) => (dispatch, getState) => {
+  return api.board.deleteColumn(token, boardId, columnId)
+    .then((res) => {
+      return dispatch({ type: columnActionTypes.COLUMN_DELETED, data: res }).data;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: columnActionTypes.COLUMN_DELETE_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
+
+const updateColumn = (token, boardId, columnId, dataToUpdate) => (dispatch, getState) => {
+  const data = {
+    dataToUpdate,
+  };
+
+  if (dataToUpdate.title === '') return Promise.reject(new Error('Title can not be blank'));
+
+  return api.board.updateColumn(token, boardId, columnId, data)
+    .then((res) => {
+      return dispatch({ type: columnActionTypes.COLUMN_UPDATED, data: res }).data;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: columnActionTypes.COLUMN_UPDATE_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
 
 export default {
   createBoard,
@@ -176,4 +212,6 @@ export default {
   addMember,
   removeMember,
   createColumn,
+  deleteColumn,
+  updateColumn,
 };

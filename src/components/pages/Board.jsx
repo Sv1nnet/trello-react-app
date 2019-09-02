@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import '../../styles/board.sass';
 import Loader from '../utils/Loader';
 import PopupContainer from '../utils/PopupContainer';
-import CardsList from '../lists/CardsList';
 import RenameBoardForm from '../forms/boardForms/RenameBoardForm';
 import ReadonlyAccessBoardForm from '../forms/boardForms/ReadonlyAccessBoardForm';
 import PublicAccessBoardForm from '../forms/boardForms/PublicAccessBoardForm';
@@ -197,16 +196,16 @@ class Board extends Component {
     if (state.status.loading) return <Loader.PageLoader bg />;
     if (state.status.err.message) return <Messages.ErrorMessage message={state.status.err.message} closeMessage={closeMessage} />;
 
-    const sortedColumns = columns.sort((columnOne, columnTwo) => {
-      if (columnOne.position < columnTwo.position) return -1;
-      if (columnOne.position > columnTwo.position) return 1;
-      return 0;
-    });
+    // const sortedColumns = columns.sort((columnOne, columnTwo) => {
+    //   if (columnOne.position < columnTwo.position) return -1;
+    //   if (columnOne.position > columnTwo.position) return 1;
+    //   return 0;
+    // });
 
-    const lists = sortedColumns.map((column) => {
-      const thisColumnCards = cards.filter(card => card.column === column._id);
-      return <CardsList key={column._id} cards={thisColumnCards} listTitle={column.title} />;
-    });
+    // const lists = sortedColumns.map((column) => {
+    //   const thisColumnCards = cards.filter(card => card.column === column._id);
+    //   return <CardsList key={column._id} cards={thisColumnCards} listTitle={column.title} columnId={column._id} />;
+    // });
 
     return (
       <>
@@ -265,7 +264,7 @@ class Board extends Component {
           )} */}
           </div>
 
-          <ColumnList lists={lists} />
+          <ColumnList />
         </div>
         {state.status.err.message && <Messages.ErrorMessage message={state.status.err.message} closeMessage={closeMessage} />}
       </>

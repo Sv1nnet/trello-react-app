@@ -2,11 +2,13 @@ import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import TextInput from '../utils/TextInput';
 import hasParent from '../../utlis/hasParent';
 import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
+import CardsList from './CardsList';
+import '../../styles/columnList.sass';
 
 
 const propTypes = {
@@ -39,8 +41,6 @@ const ColumnList = (props) => {
     },
   });
   const addColumnContainer = useRef(null);
-
-  const { lists } = props;
 
   const handleChange = (e) => {
     const { target } = e;
@@ -112,19 +112,23 @@ const ColumnList = (props) => {
       position: board.columns.length,
     };
 
-    createColumn(token.token, board._id, column)
-      .then((res) => {
-        setState({
-          ...state,
-          addNewColumn: {
-            active: false,
-            columnTitle: '',
-          },
+    if (column.title) {
+      return createColumn(token.token, board._id, column)
+        .then((res) => {
+          setState({
+            ...state,
+            addNewColumn: {
+              active: false,
+              columnTitle: '',
+            },
+          });
+        })
+        .catch((err) => {
+          handleError(err);
         });
-      })
-      .catch((err) => {
-        handleError(err);
-      });
+    }
+
+    handleError({ message: 'Title can not be blank', status: 400 });
   };
 
   const closeMessage = () => {
@@ -136,6 +140,19 @@ const ColumnList = (props) => {
       },
     });
   };
+
+  const { board } = props;
+  const sortedColumns = board.columns.sort((columnOne, columnTwo) => {
+    if (columnOne.position < columnTwo.position) return -1;
+    if (columnOne.position > columnTwo.position) return 1;
+    return 0;
+  });
+
+  const lists = sortedColumns.map((column) => {
+    const thisColumnCards = board.cards.filter(card => card.column === column._id);
+    return <CardsList key={column._id} handleError={handleError} cards={thisColumnCards} listTitle={column.title} columnId={column._id} />;
+  });
+
 
   return (
     <>
@@ -152,14 +169,21 @@ const ColumnList = (props) => {
                   name="coulmnTitle"
                   id="column-title"
                   classList="w-100 title-input"
+                  placeholder="Column title..."
                   onChange={handleChange}
                   onCrossBtnClick={clearInput}
                   inputValue={state.addNewColumn.columnTitle}
-                  focuseAfterCleared
+                  focusAfterActivated
+                  focusAfterCleared
                   hideSearchBtn
                 />
 
-                <button onClick={addColumn} type="button">Add List</button>
+                <div className="buttons-container">
+                  <button onClick={addColumn} type="button" className="bg-success text-white add-column-btn">Add List</button>
+                  <button onClick={(e) => { closeAddColumnInput(e, true); }} type="button" className="close-input-btn">
+                    <FontAwesomeIcon className="add-icon" icon={faTimes} />
+                  </button>
+                </div>
               </div>
             )
             : (

@@ -84,7 +84,7 @@ const RenameBoardForm = ({ closePopup, boardTitle, user, board, updateBoard }) =
             id="titlename"
             placeholder="Enter new board name"
             hideSearchBtn
-            focuseAfterCleared
+            focusAfterCleared
             selectOnMounted
           />
         </div>
