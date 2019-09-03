@@ -8,6 +8,7 @@ import { faPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/cardsList.sass';
 import CardFace from '../cards/CardFace';
 import boardActions from '../../actions/boardActions';
+import isMouseMoved from '../../utlis/isMouseMoved';
 import dragElement from '../../utlis/dragElement';
 
 
@@ -61,7 +62,7 @@ const CardsList = (props) => {
 
   const mouseState = {
     mouseDown: false,
-    currentPosition: {
+    onMouseDownPosition: {
       x: undefined,
       y: undefined,
     },
@@ -77,28 +78,8 @@ const CardsList = (props) => {
     return 0;
   });
 
-  /**
-   * Detect if mouse was moved after mousedown event occured
-   * @param e {Event} ReactEvent objecr or nativeEvent object
-   * @param difference {Number} distance that mouse have to be moved to be considered as moved
-   */
-  const isMouseMoved = (e, difference = 0) => {
-    const event = e.nativeEvent || e;
-
-    const currentX = event.x;
-    const currentY = event.y;
-
-    const stateX = mouseState.currentPosition.x;
-    const stateY = mouseState.currentPosition.y;
-
-    const isXDifferent = Math.abs(stateX - currentX) > difference;
-    const isYDifferent = Math.abs(stateY - currentY) > difference;
-
-    return isXDifferent || isYDifferent;
-  };
-
   const handleMouseMove = (e) => {
-    if (!columnState.dragging && isMouseMoved(e, 5)) {
+    if (!columnState.dragging && isMouseMoved(e, mouseState.onMouseDownPosition, 5)) {
       columnState.dragging = true;
       columnDragArea.current.classList.add('dragging');
 
@@ -120,7 +101,7 @@ const CardsList = (props) => {
 
     // If user moves mouse more then 5 pixels across X or Y than drag column.
     // Otherwise focus titleInput in order to change title
-    if (!isMouseMoved(e, 5) && document.activeElement !== titleInput.current) {
+    if (!isMouseMoved(e, mouseState.onMouseDownPosition, 5) && document.activeElement !== titleInput.current) {
       e.preventDefault();
       editingTarget.current.style.display = 'none';
 
@@ -133,8 +114,8 @@ const CardsList = (props) => {
     if (e.button !== 0) return;
 
     mouseState.mouseDown = true;
-    mouseState.currentPosition.x = e.nativeEvent.x;
-    mouseState.currentPosition.y = e.nativeEvent.y;
+    mouseState.onMouseDownPosition.x = e.nativeEvent.x;
+    mouseState.onMouseDownPosition.y = e.nativeEvent.y;
 
     if (document.activeElement !== titleInput.current) {
       e.preventDefault();
