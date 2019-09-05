@@ -149,8 +149,17 @@ const ColumnList = (props) => {
   });
 
   const lists = sortedColumns.map((column) => {
-    const thisColumnCards = board.cards.filter(card => card.column === column._id);
-    return <CardsList key={column._id} handleError={handleError} cards={thisColumnCards} listTitle={column.title} columnId={column._id} />;
+    const columnCards = board.cards.filter(card => card.column === column._id);
+    return (
+      <CardsList
+        key={column._id}
+        handleError={handleError}
+        cards={columnCards}
+        listTitle={column.title}
+        columnId={column._id}
+        allColumns={lists}
+      />
+    );
   });
 
 

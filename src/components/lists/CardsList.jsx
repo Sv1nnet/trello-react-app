@@ -55,6 +55,7 @@ const CardsList = (props) => {
   const editingTarget = useRef(null);
   const columnContainer = useRef(null);
   const columnDragArea = useRef(null);
+  const boardElement = document.querySelector('.board-lists-container');
 
   const [titleState, setTitleState] = useState({
     title: listTitle,
@@ -78,15 +79,100 @@ const CardsList = (props) => {
     return 0;
   });
 
+  let scrollInterval;
+
+  // Scroll board if user drags element close to edge of board window
+  const scrollBoard = (e) => {
+    // If mouse position less then 100px from right edge of screen then scroll right
+    if ((e.x > 100 && (boardElement.offsetWidth - e.x) < 100)) {
+      // Scroll is not on the right edge of screen
+      const canScroll = boardElement.offsetWidth === (boardElement.scrollWidth - boardElement.scrollLeft);
+
+      // If there is no scroll interval and we can scroll
+      if (!scrollInterval && !canScroll) {
+        scrollInterval = setInterval(() => {
+          const isEndOfScroll = boardElement.offsetWidth === (boardElement.scrollWidth - boardElement.scrollLeft);
+
+          boardElement.scrollTo(boardElement.scrollLeft + 7, 0);
+
+          if (isEndOfScroll) clearInterval(scrollInterval);
+        }, 1000 / 60);
+      }
+    // If mouse position less then 100px from left edge of screen then scroll left
+    } else if (e.x <= 100) {
+      // Scroll is not on the left edge of screen
+      const canScroll = boardElement.scrollLeft === 0;
+
+      // If there is no scroll interval and we can scroll
+      if (!scrollInterval && !canScroll) {
+        scrollInterval = setInterval(() => {
+          const isEndOfScroll = boardElement.scrollLeft === 0;
+
+          boardElement.scrollTo(boardElement.scrollLeft - 7, 0);
+          if (isEndOfScroll) clearInterval(scrollInterval);
+        }, 1000 / 60);
+      }
+    // Otherwise clear scrollIntervar to stop scrolling
+    // and set scrollInterval undefined to let scroll handler know
+    // does he needs to set a new scroll interval or another one still exists
+    } else {
+      clearInterval(scrollInterval);
+      scrollInterval = undefined;
+    }
+  };
+
+  const handleMouseEnter = (e) => {
+    console.log('mouse enter');
+  };
+
+  // Add mouseEnter handler on all columns except column we drag
+  const addColumnsMouseEnterHandler = () => {
+    const columnList = Array.prototype.filter.call(
+      document.querySelectorAll('.column-drag-area'),
+      el => el !== columnDragArea.current,
+    );
+
+    if (columnList.length !== 0) {
+      columnList.forEach(column => column.addEventListener('mouseenter', handleMouseEnter));
+    }
+  };
+
+  // Remove mouseEnter handler on all columns except column we drag
+  const removeColumnsMouseEnterHandler = () => {
+    const columnList = Array.prototype.filter.call(
+      document.querySelectorAll('.column-drag-area'),
+      el => el !== columnDragArea.current,
+    );
+
+    if (columnList.length !== 0) {
+      columnList.forEach(column => column.removeEventListener('mouseenter', handleMouseEnter));
+    }
+
+    clearInterval(scrollInterval);
+    scrollInterval = undefined;
+  };
+
+  // If mouse moved then set column state as dragging, add drag style to dragged column and
+  // add drag event handlers
   const handleMouseMove = (e) => {
     if (!columnState.dragging && isMouseMoved(e, mouseState.onMouseDownPosition, 5)) {
       columnState.dragging = true;
       columnDragArea.current.classList.add('dragging');
 
-      dragElement(e, columnContainer.current);
+      dragElement(
+        e,
+        columnContainer.current,
+        {
+          startDragCallback: addColumnsMouseEnterHandler,
+          dragCallback: scrollBoard,
+          endDragCallback: removeColumnsMouseEnterHandler,
+        },
+      );
     }
   };
 
+  // Remove drag state, drag style and drag event handlers.
+  // Also, if mouse wasn't moved then set focus on textarea in order to change column title
   const handleMouseUp = (e) => {
     if (columnState.dragging && mouseState.mouseDown) {
       columnState.dragging = false;
@@ -100,7 +186,7 @@ const CardsList = (props) => {
     columnDragArea.current.appendChild(columnContainer.current);
 
     // If user moves mouse more then 5 pixels across X or Y than drag column.
-    // Otherwise focus titleInput in order to change title
+    // Otherwise focus titleInput in order to change title.
     if (!isMouseMoved(e, mouseState.onMouseDownPosition, 5) && document.activeElement !== titleInput.current) {
       e.preventDefault();
       editingTarget.current.style.display = 'none';
@@ -110,6 +196,8 @@ const CardsList = (props) => {
     }
   };
 
+  // If pressed mouse button is left one then set mouse click position in mouse state.
+  // If textarea is not focused then add mouseup and mousemove event handlers.
   const handleMouseDown = (e) => {
     if (e.button !== 0) return;
 
@@ -183,6 +271,7 @@ const CardsList = (props) => {
     resizeTitleTextarea();
   };
 
+  // Set title height corresponding its content once component did mount
   useEffect(() => {
     resizeTitleTextarea();
   }, []);

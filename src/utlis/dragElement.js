@@ -26,18 +26,18 @@ const dragElement = (event, element, { startDragCallback, dragCallback, endDragC
   const dragHandler = (mouseMoveEvent) => {
     setElementPosition(initialPosition, mouseMoveEvent, element);
 
-    if (dragCallback) dragCallback(event);
+    if (dragCallback) dragCallback(mouseMoveEvent);
   };
 
   // Remove all handlers
-  const mouseUpHandler = () => {
+  const mouseUpHandler = (mouseMoveEvent) => {
     window.removeEventListener('mousemove', dragHandler);
     window.removeEventListener('mouseup', mouseUpHandler);
 
     element.classList.remove('dragging');
     element.style = '';
 
-    if (endDragCallback) endDragCallback(event);
+    if (endDragCallback) endDragCallback(mouseMoveEvent);
   };
 
   element.classList.add('dragging');
