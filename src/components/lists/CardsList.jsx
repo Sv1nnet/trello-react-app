@@ -55,7 +55,7 @@ const CardsList = (props) => {
   const editingTarget = useRef(null);
   const columnContainer = useRef(null);
   const columnDragArea = useRef(null);
-  const boardElement = document.querySelector('.board-lists-container');
+  const boardColumnsContainer = document.querySelector('.board-lists-container');
 
   const [titleState, setTitleState] = useState({
     title: listTitle,
@@ -84,16 +84,16 @@ const CardsList = (props) => {
   // Scroll board if user drags element close to edge of board window
   const scrollBoard = (e) => {
     // If mouse position less then 100px from right edge of screen then scroll right
-    if ((e.x > 100 && (boardElement.offsetWidth - e.x) < 100)) {
+    if ((e.x > 100 && (boardColumnsContainer.offsetWidth - e.x) < 100)) {
       // Scroll is not on the right edge of screen
-      const canScroll = boardElement.offsetWidth === (boardElement.scrollWidth - boardElement.scrollLeft);
+      const canScroll = boardColumnsContainer.offsetWidth === (boardColumnsContainer.scrollWidth - boardColumnsContainer.scrollLeft);
 
       // If there is no scroll interval and we can scroll
       if (!scrollInterval && !canScroll) {
         scrollInterval = setInterval(() => {
-          const isEndOfScroll = boardElement.offsetWidth === (boardElement.scrollWidth - boardElement.scrollLeft);
+          const isEndOfScroll = boardColumnsContainer.offsetWidth === (boardColumnsContainer.scrollWidth - boardColumnsContainer.scrollLeft);
 
-          boardElement.scrollTo(boardElement.scrollLeft + 7, 0);
+          boardColumnsContainer.scrollTo(boardColumnsContainer.scrollLeft + 7, 0);
 
           if (isEndOfScroll) clearInterval(scrollInterval);
         }, 1000 / 60);
@@ -101,14 +101,14 @@ const CardsList = (props) => {
     // If mouse position less then 100px from left edge of screen then scroll left
     } else if (e.x <= 100) {
       // Scroll is not on the left edge of screen
-      const canScroll = boardElement.scrollLeft === 0;
+      const canScroll = boardColumnsContainer.scrollLeft === 0;
 
       // If there is no scroll interval and we can scroll
       if (!scrollInterval && !canScroll) {
         scrollInterval = setInterval(() => {
-          const isEndOfScroll = boardElement.scrollLeft === 0;
+          const isEndOfScroll = boardColumnsContainer.scrollLeft === 0;
 
-          boardElement.scrollTo(boardElement.scrollLeft - 7, 0);
+          boardColumnsContainer.scrollTo(boardColumnsContainer.scrollLeft - 7, 0);
           if (isEndOfScroll) clearInterval(scrollInterval);
         }, 1000 / 60);
       }
