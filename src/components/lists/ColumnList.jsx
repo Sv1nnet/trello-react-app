@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -40,7 +41,10 @@ const ColumnList = (props) => {
       columnTitle: '',
     },
   });
+
   const addColumnContainer = useRef(null);
+  // All column refs. We nned them to add mouse enter event handlers when user drag column
+  const [columnRefs, setColumnRefs] = useState([]);
 
   const handleChange = (e) => {
     const { target } = e;
@@ -148,7 +152,7 @@ const ColumnList = (props) => {
     return 0;
   });
 
-  const lists = sortedColumns.map((column) => {
+  const columnList = sortedColumns.map((column, i) => {
     const columnCards = board.cards.filter(card => card.column === column._id);
     return (
       <CardsList
@@ -157,17 +161,17 @@ const ColumnList = (props) => {
         cards={columnCards}
         listTitle={column.title}
         columnId={column._id}
-        allColumns={lists}
+        columnRefs={columnRefs}
+        setColumnRefs={setColumnRefs}
       />
     );
   });
-
 
   return (
     <>
       {state.err.message && <Messages.ErrorMessage message={state.err.message} closeMessage={closeMessage} />}
       <div className="board-lists-container d-flex align-items-start">
-        {lists}
+        {columnList}
 
         <div className="add-new-column-button-container" ref={addColumnContainer}>
           {state.addNewColumn.active

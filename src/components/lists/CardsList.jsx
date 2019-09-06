@@ -46,6 +46,8 @@ const CardsList = (props) => {
     columnId,
     token,
     board,
+    columnRefs,
+    setColumnRefs,
     deleteColumn,
     updateColumn,
     handleError,
@@ -83,8 +85,9 @@ const CardsList = (props) => {
 
   // Scroll board if user drags element close to edge of board window
   const scrollBoard = (e) => {
+    const distanceToScroll = 150;
     // If mouse position less then 100px from right edge of screen then scroll right
-    if ((e.x > 100 && (boardColumnsContainer.offsetWidth - e.x) < 100)) {
+    if ((e.x > distanceToScroll && (boardColumnsContainer.offsetWidth - e.x) < distanceToScroll)) {
       // Scroll is not on the right edge of screen
       const canScroll = boardColumnsContainer.offsetWidth === (boardColumnsContainer.scrollWidth - boardColumnsContainer.scrollLeft);
 
@@ -99,7 +102,7 @@ const CardsList = (props) => {
         }, 1000 / 60);
       }
     // If mouse position less then 100px from left edge of screen then scroll left
-    } else if (e.x <= 100) {
+    } else if (e.x <= distanceToScroll) {
       // Scroll is not on the left edge of screen
       const canScroll = boardColumnsContainer.scrollLeft === 0;
 
@@ -127,25 +130,19 @@ const CardsList = (props) => {
 
   // Add mouseEnter handler on all columns except column we drag
   const addColumnsMouseEnterHandler = () => {
-    const columnList = Array.prototype.filter.call(
-      document.querySelectorAll('.column-drag-area'),
-      el => el !== columnDragArea.current,
-    );
+    const columnList = columnRefs.filter(el => el.current !== columnDragArea.current);
 
     if (columnList.length !== 0) {
-      columnList.forEach(column => column.addEventListener('mouseenter', handleMouseEnter));
+      columnList.forEach(column => column.current.addEventListener('mouseenter', handleMouseEnter));
     }
   };
 
-  // Remove mouseEnter handler on all columns except column we drag
+  // Remove mouseEnter handler on all columns except column we drag(cause we don't have that handler on it)
   const removeColumnsMouseEnterHandler = () => {
-    const columnList = Array.prototype.filter.call(
-      document.querySelectorAll('.column-drag-area'),
-      el => el !== columnDragArea.current,
-    );
+    const columnList = columnRefs.filter(el => el.current !== columnDragArea.current);
 
     if (columnList.length !== 0) {
-      columnList.forEach(column => column.removeEventListener('mouseenter', handleMouseEnter));
+      columnList.forEach(column => column.current.removeEventListener('mouseenter', handleMouseEnter));
     }
 
     clearInterval(scrollInterval);
@@ -257,6 +254,10 @@ const CardsList = (props) => {
     e.preventDefault();
 
     deleteColumn(token.token, board._id, columnId)
+      .then(() => {
+        const newRefs = columnRefs.filter(ref => ref.current !== columnDragArea.current);
+        setColumnRefs([...newRefs]);
+      })
       .catch(err => handleError(err));
   };
 
@@ -271,10 +272,22 @@ const CardsList = (props) => {
     resizeTitleTextarea();
   };
 
-  // Set title height corresponding its content once component did mount
   useEffect(() => {
+    // Set title height corresponding its content once component did mount
     resizeTitleTextarea();
+
+    // Add ref to columnRefs
+    columnRefs.push(columnDragArea);
+    setColumnRefs([...columnRefs]);
   }, []);
+
+  // useEffect(() => {
+  //   const index = allColumns.findIndex(column => column._id === columnId);
+  //   allColumns[index] = {
+  //     current: columnDragArea.current,
+  //     _id: columnId,
+  //   };
+  // }, [allColumns, columnId]);
 
   return (
     <div ref={columnDragArea} className="column-drag-area drag-target">
