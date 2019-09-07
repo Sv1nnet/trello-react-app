@@ -10,6 +10,7 @@ import CardFace from '../cards/CardFace';
 import boardActions from '../../actions/boardActions';
 import isMouseMoved from '../../utlis/isMouseMoved';
 import dragElement from '../../utlis/dragElement';
+import scrollElementOnMouseMove from '../../utlis/scrollElements';
 
 
 const propTypes = {
@@ -81,47 +82,9 @@ const CardsList = (props) => {
     return 0;
   });
 
-  let scrollInterval;
-
-  // Scroll board if user drags element close to edge of board window
-  const scrollBoard = (e) => {
-    const distanceToScroll = 150;
-    // If mouse position less then 100px from right edge of screen then scroll right
-    if ((e.x > distanceToScroll && (boardColumnsContainer.offsetWidth - e.x) < distanceToScroll)) {
-      // Scroll is not on the right edge of screen
-      const canScroll = boardColumnsContainer.offsetWidth === (boardColumnsContainer.scrollWidth - boardColumnsContainer.scrollLeft);
-
-      // If there is no scroll interval and we can scroll
-      if (!scrollInterval && !canScroll) {
-        scrollInterval = setInterval(() => {
-          const isEndOfScroll = boardColumnsContainer.offsetWidth === (boardColumnsContainer.scrollWidth - boardColumnsContainer.scrollLeft);
-
-          boardColumnsContainer.scrollTo(boardColumnsContainer.scrollLeft + 7, 0);
-
-          if (isEndOfScroll) clearInterval(scrollInterval);
-        }, 1000 / 60);
-      }
-    // If mouse position less then 100px from left edge of screen then scroll left
-    } else if (e.x <= distanceToScroll) {
-      // Scroll is not on the left edge of screen
-      const canScroll = boardColumnsContainer.scrollLeft === 0;
-
-      // If there is no scroll interval and we can scroll
-      if (!scrollInterval && !canScroll) {
-        scrollInterval = setInterval(() => {
-          const isEndOfScroll = boardColumnsContainer.scrollLeft === 0;
-
-          boardColumnsContainer.scrollTo(boardColumnsContainer.scrollLeft - 7, 0);
-          if (isEndOfScroll) clearInterval(scrollInterval);
-        }, 1000 / 60);
-      }
-    // Otherwise clear scrollIntervar to stop scrolling
-    // and set scrollInterval undefined to let scroll handler know
-    // does he needs to set a new scroll interval or another one still exists
-    } else {
-      clearInterval(scrollInterval);
-      scrollInterval = undefined;
-    }
+  const scrollIntervals = {
+    scrollHorizontalInterval: undefined,
+    scrollVerticalInterval: undefined,
   };
 
   const handleMouseEnter = (e) => {
@@ -145,14 +108,27 @@ const CardsList = (props) => {
       columnList.forEach(column => column.current.removeEventListener('mouseenter', handleMouseEnter));
     }
 
-    clearInterval(scrollInterval);
-    scrollInterval = undefined;
+    clearInterval(scrollIntervals.scrollHorizontalInterval);
+    scrollIntervals.scrollHorizontalInterval = undefined;
+
+    clearInterval(scrollIntervals.scrollVerticalInterval);
+    scrollIntervals.scrollVerticalInterval = undefined;
   };
 
   // If mouse moved then set column state as dragging, add drag style to dragged column and
   // add drag event handlers
   const handleMouseMove = (e) => {
     if (!columnState.dragging && isMouseMoved(e, mouseState.onMouseDownPosition, 5)) {
+      const scrollOptions = [
+        {
+          elementToScroll: boardColumnsContainer,
+          distanceToStartScrollingX: 150,
+          scrollIntervals,
+          scrollStepX: 7,
+          scrollX: true,
+        },
+      ];
+
       columnState.dragging = true;
       columnDragArea.current.classList.add('dragging');
 
@@ -161,7 +137,8 @@ const CardsList = (props) => {
         columnContainer.current,
         {
           startDragCallback: addColumnsMouseEnterHandler,
-          dragCallback: scrollBoard,
+          // dragCallback: scrollBoard,
+          dragCallback: scrollElementOnMouseMove(scrollOptions),
           endDragCallback: removeColumnsMouseEnterHandler,
         },
       );
