@@ -253,18 +253,10 @@ const CardsList = (props) => {
     // Set title height corresponding its content once component did mount
     resizeTitleTextarea();
 
-    // Add ref to columnRefs
+    // Add ref to columnRefs in board component
     columnRefs.push(columnDragArea);
     setColumnRefs([...columnRefs]);
   }, []);
-
-  // useEffect(() => {
-  //   const index = allColumns.findIndex(column => column._id === columnId);
-  //   allColumns[index] = {
-  //     current: columnDragArea.current,
-  //     _id: columnId,
-  //   };
-  // }, [allColumns, columnId]);
 
   return (
     <div ref={columnDragArea} className="column-drag-area drag-target">
