@@ -180,6 +180,7 @@ class Board extends Component {
       props,
       state,
       handlePopupBtnClick,
+      handleError,
       closeMessage,
     } = this;
     const {
@@ -187,8 +188,6 @@ class Board extends Component {
       isReadOnly,
       isPrivate,
       members,
-      columns,
-      cards,
       owner,
       _id,
     } = props.board;
@@ -196,17 +195,6 @@ class Board extends Component {
     if (state.status.redirect) return <Redirect to="/board/all" />;
     if (state.status.loading) return <Loader.PageLoader bg />;
     if (state.status.err.message) return <Messages.ErrorMessage message={state.status.err.message} closeMessage={closeMessage} />;
-
-    // const sortedColumns = columns.sort((columnOne, columnTwo) => {
-    //   if (columnOne.position < columnTwo.position) return -1;
-    //   if (columnOne.position > columnTwo.position) return 1;
-    //   return 0;
-    // });
-
-    // const lists = sortedColumns.map((column) => {
-    //   const thisColumnCards = cards.filter(card => card.column === column._id);
-    //   return <CardsList key={column._id} cards={thisColumnCards} listTitle={column.title} columnId={column._id} />;
-    // });
 
     return (
       <>
@@ -265,7 +253,7 @@ class Board extends Component {
           )} */}
           </div>
 
-          <ColumnListContextProvider>
+          <ColumnListContextProvider handleError={handleError}>
             <ColumnList />
           </ColumnListContextProvider>
         </div>

@@ -426,8 +426,6 @@ router.post('/:id/update_column_positions', (req, res) => {
   const boardId = req.params.id;
   const { columns } = req.body;
 
-  console.log('columns', columns);
-
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
       return res.status(400).send({ err: 'Invalid token' });
@@ -456,8 +454,6 @@ router.post('/:id/update_column_positions', (req, res) => {
           console.log('Could not save board with a new column positions', err);
           return Promise.reject(new Error('Could not save the board with a new column positions'));
         });
-
-        console.log('savedBoard', savedBoard);
 
         return res.status(200).send(savedBoard);
       }

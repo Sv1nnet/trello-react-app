@@ -10,6 +10,7 @@ const ColumnListContextProvider = (props) => {
     token,
     board,
     updateColumnPositions,
+    handleError,
   } = props;
 
   const [columnsState, setColumnsState] = useState({
@@ -38,7 +39,7 @@ const ColumnListContextProvider = (props) => {
 
     return updateColumnPositions(token.token, board._id, columnsToUpdate)
       .then(res => console.log(res))
-      .catch(err => console.log(err));
+      .catch(err => handleError(err));
   };
 
   useEffect(() => {
