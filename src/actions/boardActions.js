@@ -202,6 +202,26 @@ const updateColumn = (token, boardId, columnId, dataToUpdate) => (dispatch, getS
     });
 };
 
+const updateColumnPositions = (token, boardId, dataToUpdate) => (dispatch, getState) => {
+  const data = {
+    columns: dataToUpdate,
+  };
+
+  console.log('actions', data);
+  return api.board.updateColumnPositions(token, boardId, data)
+    .then((res) => {
+      return dispatch({ type: columnActionTypes.COLUMN_POSITIONS_UPDATED, data: res }).data;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: columnActionTypes.COLUMN_POSITIONS_UPDATE_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
+
 export default {
   createBoard,
   loadAllBoards,
@@ -214,4 +234,5 @@ export default {
   createColumn,
   deleteColumn,
   updateColumn,
+  updateColumnPositions,
 };

@@ -16,6 +16,7 @@ import MembersForm from '../forms/boardForms/MembersForm';
 import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
 import ColumnList from '../lists/ColumnList';
+import ColumnListContextProvider from '../context/ColumnListContext';
 
 
 const propTypes = {
@@ -264,7 +265,9 @@ class Board extends Component {
           )} */}
           </div>
 
-          <ColumnList />
+          <ColumnListContextProvider>
+            <ColumnList />
+          </ColumnListContextProvider>
         </div>
         {state.status.err.message && <Messages.ErrorMessage message={state.status.err.message} closeMessage={closeMessage} />}
       </>

@@ -74,6 +74,11 @@ const api = {
       setAuthHeaders(token);
       return axios.post(`${ip}/board/${boardId}/update_column/${columnId}`, data);
     },
+    updateColumnPositions: (token, boardId, data) => {
+      setAuthHeaders(token);
+      console.log(data);
+      return axios.post(`${ip}/board/${boardId}/update_column_positions`, data);
+    },
     deleteColumn: (token, boardId, columnId) => {
       setAuthHeaders(token);
       return axios.post(`${ip}/board/${boardId}/delete_column/${columnId}`);

@@ -51,6 +51,7 @@ const boardReducer = (state = initialState, action) => {
         columns: data.columns,
       };
     case columnActionTypes.COLUMN_DELETED:
+    case columnActionTypes.COLUMN_POSITIONS_UPDATED:
     case columnActionTypes.COLUMN_UPDATED:
     case boardActionTypes.BOARD_UPDATED:
     case boardActionTypes.BOARD_DOWNLOADED:

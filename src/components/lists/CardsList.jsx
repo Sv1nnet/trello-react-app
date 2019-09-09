@@ -10,7 +10,7 @@ import CardFace from '../cards/CardFace';
 import boardActions from '../../actions/boardActions';
 import isMouseMoved from '../../utlis/isMouseMoved';
 import dragElement from '../../utlis/dragElement';
-import scrollElementOnMouseMove from '../../utlis/scrollElements';
+import scrollElements from '../../utlis/scrollElements';
 
 
 const propTypes = {
@@ -34,8 +34,12 @@ const propTypes = {
     cards: PropTypes.array.isRequired,
   }).isRequired,
   listTitle: PropTypes.string.isRequired,
+  columnPosition: PropTypes.number.isRequired,
+  setColumnRefs: PropTypes.func.isRequired,
+  switchColumns: PropTypes.func.isRequired,
   deleteColumn: PropTypes.func.isRequired,
   updateColumn: PropTypes.func.isRequired,
+  updateColumnPositions: PropTypes.func.isRequired,
   handleError: PropTypes.func.isRequired,
 };
 
@@ -50,8 +54,10 @@ const CardsList = (props) => {
     columnRefs,
     setColumnRefs,
     deleteColumn,
+    switchColumns,
     updateColumn,
     handleError,
+    updateColumnPositions,
   } = props;
 
   const titleInput = useRef(null);
@@ -88,7 +94,10 @@ const CardsList = (props) => {
   };
 
   const handleMouseEnter = (e) => {
-    console.log('mouse enter');
+    switchColumns(e, {
+      ...columnDragArea,
+      _id: columnId,
+    });
   };
 
   // Add mouseEnter handler on all columns except column we drag
@@ -137,9 +146,8 @@ const CardsList = (props) => {
         columnContainer.current,
         {
           startDragCallback: addColumnsMouseEnterHandler,
-          // dragCallback: scrollBoard,
-          dragCallback: scrollElementOnMouseMove(scrollOptions),
-          endDragCallback: removeColumnsMouseEnterHandler,
+          dragCallback: scrollElements(scrollOptions),
+          endDragCallback: (e) => { removeColumnsMouseEnterHandler(e); updateColumnPositions(); console.log('updated'); },
         },
       );
     }
@@ -232,6 +240,7 @@ const CardsList = (props) => {
 
     deleteColumn(token.token, board._id, columnId)
       .then(() => {
+        // Update columnRefs
         const newRefs = columnRefs.filter(ref => ref.current !== columnDragArea.current);
         setColumnRefs([...newRefs]);
       })
@@ -249,12 +258,16 @@ const CardsList = (props) => {
     resizeTitleTextarea();
   };
 
+  // Set textarea height and add ref to columnRefs on component did mount
   useEffect(() => {
-    // Set title height corresponding its content once component did mount
+    // Set title height corresponding its content
     resizeTitleTextarea();
 
     // Add ref to columnRefs in board component
-    columnRefs.push(columnDragArea);
+    columnRefs.push({
+      ...columnDragArea,
+      _id: columnId,
+    });
     setColumnRefs([...columnRefs]);
   }, []);
 
