@@ -363,6 +363,7 @@ router.post('/:id/delete_column/:columnId', (req, res) => {
 
       if (isOwner || (isMember && !board.isReadOnly)) {
         board.deleteColumn(columnId);
+        await Column.deleteOne({ _id: columnId }).catch(err => console.log('Error in deleting column by mongo'));
 
         const savedBoard = await board.save().catch((err) => {
           console.log('Could not save board with a new column', err);

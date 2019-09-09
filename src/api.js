@@ -76,7 +76,6 @@ const api = {
     },
     updateColumnPositions: (token, boardId, data) => {
       setAuthHeaders(token);
-      console.log(data);
       return axios.post(`${ip}/board/${boardId}/update_column_positions`, data);
     },
     deleteColumn: (token, boardId, columnId) => {

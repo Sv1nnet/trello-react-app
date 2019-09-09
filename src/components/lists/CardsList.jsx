@@ -34,7 +34,6 @@ const propTypes = {
     cards: PropTypes.array.isRequired,
   }).isRequired,
   listTitle: PropTypes.string.isRequired,
-  columnPosition: PropTypes.number.isRequired,
   setColumnRefs: PropTypes.func.isRequired,
   switchColumns: PropTypes.func.isRequired,
   deleteColumn: PropTypes.func.isRequired,
@@ -124,6 +123,11 @@ const CardsList = (props) => {
     scrollIntervals.scrollVerticalInterval = undefined;
   };
 
+  const endDragHandler = (e) => {
+    removeColumnsMouseEnterHandler(e);
+    updateColumnPositions();
+  };
+
   // If mouse moved then set column state as dragging, add drag style to dragged column and
   // add drag event handlers
   const handleMouseMove = (e) => {
@@ -147,7 +151,7 @@ const CardsList = (props) => {
         {
           startDragCallback: addColumnsMouseEnterHandler,
           dragCallback: scrollElements(scrollOptions),
-          endDragCallback: (e) => { removeColumnsMouseEnterHandler(e); updateColumnPositions(); console.log('updated'); },
+          endDragCallback: endDragHandler,
         },
       );
     }

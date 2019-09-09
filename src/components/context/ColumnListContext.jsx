@@ -37,9 +37,10 @@ const ColumnListContextProvider = (props) => {
   const updatePositions = () => {
     const columnsToUpdate = cashedColumns.filter((column, i) => column.position !== columnsState.sortedColumns[i].position);
 
-    return updateColumnPositions(token.token, board._id, columnsToUpdate)
-      .then(res => console.log(res))
-      .catch(err => handleError(err));
+    if (columnsToUpdate.length > 0) {
+      updateColumnPositions(token.token, board._id, columnsToUpdate)
+        .catch(err => handleError(err));
+    }
   };
 
   useEffect(() => {
