@@ -112,6 +112,9 @@ const boardReducer = (state = initialState, action) => {
         columns: [...state.columns, data.column],
       };
     case boardActionTypes.BOARD_UPDATE_FAILED:
+    case boardActionTypes.COLUMN_CREATE_FAILED:
+    case boardActionTypes.COLUMN_DELETE_FAILED:
+    case boardActionTypes.COLUMN_POSITIONS_UPDATE_FAILED:
     default:
       return { ...state };
   }
