@@ -51,6 +51,7 @@ const CardsList = (props) => {
     token,
     board,
     columnRefs,
+    tempColumnRefs,
     setColumnRefs,
     deleteColumn,
     switchColumns,
@@ -68,6 +69,7 @@ const CardsList = (props) => {
   const [titleState, setTitleState] = useState({
     title: listTitle,
   });
+  const [cardRefs, setCardRefs] = useState([]);
 
   const mouseState = {
     mouseDown: false,
@@ -268,11 +270,12 @@ const CardsList = (props) => {
     resizeTitleTextarea();
 
     // Add ref to columnRefs in board component
-    columnRefs.push({
+    tempColumnRefs.push({
       ...columnDragArea,
       _id: columnId,
     });
-    setColumnRefs([...columnRefs]);
+
+    setColumnRefs([...tempColumnRefs]);
   }, []);
 
   return (
@@ -303,7 +306,16 @@ const CardsList = (props) => {
         </div>
         <div className="cards-container">
 
-          {sortedCards.map(card => <CardFace key={card._id} cardTitle={card.title} />)}
+          {sortedCards.map((card, i) => (
+            <CardFace
+              key={card._id}
+              cardId={card._id}
+              cardPosition={i}
+              cardTitle={card.title}
+              cardRefs={cardRefs}
+              setCardRefs={setCardRefs}
+            />
+          ))}
 
           <textarea
             onChange={handleTitleChange}

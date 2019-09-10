@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import TextInput from '../utils/TextInput';
 import hasParent from '../../utlis/hasParent';
+import switchElements from '../../utlis/switchElements';
 import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
 import CardsList from './CardsList';
@@ -43,6 +44,10 @@ const ColumnList = (props) => {
     },
   });
 
+  // We need use temp column refs array because each setColumnRefs return a new array and
+  // every next CardList will have previously passed empty columnRefs without new refs from the other
+  // CardList components. So we push new ref in tempColumnRefs and then destructure it in setColumnRefs
+  const tempColumnRefs = [];
   // All column refs. We nned them to add mouse enter event handlers when user drag column
   const [columnRefs, setColumnRefs] = useState([]);
   const addColumnContainer = useRef(null);
@@ -138,36 +143,7 @@ const ColumnList = (props) => {
   };
 
   const switchColumns = (e, source) => {
-    // Find target in columnRefs and switch it with source column
-    columnRefs.forEach((column) => {
-      if (e.target === column.current || hasParent(column.current, e.target)) {
-        // Get siblings os target and source column elements
-        const targetSibling = {
-          next: column.current.nextElementSibling,
-          previous: column.current.previousElementSibling,
-        };
-        const sourceSibling = {
-          next: source.current.nextElementSibling,
-          previous: source.current.previousElementSibling,
-        };
-
-        // Place source where target is placed
-        if (targetSibling.next) {
-          targetSibling.next.before(source.current);
-        } else {
-          targetSibling.previous.after(source.current);
-        }
-
-        // Place target where source was placed
-        if (sourceSibling.next) {
-          sourceSibling.next.before(column.current);
-        } else {
-          sourceSibling.previous.after(column.current);
-        }
-
-        switchColumnPositions(source, column);
-      }
-    });
+    switchElements(e, source, columnRefs, switchColumnPositions);
   };
 
   const closeMessage = () => {
@@ -190,10 +166,10 @@ const ColumnList = (props) => {
         cards={columnCards}
         listTitle={column.title}
         columnId={column._id}
-        columnPosition={i}
         columnRefs={columnRefs}
-        handleError={handleError}
+        tempColumnRefs={tempColumnRefs}
         setColumnRefs={setColumnRefs}
+        handleError={handleError}
         switchColumns={switchColumns}
         updateColumnPositions={updatePositions}
       />
@@ -253,7 +229,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   createColumn: (token, boardId, data) => dispatch(boardActions.createColumn(token, boardId, data)),
-  updateColumnPositions: (token, boardId, data) => dispatch(boardActions.updateColumnPositions(token, boardId, data)),
 });
 
 

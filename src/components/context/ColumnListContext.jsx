@@ -21,6 +21,7 @@ const ColumnListContextProvider = (props) => {
     }),
   });
 
+  // Save changes in cashedColumns and then compare them with initial column positions in columnsState.sortedColumns
   const cashedColumns = columnsState.sortedColumns.map(column => ({
     _id: column._id,
     position: column.position,
@@ -34,6 +35,7 @@ const ColumnListContextProvider = (props) => {
     cashedColumns.find(column => column._id === target._id).position = sourcePosition;
   };
 
+  // Send request to the server in order to update column positions
   const updatePositions = () => {
     const columnsToUpdate = cashedColumns.filter((column, i) => column.position !== columnsState.sortedColumns[i].position);
 
@@ -43,6 +45,7 @@ const ColumnListContextProvider = (props) => {
     }
   };
 
+  // Re-sort columns after they changed
   useEffect(() => {
     setColumnsState({
       sortedColumns: board.columns.sort((columnOne, columnTwo) => {
