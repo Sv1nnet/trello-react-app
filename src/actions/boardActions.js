@@ -1,4 +1,4 @@
-import { boardActionTypes, userActionTypes, columnActionTypes } from '../types';
+import { boardActionTypes, userActionTypes, columnActionTypes, cardActionTypes } from '../types';
 import api from '../api';
 import createErrorResponseObject from '../utlis/createErrorResponseObject';
 
@@ -222,6 +222,34 @@ const updateColumnPositions = (token, boardId, dataToUpdate) => (dispatch, getSt
     });
 };
 
+const switchColumnPositions = newColumns => (dispatch, getState) => {
+  dispatch({ type: columnActionTypes.COLUMN_POSITIONS_SWITCHED, data: { columns: newColumns } });
+};
+
+const updateCardPositions = (token, boardId, dataToUpdate) => (dispatch, getState) => {
+  const data = {
+    columns: dataToUpdate,
+  };
+
+  console.log('actions', data);
+  return api.board.updateCardPositions(token, boardId, data)
+    .then((res) => {
+      return dispatch({ type: cardActionTypes.CARD_POSITIONS_UPDATED, data: res }).data;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: cardActionTypes.CARD_POSITIONS_UPDATE_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
+
+const switchCardPositions = newCards => (dispatch, getState) => {
+  dispatch({ type: cardActionTypes.CARD_POSITIONS_SWITCHED, data: { cards: newCards } });
+};
+
 export default {
   createBoard,
   loadAllBoards,
@@ -234,5 +262,8 @@ export default {
   createColumn,
   deleteColumn,
   updateColumn,
+  switchColumnPositions,
   updateColumnPositions,
+  switchCardPositions,
+  updateCardPositions,
 };

@@ -9,7 +9,8 @@ import hasParent from '../../utlis/hasParent';
 import switchElements from '../../utlis/switchElements';
 import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
-import CardsList from './CardsList';
+import CardsList from './CardList';
+import ColumnContainer from '../columns/ColumnContainer';
 import { ColumnListContext } from '../context/ColumnListContext';
 import '../../styles/columnList.sass';
 
@@ -44,15 +45,16 @@ const ColumnList = (props) => {
     },
   });
 
-  // We need use temp column refs array because each setColumnRefs return a new array and
+  // We need use temp column refs array because every setColumnRefs returns a new array and
   // every next CardList will have previously passed empty columnRefs without new refs from the other
-  // CardList components. So we push new ref in tempColumnRefs and then destructure it in setColumnRefs
+  // CardList components. So we push a new ref in tempColumnRefs and then destructure it in setColumnRefs
   const tempColumnRefs = [];
-  // All column refs. We nned them to add mouse enter event handlers when user drag column
+
+  // columnRefs - all column refs. We need them to add mouse enter event handlers when user drags column
   const [columnRefs, setColumnRefs] = useState([]);
   const addColumnContainer = useRef(null);
 
-  const { columnsState, switchColumnPositions, updatePositions } = useContext(ColumnListContext);
+  const { columnsState, switchColumnPositions } = useContext(ColumnListContext);
   const handleChange = (e) => {
     const { target } = e;
     setState({
@@ -153,6 +155,10 @@ const ColumnList = (props) => {
         message: '',
         statusCode: undefined,
       },
+      addNewColumn: {
+        active: false,
+        columnTitle: '',
+      },
     });
   };
 
@@ -161,7 +167,7 @@ const ColumnList = (props) => {
   const columnList = columnsState.sortedColumns.map((column, i) => {
     const columnCards = board.cards.filter(card => card.column === column._id);
     return (
-      <CardsList
+      <ColumnContainer
         key={column._id}
         cards={columnCards}
         listTitle={column.title}
@@ -171,7 +177,6 @@ const ColumnList = (props) => {
         setColumnRefs={setColumnRefs}
         handleError={handleError}
         switchColumns={switchColumns}
-        updateColumnPositions={updatePositions}
       />
     );
   });

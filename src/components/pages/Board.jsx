@@ -56,7 +56,7 @@ class Board extends Component {
         message: '',
         statusCode: undefined,
       },
-      redirect: false, // If we can get access to a board then set this true to redirect to all boards page
+      redirect: false, // If we can not get access to a board then set this true to redirect to all boards page
     },
     popup: {
       isRenamePopupActive: false,
@@ -144,7 +144,7 @@ class Board extends Component {
       });
   }
 
-  closeMessage = () => {
+  closeMessage = (redirect = true) => {
     this.setState(prevState => ({
       ...prevState,
       status: {
@@ -153,7 +153,7 @@ class Board extends Component {
           message: '',
           statusCode: undefined,
         },
-        redirect: true,
+        redirect,
       },
     }));
   }
@@ -180,7 +180,6 @@ class Board extends Component {
       props,
       state,
       handlePopupBtnClick,
-      handleError,
       closeMessage,
     } = this;
     const {
@@ -253,7 +252,7 @@ class Board extends Component {
           )} */}
           </div>
 
-          <ColumnListContextProvider handleError={handleError}>
+          <ColumnListContextProvider>
             <ColumnList />
           </ColumnListContextProvider>
         </div>

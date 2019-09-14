@@ -1,4 +1,4 @@
-import { boardActionTypes, columnActionTypes } from '../types';
+import { boardActionTypes, columnActionTypes, cardActionTypes } from '../types';
 
 
 const initialState = {
@@ -30,6 +30,8 @@ const initialState = {
   members: [],
   isReadOnly: false,
   columns: [],
+  localColumns: [],
+  localCards: [],
 };
 
 const boardReducer = (state = initialState, action) => {
@@ -49,6 +51,8 @@ const boardReducer = (state = initialState, action) => {
         members: data.members,
         isReadOnly: data.isReadOnly,
         columns: data.columns,
+        localColumns: [],
+        localCards: [],
       };
     case columnActionTypes.COLUMN_DELETED:
     case columnActionTypes.COLUMN_POSITIONS_UPDATED:
@@ -68,6 +72,18 @@ const boardReducer = (state = initialState, action) => {
         members: data.members,
         isReadOnly: data.isReadOnly,
         columns: data.columns,
+        localColumns: [],
+        localCards: [],
+      };
+    case columnActionTypes.COLUMN_POSITIONS_SWITCHED:
+      return {
+        ...state,
+        localColumns: action.data.columns,
+      };
+    case cardActionTypes.CARD_POSITIONS_SWITCHED:
+      return {
+        ...state,
+        localCards: action.data.cards,
       };
     case boardActionTypes.BOARD_MEMBER_ADDED:
       data = { ...action.data.data };
@@ -83,6 +99,8 @@ const boardReducer = (state = initialState, action) => {
         members: data.board.members,
         isReadOnly: data.board.isReadOnly,
         columns: data.board.columns,
+        localColumns: [],
+        localCards: [],
       };
     case boardActionTypes.BOARD_MEMBER_REMOVED:
       data = { ...action.data.data };
@@ -98,6 +116,8 @@ const boardReducer = (state = initialState, action) => {
         members: data.board.members,
         isReadOnly: data.board.isReadOnly,
         columns: data.board.columns,
+        localColumns: [],
+        localCards: [],
       };
     case boardActionTypes.BOARD_MEMBERS_RECEIVED:
       data = { ...action.data.data };
@@ -111,10 +131,10 @@ const boardReducer = (state = initialState, action) => {
         ...state,
         columns: [...state.columns, data.column],
       };
+    case columnActionTypes.COLUMN_POSITIONS_UPDATE_FAILED:
     case boardActionTypes.BOARD_UPDATE_FAILED:
-    case boardActionTypes.COLUMN_CREATE_FAILED:
-    case boardActionTypes.COLUMN_DELETE_FAILED:
-    case boardActionTypes.COLUMN_POSITIONS_UPDATE_FAILED:
+    case columnActionTypes.COLUMN_CREATE_FAILED:
+    case columnActionTypes.COLUMN_DELETE_FAILED:
     default:
       return { ...state };
   }

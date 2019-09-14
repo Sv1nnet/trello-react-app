@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,6 +11,7 @@ import boardActions from '../../actions/boardActions';
 import isMouseMoved from '../../utlis/isMouseMoved';
 import dragElement from '../../utlis/dragElement';
 import scrollElements from '../../utlis/scrollElements';
+import { ColumnListContext } from '../context/ColumnListContext';
 
 
 const propTypes = {
@@ -38,12 +39,11 @@ const propTypes = {
   switchColumns: PropTypes.func.isRequired,
   deleteColumn: PropTypes.func.isRequired,
   updateColumn: PropTypes.func.isRequired,
-  updateColumnPositions: PropTypes.func.isRequired,
   handleError: PropTypes.func.isRequired,
 };
 
 
-const CardsList = (props) => {
+const CardList = (props) => {
   const {
     cards,
     listTitle,
@@ -57,7 +57,6 @@ const CardsList = (props) => {
     switchColumns,
     updateColumn,
     handleError,
-    updateColumnPositions,
   } = props;
 
   const titleInput = useRef(null);
@@ -65,6 +64,8 @@ const CardsList = (props) => {
   const columnContainer = useRef(null);
   const columnDragArea = useRef(null);
   const boardColumnsContainer = document.querySelector('.board-lists-container');
+
+  const { updatePositions } = useContext(ColumnListContext);
 
   const [titleState, setTitleState] = useState({
     title: listTitle,
@@ -127,7 +128,7 @@ const CardsList = (props) => {
 
   const endDragHandler = (e) => {
     removeColumnsMouseEnterHandler(e);
-    updateColumnPositions();
+    updatePositions();
   };
 
   // If mouse moved then set column state as dragging, add drag style to dragged column and
@@ -264,6 +265,12 @@ const CardsList = (props) => {
     resizeTitleTextarea();
   };
 
+  // Receive a new card when it is dragged from other column.
+  // We should pass this function to child cards
+  const receiveNewCard = () => {
+
+  };
+
   // Set textarea height and add ref to columnRefs on component did mount
   useEffect(() => {
     // Set title height corresponding its content
@@ -352,7 +359,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 
-CardsList.propTypes = propTypes;
+CardList.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(CardsList);
+export default connect(mapStateToProps, mapDispatchToProps)(CardList);
