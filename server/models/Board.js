@@ -89,7 +89,9 @@ BoardSchema.methods.updateColumn = async function addColumn(columnId, dataToUpda
 
 BoardSchema.methods.deleteColumn = function deleteColumn(columnId) {
   const board = this;
-  board.columns = board.columns.filter(column => column._id.toHexString() !== columnId);
+  board.columns = board.columns
+    .filter(column => column._id.toHexString() !== columnId)
+    .map((column, i) => { column.position = i; return column; });
   board.cards = board.cards.filter(card => card.column.toHexString() !== columnId);
 };
 

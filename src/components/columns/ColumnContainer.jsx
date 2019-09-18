@@ -1,24 +1,28 @@
 import React, { useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import DraggableContainer from '../utils/DraggableContainer';
 import isMouseMoved from '../../utlis/isMouseMoved';
 import Column from './Column';
 import '../../styles/cardsList.sass';
-import PropTypes from 'prop-types';
 
+
+const defaultProps = {
+  cards: [],
+  columnRefs: [],
+};
 
 const propTypes = {
   cards: PropTypes.array,
   listTitle: PropTypes.string.isRequired,
   columnId: PropTypes.string.isRequired,
   columnRefs: PropTypes.array,
-
 };
 
 
 const ColumnContainer = (props) => {
   const columnDragTarget = useRef(null);
-  const titleInput = useRef(null);
-  const editingTarget = useRef(null);
+  const titleInputRef = useRef(null);
+  const editingTargetRef = useRef(null);
 
   const {
     cards,
@@ -36,18 +40,18 @@ const ColumnContainer = (props) => {
 
   const mouseUp = (e, mouseState) => {
     // If user moves mouse more then 5 pixels across X or Y than drag column.
-    // Otherwise focus titleInput in order to change title.
-    if (!isMouseMoved(e, mouseState.onMouseDownPosition, 5) && document.activeElement !== titleInput.current) {
+    // Otherwise focus titleInputRef in order to change title.
+    if (!isMouseMoved(e, mouseState.onMouseDownPosition, 5) && document.activeElement !== titleInputRef.current) {
       e.preventDefault();
-      editingTarget.current.style.display = 'none';
+      editingTargetRef.current.style.display = 'none';
 
-      titleInput.current.focus();
-      titleInput.current.select();
+      titleInputRef.current.focus();
+      titleInputRef.current.select();
     }
   };
 
   const mouseDown = (e, { handleMouseUp, handleMouseMove }) => {
-    if (document.activeElement !== titleInput.current) {
+    if (document.activeElement !== titleInputRef.current) {
       e.preventDefault();
 
       window.addEventListener('mouseup', handleMouseUp);
@@ -81,8 +85,8 @@ const ColumnContainer = (props) => {
     >
       <Column
         refs={{
-          titleInput,
-          editingTarget,
+          titleInputRef,
+          editingTargetRef,
           tempColumnRefs,
           setColumnRefs,
           columnRefs,
@@ -91,16 +95,14 @@ const ColumnContainer = (props) => {
         listTitle={listTitle}
         columnId={columnId}
         handleError={handleError}
-        switchColumns={switchColumns}
       />
     </DraggableContainer>
   );
 };
 
 
-ColumnContainer.propTypes = {
-
-};
+ColumnContainer.defaultProps = defaultProps;
+ColumnContainer.propTypes = propTypes;
 
 
 export default ColumnContainer;

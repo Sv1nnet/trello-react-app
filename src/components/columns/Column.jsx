@@ -26,16 +26,17 @@ const Column = (props) => {
   } = props;
 
   const {
-    titleInput,
-    editingTarget,
+    titleInputRef,
+    editingTargetRef,
     tempColumnRefs,
-    setColumnRefs,
     columnRefs,
+    setColumnRefs,
   } = refs;
 
   const [titleState, setTitleState] = useState({
     title: listTitle,
   });
+
   const [cardRefs, setCardRefs] = useState([]);
 
   const updateTitle = () => {
@@ -43,7 +44,7 @@ const Column = (props) => {
       title: titleState.title,
     };
 
-    editingTarget.current.style.display = '';
+    editingTargetRef.current.style.display = '';
 
     if (listTitle !== titleState.title) {
       updateColumn(token.token, board._id, columnId, dataToUpdate)
@@ -59,13 +60,13 @@ const Column = (props) => {
 
   const resizeTitleTextarea = () => {
     // Set textarea height 1px to recalculate it's content height
-    if (titleInput.current) {
-      titleInput.current.style.height = '1px';
+    if (titleInputRef.current) {
+      titleInputRef.current.style.height = '1px';
 
-      const { scrollHeight } = titleInput.current;
+      const { scrollHeight } = titleInputRef.current;
       const newHeight = `${scrollHeight + 2}px`;
 
-      titleInput.current.style.height = newHeight;
+      titleInputRef.current.style.height = newHeight;
     }
   };
 
@@ -73,7 +74,7 @@ const Column = (props) => {
     if (e.key === 'Enter') {
       e.preventDefault();
 
-      titleInput.current.blur();
+      titleInputRef.current.blur();
     }
   };
 
@@ -83,7 +84,7 @@ const Column = (props) => {
     deleteColumn(token.token, board._id, columnId)
       .then(() => {
         // Update columnRefs
-        const newRefs = columnRefs.filter(ref => ref.current !== dragTarget.current);
+        const newRefs = columnRefs.filter(columnRef => columnRef._id !== columnId);
         setColumnRefs([...newRefs]);
       })
       .catch(err => handleError(err));
@@ -105,13 +106,14 @@ const Column = (props) => {
     // Set title height corresponding its content
     resizeTitleTextarea();
 
-    // Add ref to columnRefs in board component
+    // // Add ref to columnRefs in board component
     tempColumnRefs.push({
       ...dragTarget,
       _id: columnId,
     });
 
-    setColumnRefs([...tempColumnRefs]);
+    // Need to spread columnRef as well in case user adds a new column (after board loaded)
+    setColumnRefs([...columnRefs, ...tempColumnRefs]);
   }, []);
 
   const sortedCards = cards.sort((cardOne, cardTwo) => {
@@ -128,7 +130,7 @@ const Column = (props) => {
       <div className="list-header-container">
         <div
           onMouseDown={handleMouseDown}
-          ref={editingTarget}
+          ref={editingTargetRef}
           className="editing-target"
         />
 
@@ -136,7 +138,7 @@ const Column = (props) => {
           onBlur={updateTitle}
           onChange={handleTitleChange}
           onKeyPress={setTitleInputBlured}
-          ref={titleInput}
+          ref={titleInputRef}
           maxLength="128"
           value={titleState.title}
         />

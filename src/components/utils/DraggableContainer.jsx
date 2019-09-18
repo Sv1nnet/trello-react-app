@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import isMouseMoved from '../../utlis/isMouseMoved';
 import dragElement from '../../utlis/dragElement';
 import scrollElements from '../../utlis/scrollElements';
@@ -7,16 +7,15 @@ import { ColumnListContext } from '../context/ColumnListContext';
 const DraggableContainer = (props) => {
   const {
     children,
-    elementRefs,
+    elementRefs = [],
     extraClasses,
-    elementToScroll,
     dragTarget,
     mouseEvents,
   } = props;
 
   const { mouseUp, mouseEnter, mouseDown } = mouseEvents;
 
-  const { updatePositions } = useContext(ColumnListContext);
+  const { updateColumnPositions } = useContext(ColumnListContext);
   const refElementContainer = useRef(null);
 
   const mouseState = {
@@ -62,7 +61,7 @@ const DraggableContainer = (props) => {
 
   const endDragHandler = (e) => {
     removeElementsMouseEnterHandler(e);
-    updatePositions();
+    updateColumnPositions();
   };
 
   // If mouse moved then set column state as dragging, add drag style to dragged column and

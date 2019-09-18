@@ -370,7 +370,7 @@ router.post('/:id/delete_column/:columnId', (req, res) => {
           return Promise.reject(new Error('Could not save the board with a new column'));
         });
 
-        console.log(savedBoard.columns)
+        // console.log(savedBoard.columns)
         return res.status(200).send(savedBoard);
       }
 
