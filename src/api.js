@@ -82,8 +82,9 @@ const api = {
       setAuthHeaders(token);
       return axios.post(`${ip}/board/${boardId}/delete_column/${columnId}`);
     },
-    createCard: (token, boardId, columnId, data) => {
-      
+    createCard: (token, boardId, data) => {
+      setAuthHeaders(token);
+      return axios.post(`${ip}/board/${boardId}/create_card`, data);
     },
     updateCardPositions: (token, boardId, data) => {
       setAuthHeaders(token);

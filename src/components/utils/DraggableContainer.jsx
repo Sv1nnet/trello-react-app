@@ -6,16 +6,17 @@ import { ColumnListContext } from '../context/ColumnListContext';
 
 const DraggableContainer = (props) => {
   const {
-    children,
-    elementRefs = [],
-    extraClasses,
-    dragTarget,
-    mouseEvents,
+    children, // Elements to render inside DraggableContainer
+    elementRefs = [], // Array of refs that mouse event hendlers will be put on
+    extraClasses, // Extra classes will be added to a drag container
+    dragTargetRef, // Ref that is a area where element have to be dragged to
+    mouseEvents, // mouseUp, mouseEnter, mouseDown events passed from element container
+    action, // card or column positions we should update
   } = props;
 
   const { mouseUp, mouseEnter, mouseDown } = mouseEvents;
 
-  const { updateColumnPositions } = useContext(ColumnListContext);
+  const { updateColumnPositions, updateCardPositions } = useContext(ColumnListContext);
   const refElementContainer = useRef(null);
 
   const mouseState = {
@@ -37,7 +38,7 @@ const DraggableContainer = (props) => {
 
   // Add mouseEnter handler on all columns except HTMLElement we drag
   const addElementsMouseEnterHandler = () => {
-    const HTMLElementList = elementRefs.filter(el => el.current !== dragTarget.current);
+    const HTMLElementList = elementRefs.filter(el => el.current !== dragTargetRef.current);
 
     if (HTMLElementList.length !== 0) {
       HTMLElementList.forEach(HTMLElement => HTMLElement.current.addEventListener('mouseenter', mouseEnter));
@@ -46,7 +47,7 @@ const DraggableContainer = (props) => {
 
   // Remove mouseEnter handler on all columns except HTMLElement we drag(cause we don't have that handler on it)
   const removeElementsMouseEnterHandler = () => {
-    const HTMLElementList = elementRefs.filter(el => el.current !== dragTarget.current);
+    const HTMLElementList = elementRefs.filter(el => el.current !== dragTargetRef.current);
 
     if (HTMLElementList.length !== 0) {
       HTMLElementList.forEach(HTMLElement => HTMLElement.current.removeEventListener('mouseenter', mouseEnter));
@@ -61,10 +62,20 @@ const DraggableContainer = (props) => {
 
   const endDragHandler = (e) => {
     removeElementsMouseEnterHandler(e);
-    updateColumnPositions();
+    switch (action) {
+      case 'UPDATE_COLUMNS':
+        updateColumnPositions();
+        break;
+      case 'UPDATE_CARDS':
+        updateCardPositions();
+        break;
+
+      default:
+        break;
+    }
   };
 
-  // If mouse moved then set column state as dragging, add drag style to dragged column and
+  // If mouse moved then set element state as dragging, add drag style to dragged element and
   // add drag event handlers
   const handleMouseMove = (e) => {
     if (!dragState.dragging && isMouseMoved(e, mouseState.onMouseDownPosition, 5)) {
@@ -80,7 +91,7 @@ const DraggableContainer = (props) => {
       }));
 
       dragState.dragging = true;
-      dragTarget.current.classList.add('dragging');
+      dragTargetRef.current.classList.add('dragging');
 
       dragElement(
         e,
@@ -95,7 +106,6 @@ const DraggableContainer = (props) => {
   };
 
   // Remove drag state, drag style and drag event handlers.
-  // Also, if mouse wasn't moved then set focus on textarea in order to change column title
   const handleMouseUp = (e) => {
     if (dragState.dragging && mouseState.mouseDown) {
       dragState.dragging = false;
@@ -104,15 +114,14 @@ const DraggableContainer = (props) => {
     window.removeEventListener('mousemove', handleMouseMove);
     window.removeEventListener('mouseup', handleMouseUp);
 
-    dragTarget.current.classList.remove('dragging');
+    dragTargetRef.current.classList.remove('dragging');
 
-    dragTarget.current.appendChild(refElementContainer.current);
+    dragTargetRef.current.appendChild(refElementContainer.current);
 
     if (mouseUp) mouseUp(e, mouseState);
   };
 
   // If pressed mouse button is left one then set mouse click position in mouse state.
-  // If textarea is not focused then add mouseup and mousemove event handlers.
   const handleMouseDown = (e) => {
     if (e.button !== 0) return;
 
@@ -124,14 +133,17 @@ const DraggableContainer = (props) => {
   };
 
   const childrenWithProps = React.Children.map(children, child => React.cloneElement(child, {
+    refs: {
+      ...child.props.refs,
+      dragTargetRef,
+    },
     handleMouseDown,
     handleMouseUp,
-    dragTarget,
     refElementContainer,
   }));
 
   return (
-    <div ref={dragTarget} className={`${extraClasses || ''} drag-target`}>
+    <div ref={dragTargetRef} className={`${extraClasses || ''} drag-target`}>
       {childrenWithProps}
     </div>
   );

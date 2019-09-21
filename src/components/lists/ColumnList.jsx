@@ -9,10 +9,10 @@ import hasParent from '../../utlis/hasParent';
 import switchElements from '../../utlis/switchElements';
 import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
-import CardsList from './CardList';
 import ColumnContainer from '../columns/ColumnContainer';
 import { ColumnListContext } from '../context/ColumnListContext';
 import '../../styles/columnList.sass';
+import AddBoardContent from '../utils/AddBoardContent';
 
 
 const propTypes = {
@@ -39,10 +39,6 @@ const ColumnList = (props) => {
       message: '',
       statusCode: undefined,
     },
-    addNewColumn: {
-      active: false,
-      columnTitle: '',
-    },
   });
 
   // We need use temp column refs array because every setColumnRefs returns a new array and
@@ -52,49 +48,8 @@ const ColumnList = (props) => {
 
   // columnRefs - all column refs. We need them to add mouse enter event handlers when user drags column
   const [columnRefs, setColumnRefs] = useState([]);
-  const addColumnContainer = useRef(null);
 
   const { columnsState, switchColumnPositions } = useContext(ColumnListContext);
-  const handleChange = (e) => {
-    const { target } = e;
-    setState({
-      ...state,
-      addNewColumn: {
-        active: true,
-        columnTitle: target.value,
-      },
-    });
-  };
-
-  const closeAddColumnInput = (e, shouldClose) => {
-    if (e) e.preventDefault();
-
-    if (shouldClose || !hasParent(addColumnContainer.current, e.target)) {
-      window.removeEventListener('click', closeAddColumnInput);
-
-      setState({
-        ...state,
-        addNewColumn: {
-          active: false,
-          columnTitle: '',
-        },
-      });
-    }
-  };
-
-  const openAddColumnInput = (e) => {
-    e.preventDefault();
-
-    setState({
-      ...state,
-      addNewColumn: {
-        active: true,
-        columnTitle: '',
-      },
-    });
-
-    window.addEventListener('click', closeAddColumnInput);
-  };
 
   const handleError = (err) => {
     setState({
@@ -106,42 +61,28 @@ const ColumnList = (props) => {
     });
   };
 
-  const clearInput = () => {
-    setState({
-      ...state,
-      addNewColumn: {
-        active: true,
-        columnTitle: '',
-      },
-    });
-  };
-
-  const addColumn = (e) => {
+  const addColumn = (e, columnTitle) => {
     e.preventDefault();
+
+    if (!columnTitle) {
+      const err = { status: 400, message: 'Column title can not be blank' };
+      handleError(err);
+      return Promise.reject(err);
+    }
 
     const { createColumn, token, board } = props;
     const column = {
-      title: state.addNewColumn.columnTitle,
+      title: columnTitle,
       position: board.columns.length,
     };
 
     if (column.title) {
       return createColumn(token.token, board._id, column)
-        .then((res) => {
-          setState({
-            ...state,
-            addNewColumn: {
-              active: false,
-              columnTitle: '',
-            },
-          });
-        })
         .catch((err) => {
           handleError(err);
+          return Promise.reject(err);
         });
     }
-
-    handleError({ message: 'Title can not be blank', status: 400 });
   };
 
   const switchColumns = (e, source) => {
@@ -187,40 +128,20 @@ const ColumnList = (props) => {
       <div className="board-lists-container d-flex align-items-start">
         {columnList}
 
-        <div className="add-new-column-button-container" ref={addColumnContainer}>
-          {state.addNewColumn.active
-            ? (
-              <div className="add-new-column-inputs-container">
-                <TextInput
-                  type="text"
-                  name="coulmnTitle"
-                  id="column-title"
-                  classList="w-100 title-input"
-                  placeholder="Column title..."
-                  onChange={handleChange}
-                  onCrossBtnClick={clearInput}
-                  inputValue={state.addNewColumn.columnTitle}
-                  focusAfterActivated
-                  focusAfterCleared
-                  hideSearchBtn
-                />
-
-                <div className="buttons-container">
-                  <button onClick={addColumn} type="button" className="bg-success text-white add-column-btn">Add List</button>
-                  <button onClick={(e) => { closeAddColumnInput(e, true); }} type="button" className="close-input-btn">
-                    <FontAwesomeIcon className="add-icon" icon={faTimes} />
-                  </button>
-                </div>
-              </div>
-            )
-            : (
-              <a onClick={openAddColumnInput} href="/" className="btn btn-sm btn-block">
-                <span>
-                  <FontAwesomeIcon className="add-icon" icon={faPlus} /> Add another list
-                </span>
-              </a>
-            )}
-
+        <div className="add-new-column-button-container">
+          <AddBoardContent
+            addContent={addColumn}
+            openBtnTitle="Add another column"
+            addBtnTitle="Add Column"
+            containerClass="add-new-column-inputs-container"
+            addBtnClass="add-column-btn"
+            textInputOptions={{
+              textInputName: 'columnTitle',
+              textInputId: 'column-title',
+              textInputClass: 'title-input',
+              textInputPlaceholder: 'Column title...',
+            }}
+          />
         </div>
       </div>
     </>

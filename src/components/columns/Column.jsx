@@ -1,43 +1,48 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-import CardFace from '../cards/CardFace';
+import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import boardActions from '../../actions/boardActions';
-import CardListContext from '../context/CardListContext';
+import CardContainer from '../cards/CardContainer';
+import AddBoardContent from '../utils/AddBoardContent';
 
 
 const Column = (props) => {
   const {
-    cards,
-    listTitle,
-    columnId,
+    columnData,
     token,
     board,
     handleMouseDown,
     deleteColumn,
     updateColumn,
+    createCard,
     handleError,
     refs,
     refElementContainer,
-    dragTarget,
   } = props;
 
   const {
     titleInputRef,
     editingTargetRef,
     tempColumnRefs,
+    tempCardRefs = [],
     columnRefs,
     setColumnRefs,
+    dragTargetRef,
   } = refs;
+
+  const { columnId, listTitle, cards } = columnData;
 
   const [titleState, setTitleState] = useState({
     title: listTitle,
   });
 
   const [cardRefs, setCardRefs] = useState([]);
+
+  const cardsContainerRef = useRef(null);
+  // const addCardContainerRef = useRef(null);
 
   const updateTitle = () => {
     const dataToUpdate = {
@@ -81,13 +86,15 @@ const Column = (props) => {
   const deleteThisColumn = (e) => {
     e.preventDefault();
 
-    deleteColumn(token.token, board._id, columnId)
-      .then(() => {
-        // Update columnRefs
-        const newRefs = columnRefs.filter(columnRef => columnRef._id !== columnId);
-        setColumnRefs([...newRefs]);
-      })
-      .catch(err => handleError(err));
+    if (e.nativeEvent.shiftKey) {
+      deleteColumn(token.token, board._id, columnId)
+        .then(() => {
+          // Update columnRefs
+          const newRefs = columnRefs.filter(columnRef => columnRef._id !== columnId);
+          setColumnRefs([...newRefs]);
+        })
+        .catch(err => handleError(err));
+    }
   };
 
   const handleTitleChange = (e) => {
@@ -101,6 +108,28 @@ const Column = (props) => {
     resizeTitleTextarea();
   };
 
+  const addCard = (e, cardTitle) => {
+    e.preventDefault();
+
+    if (!cardTitle) {
+      const err = { status: 400, message: 'Card title can not be blank' };
+      handleError(err);
+      return Promise.reject(err);
+    }
+
+    const card = {
+      title: cardTitle,
+      column: columnId,
+      position: cards.length,
+    };
+
+    return createCard(token.token, board._id, card)
+      .catch((err) => {
+        handleError(err);
+        return Promise.reject(err);
+      });
+  };
+
   // Set textarea height and add ref to columnRefs on component did mount
   useEffect(() => {
     // Set title height corresponding its content
@@ -108,7 +137,7 @@ const Column = (props) => {
 
     // // Add ref to columnRefs in board component
     tempColumnRefs.push({
-      ...dragTarget,
+      ...dragTargetRef,
       _id: columnId,
     });
 
@@ -147,14 +176,22 @@ const Column = (props) => {
           <FontAwesomeIcon className="ellipsis-btn" icon={faEllipsisH} />
         </button>
       </div>
-      <div className="cards-container">
+      <div ref={cardsContainerRef} className="cards-container">
 
         {sortedCards.map((card, i) => (
-          <CardFace
+          <CardContainer
             key={card._id}
-            cardId={card._id}
-            cardPosition={i}
-            cardTitle={card.title}
+            cardData={{
+              cardId: card._id,
+              cardPosition: i,
+              cardTitle: card.title,
+            }}
+            columnId={columnId}
+            refs={{
+              columnRefs,
+              tempCardRefs,
+              cardsContainerRef,
+            }}
             setCardRefs={setCardRefs}
           />
         ))}
@@ -172,12 +209,22 @@ const Column = (props) => {
         />
 
       </div>
-      <div className="create-card-button-wrapper my-1 mx-1">
-        <a href="/" className="btn btn-sm btn-block">
-          <FontAwesomeIcon className="add-icon" icon={faPlus} />
-          <span>Add another card</span>
-        </a>
-      </div>
+
+      <AddBoardContent
+        addContent={addCard}
+        openBtnTitle="Add another card"
+        openBtnWrapperClass="create-card-button-wrapper"
+        addBtnTitle="Add Card"
+        containerClass="add-new-card-inputs-container"
+        addBtnClass="add-card-btn"
+        textInputOptions={{
+          textInputName: 'cardTitle',
+          textInputId: 'card-title',
+          textInputClass: 'card-title-input',
+          textInputPlaceholder: 'Card title...',
+        }}
+      />
+
     </div>
   );
 };
@@ -190,6 +237,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   deleteColumn: (token, boardId, columnId) => dispatch(boardActions.deleteColumn(token, boardId, columnId)),
   updateColumn: (token, boardId, columnId, data) => dispatch(boardActions.updateColumn(token, boardId, columnId, data)),
+  createCard: (token, boardId, card) => dispatch(boardActions.createCard(token, boardId, card)),
 });
 
 Column.propTypes = {

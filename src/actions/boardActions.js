@@ -226,12 +226,30 @@ const switchColumnPositions = newColumns => (dispatch, getState) => {
   dispatch({ type: columnActionTypes.COLUMN_POSITIONS_SWITCHED, data: { columns: newColumns } });
 };
 
+const createCard = (token, boardId, card) => (dispatch, getState) => {
+  const cardData = {
+    card,
+  };
+
+  return api.board.createCard(token, boardId, cardData)
+    .then((res) => {
+      return dispatch({ type: cardActionTypes.CARD_CREATED, data: res }).data;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: cardActionTypes.CARD_CREATE_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
+
 const updateCardPositions = (token, boardId, dataToUpdate) => (dispatch, getState) => {
   const data = {
     columns: dataToUpdate,
   };
 
-  console.log('actions', data);
   return api.board.updateCardPositions(token, boardId, data)
     .then((res) => {
       return dispatch({ type: cardActionTypes.CARD_POSITIONS_UPDATED, data: res }).data;
@@ -264,6 +282,7 @@ export default {
   updateColumn,
   switchColumnPositions,
   updateColumnPositions,
+  createCard,
   switchCardPositions,
   updateCardPositions,
 };

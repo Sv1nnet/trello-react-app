@@ -14,9 +14,12 @@ const CardFace = (props) => {
     setCardRefs,
     cardRefs,
     cardContainerRef,
-    editingTarget,
-    cardDragArea,
+    editingTargetRef,
+    dragTargetRef,
+    cardDragAreaRef,
   } = refs;
+
+  console.log('dragTargetRef', dragTargetRef)
 
   // useEffect(() => {
   // const newCardRefs = [...cardRefs];
@@ -29,17 +32,17 @@ const CardFace = (props) => {
   // }, []);
 
   return (
-    <div ref={cardDragArea} className="card-drag-area drag-target">
-      <div ref={editingTarget} className="h-100">
-        <div ref={cardContainerRef} className="card-item d-flex px-2 flex-wrap align-items-center drag-source">
-          <div className="title">
-            <span>{console.log('card rendered', cardId)}</span>
-            <span>{cardTitle}</span>
-          </div>
+    <div ref={editingTargetRef} className="h-100">
+      <div ref={cardContainerRef} className="card-item d-flex px-2 flex-wrap align-items-center drag-source">
+        <div className="title">
+          <span>{console.log('card rendered', cardId, cardTitle)}</span>
+          <span>{cardTitle}</span>
         </div>
       </div>
     </div>
   );
 };
 
-export default React.memo(CardFace);
+export default React.memo(CardFace, (prevProps, nextProp) => {
+  return prevProps.cardTitle === nextProp.cardTitle;
+});

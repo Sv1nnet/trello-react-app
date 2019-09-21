@@ -20,7 +20,7 @@ const propTypes = {
 
 
 const ColumnContainer = (props) => {
-  const columnDragTarget = useRef(null);
+  const columnDragTargetRef = useRef(null);
   const titleInputRef = useRef(null);
   const editingTargetRef = useRef(null);
 
@@ -61,7 +61,7 @@ const ColumnContainer = (props) => {
 
   const mouseEnter = (e) => {
     switchColumns(e, {
-      ...columnDragTarget,
+      ...columnDragTargetRef,
       _id: columnId,
     });
   };
@@ -78,10 +78,11 @@ const ColumnContainer = (props) => {
   return (
     <DraggableContainer
       extraClasses="column-drag-area"
-      dragTarget={columnDragTarget}
+      dragTargetRef={columnDragTargetRef}
       scrollOptions={scrollOptions}
       mouseEvents={{ mouseUp, mouseDown, mouseEnter }}
       elementRefs={columnRefs}
+      action="UPDATE_COLUMNS"
     >
       <Column
         refs={{
@@ -91,9 +92,11 @@ const ColumnContainer = (props) => {
           setColumnRefs,
           columnRefs,
         }}
-        cards={cards}
-        listTitle={listTitle}
-        columnId={columnId}
+        columnData={{
+          columnId,
+          listTitle,
+          cards,
+        }}
         handleError={handleError}
       />
     </DraggableContainer>

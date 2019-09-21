@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const { MarkSchema } = require('./Mark');
+const { CardCommentSchema } = require('./CardComment');
 
 const { Schema } = mongoose;
 
@@ -15,9 +17,11 @@ const CardSchema = new Schema({
     type: Number,
     required: true,
   },
-  mark: {
-    type: Schema.Types.ObjectId,
+  marks: [MarkSchema],
+  description: {
+    type: String,
   },
+  comments: [CardCommentSchema],
 });
 
 const Card = mongoose.model('cards', CardSchema);

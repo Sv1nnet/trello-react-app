@@ -70,6 +70,18 @@ class TextInput extends Component {
     if (props.onBlur) props.onBlur(e);
   }
 
+  onKeyPress = (e) => {
+    const { onKeyPress } = this.props;
+
+    if (onKeyPress) onKeyPress(e);
+  }
+
+  onKeyUp = (e) => {
+    const { onKeyUp } = this.props;
+
+    if (onKeyUp) onKeyUp(e);
+  }
+
   onSearchBtnClick = () => {
     const { props } = this;
 
@@ -102,6 +114,8 @@ class TextInput extends Component {
     const {
       onFocus,
       onBlur,
+      onKeyUp,
+      onKeyPress,
       onCrossBtnClick,
       onSearchBtnClick,
     } = this;
@@ -117,6 +131,8 @@ class TextInput extends Component {
           onChange={onChange}
           onFocus={onFocus}
           onBlur={onBlur}
+          onKeyPress={onKeyPress}
+          onKeyUp={onKeyUp}
           type="text"
           className={`nav-link ${classList}`}
           placeholder={placeholder || 'Search'}

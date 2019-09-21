@@ -1,33 +1,37 @@
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import DraggableContainer from '../utils/DraggableContainer';
-import CardFace from 'CardFace';
+import CardFace from './CardFace';
 import isMouseMoved from '../../utlis/isMouseMoved';
 import '../../styles/cardItem.sass';
 
 
 const CardContainer = (props) => {
   const {
-    cardId
-    tempCardRefs,
     setCardRefs,
-    cardRefs,
-    columnRef,
     handleError,
     switchCards,
+    cards,
+    cardData,
+    columnId,
+    refs,
   } = props;
 
-  const cardDragTarget = useRef(null);
-  const editingTarget = useRef(null);
-  const editCardBtn = useRef(null);
-  const cardContainer = useRef(null);
-  const cardDragArea = useRef(null);
+  const { cardId, cardPostiion, cardTitle } = cardData;
+  const { cardRefs, cardsContainerRef, tempCardRefs } = refs;
+
+  const cardDragTargetRef = useRef(null);
+  const editingTargetRef = useRef(null);
+  const editCardBtnRef = useRef(null);
+  const cardContainerRef = useRef(null);
+  const cardDragAreaRef = useRef(null);
+  const cardRef = useRef(null);
 
   // We need pass it to DraggableContainer to scroll it when cursore comes to edge of this element
-  const boardColumnsContainer = document.querySelector('.board-lists-container');
+  const columnsContainer = document.querySelector('.board-lists-container');
 
   const mouseDown = (e, { handleMouseUp, handleMouseMove }) => {
-    if (e.target !== editCardBtn.current) {
+    if (e.target !== editCardBtnRef.current) {
       e.preventDefault();
 
       window.addEventListener('mouseup', handleMouseUp);
@@ -36,48 +40,51 @@ const CardContainer = (props) => {
   };
 
   const mouseEnter = (e) => {
-    switchColumns(e, {
-      ...cardDragTarget,
+    switchCards(e, {
+      ...cardDragTargetRef,
       _id: cardId,
     });
   };
 
   const scrollOptions = [
     {
-      elementToScroll: boardColumnsContainer,
+      elementToScroll: columnsContainer,
       distanceToStartScrollingX: 150,
       scrollStepX: 7,
       scrollX: true,
     },
     {
-      elementToScroll: columnRef.current,
+      elementToScroll: cardsContainerRef.current,
       distanceToStartScrollingY: 20,
       scrollStepY: 7,
       scrollY: true,
     },
   ];
 
+  const mouseUp = () => { };
   return (
     <DraggableContainer
-      extraClasses="column-drag-area"
-      dragTarget={columnDragTarget}
+      extraClasses="card-drag-area"
+      dragTargetRef={cardDragTargetRef}
       scrollOptions={scrollOptions}
       mouseEvents={{ mouseUp, mouseDown, mouseEnter }}
-      elementRefs={columnRefs}
+      elementRefs={cardRefs}
     >
       <CardFace
         refs={{
-          editingTarget,
+          editingTargetRef,
           tempCardRefs,
           setCardRefs,
           cardRefs,
-          cardDragArea,
+          cardDragAreaRef,
         }}
         cards={cards}
-        listTitle={listTitle}
+        cardTitle={cardTitle}
+        cardId={cardId}
         columnId={columnId}
+        position={cardPostiion}
         handleError={handleError}
-        switchColumns={switchColumns}
+        switchColumns={switchCards}
       />
     </DraggableContainer>
   );
@@ -89,4 +96,6 @@ CardContainer.propTypes = {
 };
 
 
-export default CardContainer;
+export default React.memo(CardContainer, (prevProps, nextProps) => {
+  return true;
+});
