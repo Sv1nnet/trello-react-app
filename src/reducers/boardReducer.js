@@ -141,8 +141,17 @@ const boardReducer = (state = initialState, action) => {
         localCards: [],
         cards: [...state.cards, data.card],
       };
+    case cardActionTypes.CARD_DELETED:
+      data = { ...action.data.data };
+      return {
+        ...state,
+        localColumns: [],
+        localCards: [],
+        cards: data.cards,
+      };
     case columnActionTypes.COLUMN_POSITIONS_UPDATE_FAILED:
     case boardActionTypes.BOARD_UPDATE_FAILED:
+    case cardActionTypes.CARD_DELETE_FAILED:
     case columnActionTypes.COLUMN_CREATE_FAILED:
     case columnActionTypes.COLUMN_DELETE_FAILED:
     default:

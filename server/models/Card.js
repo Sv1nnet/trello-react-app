@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 const mongoose = require('mongoose');
 const { MarkSchema } = require('./Mark');
 const { CardCommentSchema } = require('./CardComment');
@@ -23,6 +25,14 @@ const CardSchema = new Schema({
   },
   comments: [CardCommentSchema],
 });
+
+CardSchema.methods.update = function update(data) {
+  const card = this;
+
+  for (const key in data) {
+    card[key] = data[key];
+  }
+};
 
 const Card = mongoose.model('cards', CardSchema);
 

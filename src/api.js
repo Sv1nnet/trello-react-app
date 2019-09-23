@@ -1,7 +1,7 @@
 import axios from 'axios';
 import setAuthHeaders from './utlis/setAuthHeaders';
 
-const ip = 'http://192.168.0.16:3111';
+const ip = 'http://192.168.0.10:3111';
 const api = {
   auth: {
     signup: (data) => {
@@ -85,6 +85,10 @@ const api = {
     createCard: (token, boardId, data) => {
       setAuthHeaders(token);
       return axios.post(`${ip}/board/${boardId}/create_card`, data);
+    },
+    deleteCard: (token, boardId, cardId) => {
+      setAuthHeaders(token);
+      return axios.post(`${ip}/board/${boardId}/delete_card/${cardId}`);
     },
     updateCardPositions: (token, boardId, data) => {
       setAuthHeaders(token);

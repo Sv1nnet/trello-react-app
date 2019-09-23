@@ -84,6 +84,7 @@ BoardSchema.methods.addColumn = function addColumn(column) {
 BoardSchema.methods.updateColumn = async function addColumn(columnId, dataToUpdate) {
   const board = this;
   const columnToUpdate = board.columns.id(columnId);
+
   columnToUpdate.update(dataToUpdate);
   // const columnToUpdate = board.columns.find(column => column._id.toHexString() === columnId);
   // columnToUpdate.update(dataToUpdate);
@@ -91,6 +92,7 @@ BoardSchema.methods.updateColumn = async function addColumn(columnId, dataToUpda
 
 BoardSchema.methods.deleteColumn = function deleteColumn(columnId) {
   const board = this;
+
   board.columns.id(columnId).remove();
   board.columns = board.columns.map((column, i) => { column.position = i; return column; });
 
@@ -103,22 +105,41 @@ BoardSchema.methods.deleteColumn = function deleteColumn(columnId) {
   board.cards = board.cards.filter(card => card.column.toHexString() !== columnId);
 };
 
-BoardSchema.methods.addCard = function addColumn(card) {
+BoardSchema.methods.addCard = function addCard(card) {
   const board = this;
   board.cards.push(card);
 };
 
-BoardSchema.methods.updateCards = async function addColumn(cardId, dataToUpdate) {
+BoardSchema.methods.updateCard = function updateCard(cardId, dataToUpdate) {
   const board = this;
   const cardToUpdate = board.cards.find(card => card._id.toHexString() === cardId);
+
   cardToUpdate.update(dataToUpdate);
 };
 
-BoardSchema.methods.deleteCard = function deleteColumn(cardId) {
+BoardSchema.methods.deleteCard = function deleteCard(cardId) {
   const board = this;
-  const newCards = board.cards.filter(card => card._id.toHexString() !== cardId);
-  board.cards = newCards.map((card, i) => { card.position = i; return card; });
-  board.cards = board.cards.filter(card => card.column.toHexString() !== cardId);
+  const tempCards = board.cards.filter(card => card._id.toHexString() !== cardId);
+  const columns = {};
+  const newCards = [];
+
+  tempCards.forEach((card) => {
+    const column = card.column.toHexString();
+
+    if (!columns[column]) columns[column] = [];
+
+    columns[column].push(card);
+  });
+
+  for (const column in columns) {
+    columns[column].forEach((card, i) => {
+      card.position = i;
+      newCards.push(card);
+    });
+  }
+
+  board.cards = newCards;
+  console.log('new cards', board.cards)
 };
 
 const Board = mongoose.model('boards', BoardSchema);

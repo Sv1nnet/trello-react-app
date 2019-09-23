@@ -111,7 +111,7 @@ const ColumnListContextProvider = (props) => {
   const initialCards = {};
 
   const [cardsState, setCardsState] = useState({});
-  console.log('cardsState', cardsState);
+  // console.log('cardsState', cardsState);
 
   for (const column in cardsState) {
     const columnCards = cardsState[column].map(card => ({

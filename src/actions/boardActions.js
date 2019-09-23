@@ -245,6 +245,21 @@ const createCard = (token, boardId, card) => (dispatch, getState) => {
     });
 };
 
+const deleteCard = (token, boardId, cardId) => (dispatch, getState) => {
+  return api.board.deleteCard(token, boardId, cardId)
+    .then((res) => {
+      return dispatch({ type: cardActionTypes.CARD_DELETED, data: res }).data;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: cardActionTypes.CARD_DELETE_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
+
 const updateCardPositions = (token, boardId, dataToUpdate) => (dispatch, getState) => {
   const data = {
     columns: dataToUpdate,
@@ -283,6 +298,7 @@ export default {
   switchColumnPositions,
   updateColumnPositions,
   createCard,
+  deleteCard,
   switchCardPositions,
   updateCardPositions,
 };
