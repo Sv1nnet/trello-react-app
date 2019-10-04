@@ -20,29 +20,26 @@ const Column = (props) => {
     createCard,
     handleError,
     refs,
-    refElementContainer,
+    columnRefsAPI,
+    cardRefsAPI,
+    switchCards,
+    elementContainerRef,
   } = props;
 
   const {
     titleInputRef,
     editingTargetRef,
-    tempColumnRefs,
-    tempCardRefs = [],
-    columnRefs,
-    setColumnRefs,
     dragTargetRef,
   } = refs;
 
+  const { columnRefs, tempColumnRefs = [], setColumnRefs } = columnRefsAPI;
   const { columnId, listTitle, cards } = columnData;
 
   const [titleState, setTitleState] = useState({
     title: listTitle,
   });
 
-  const [cardRefs, setCardRefs] = useState([]);
-
   const cardsContainerRef = useRef(null);
-  // const addCardContainerRef = useRef(null);
 
   const updateTitle = () => {
     const dataToUpdate = {
@@ -130,6 +127,8 @@ const Column = (props) => {
       });
   };
 
+  // const switchCards = () => {};
+
   // Set textarea height and add ref to columnRefs on component did mount
   useEffect(() => {
     // Set title height corresponding its content
@@ -151,9 +150,29 @@ const Column = (props) => {
     return 0;
   });
 
+  const cardContainers = sortedCards.map((card, i) => (
+    <CardContainer
+      key={card._id}
+      cardData={{
+        cardId: card._id,
+        cardPosition: i,
+        cardTitle: card.title,
+      }}
+      columnId={columnId}
+      refs={{
+        columnRefs,
+      }}
+      cardRefsAPI={{
+        ...cardRefsAPI,
+        cardsContainerRef,
+      }}
+      switchCards={switchCards}
+    />
+  ));
+
   return (
     <div
-      ref={refElementContainer}
+      ref={elementContainerRef}
       className="cards-list-container drag-source"
     >
       <div className="list-header-container">
@@ -178,23 +197,7 @@ const Column = (props) => {
       </div>
       <div ref={cardsContainerRef} className="cards-container">
 
-        {sortedCards.map((card, i) => (
-          <CardContainer
-            key={card._id}
-            cardData={{
-              cardId: card._id,
-              cardPosition: i,
-              cardTitle: card.title,
-            }}
-            columnId={columnId}
-            refs={{
-              columnRefs,
-              tempCardRefs,
-              cardsContainerRef,
-            }}
-            setCardRefs={setCardRefs}
-          />
-        ))}
+        {cardContainers}
 
         <textarea
           onChange={handleTitleChange}

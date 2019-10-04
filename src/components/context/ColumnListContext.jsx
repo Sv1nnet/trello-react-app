@@ -1,9 +1,11 @@
+/* eslint-disable no-loop-func */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 import React, { useState, useEffect, createContext } from 'react';
 import { connect } from 'react-redux';
 import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
+import CardContainer from '../cards/CardContainer';
 
 export const ColumnListContext = createContext();
 
@@ -111,13 +113,12 @@ const ColumnListContextProvider = (props) => {
   const initialCards = {};
 
   const [cardsState, setCardsState] = useState({});
+  const [renderedCardsState, setRenderedCardsState] = useState({});
   // console.log('cardsState', cardsState);
 
   for (const column in cardsState) {
     const columnCards = cardsState[column].map(card => ({
-      _id: card._id,
-      column: card.column,
-      position: card.position,
+      ...card,
     }));
 
     cashedCards[column] = [...columnCards];
@@ -128,14 +129,17 @@ const ColumnListContextProvider = (props) => {
     const sourceData = {};
     const targetData = {};
 
-    // Create source and target objects with cashed columns and positions info
-    for (const column in cashedCards) {
-      const sourceCard = cashedCards[column].find(card => card._id === source._id);
-      const targetCard = cashedCards[column].find(card => card._id === target._id);
+    const result = [];
 
+    // Create source and target objects with cashed columns and positions info
+    const sourceCard = cashedCards[source.column].find(card => card._id === source._id);
+    const targetCard = cashedCards[target.column].find(card => card._id === target._id);
+
+    if (sourceCard) {
       sourceData.column = sourceCard.column;
       sourceData.position = sourceCard.position;
-
+    }
+    if (targetCard) {
       targetData.column = targetCard.column;
       targetData.position = targetCard.position;
     }
@@ -145,43 +149,24 @@ const ColumnListContextProvider = (props) => {
 
       cashedCards[column].find(card => card._id === source._id).position = targetData.position;
       cashedCards[column].find(card => card._id === target._id).position = sourceData.position;
+
+      cashedCards[sourceData.column].forEach((card) => { result.push(card); });
     } else { // If card was moved to another column
       const sourceColumn = sourceData.column;
       const targetColumn = targetData.column;
 
-      let sourceCard;
-      let targetCard;
+      sourceCard.position = targetData.position;
+      sourceCard.column = targetData.column;
 
-      for (const column in cashedCards) {
-        const sourceCardIndex = cashedCards[column].findIndex(card => card._id === source._id);
-        const targetCardIndex = cashedCards[column].findIndex(card => card._id === target._id);
+      cashedCards[sourceColumn].forEach((card) => {
+        if (card._id !== source._id) result.push(card);
+      });
 
-        if (sourceCardIndex !== -1) {
-          sourceCard = cashedCards.splice(sourceCardIndex, 1);
-        }
-        if (sourceCardIndex !== -1) {
-          targetCard = cashedCards.splice(targetCardIndex, 1);
-        }
-      }
+      cashedCards[targetColumn].forEach((card) => {
+        result.push(card);
+      });
 
-      sourceCard.column = targetColumn;
-      sourceCard.position = targetCard.position;
-
-      // TODO: set source position and the rest elemets after it
-      const cardsWithNewPosition = cashedCards[targetColumn]
-        .splice(target.position)
-        .map(card => ({
-          ...card,
-          position: card.position + 1,
-        }));
-
-      cashedCards[targetColumn].splice(target.position, 0, sourceCard, ...cardsWithNewPosition);
-    }
-
-    const result = [];
-
-    for (const column in cashedCards) {
-      cashedCards[column].forEach((card) => { result.push(card); });
+      result.push(sourceCard);
     }
 
     props.switchCardPositions(result);
@@ -230,28 +215,35 @@ const ColumnListContextProvider = (props) => {
   // Re-sort cards after they changed (e.g. once they downloaded or their positions changed)
   useEffect(() => {
     setCardsState(() => {
-      const cards = {};
+      // const newCards = {};
 
-      if (board.localCards.length > 0) {
-        board.columns.forEach((column) => {
-          cards[column._id] = board.localCards.filter(card => card.column === column._id).sort((cardOne, cardTwo) => {
-            if (cardOne.position < cardTwo.position) return -1;
-            if (cardOne.position > cardTwo.position) return 1;
-            return 0;
-          });
-        });
-      } else {
-        board.columns.forEach((column) => {
-          cards[column._id] = board.cards.filter(card => card.column === column._id).sort((cardOne, cardTwo) => {
-            if (cardOne.position < cardTwo.position) return -1;
-            if (cardOne.position > cardTwo.position) return 1;
-            return 0;
-          });
-        });
+      // if (Object.keys(board.localCards).length > 0) {
+      //   for (const column in board.localCards) {
+      //     newCards[column] = board.localCards[column].map((card, i) => ({
+      //       ...card,
+      //       cardContainer: (
+      //         <CardContainer
+      //           key={card._id}
+      //           cardData={{
+      //             cardId: card._id,
+      //             cardPosition: i,
+      //             cardTitle: card.title,
+      //           }}
+      //         />
+      //       ),
+      //     }));
+      //   }
+      // }
+      // return { ...board.cards };
+      if (Object.keys(board.localCards).length > 0) {
+        return { ...board.localCards };
       }
-
-      return cards;
+      return { ...board.cards };
     });
+
+    setRenderedCardsState(() => {
+
+    })
   }, [board.cards, board.columns, board.localCards]);
 
   const closeMessage = () => {
@@ -262,7 +254,7 @@ const ColumnListContextProvider = (props) => {
   };
 
   return (
-    <ColumnListContext.Provider value={{ columnsState, switchColumnPositions, updateColumnPositions, switchCardPositions, updateCardPositions }}>
+    <ColumnListContext.Provider value={{ columnsState, switchColumnPositions, updateColumnPositions, cardsState, switchCardPositions, updateCardPositions }}>
       {updatingState.message && <Messages.ErrorMessage message={updatingState.message} closeMessage={closeMessage} />}
       {children}
     </ColumnListContext.Provider>

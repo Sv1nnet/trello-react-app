@@ -1,34 +1,46 @@
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import DraggableContainer from '../utils/DraggableContainer';
-import CardFace from './CardFace';
+import Card from './Card';
 import isMouseMoved from '../../utlis/isMouseMoved';
 import '../../styles/cardItem.sass';
 
 
 const CardContainer = (props) => {
   const {
-    setCardRefs,
     handleError,
     switchCards,
     cards,
     cardData,
     columnId,
-    refs,
+    cardRefsAPI,
   } = props;
 
   const { cardId, cardPostiion, cardTitle } = cardData;
-  const { cardRefs, cardsContainerRef, tempCardRefs } = refs;
+
+  const {
+    cardRefs,
+    cardsContainerRef,
+  } = cardRefsAPI;
 
   const cardDragTargetRef = useRef(null);
   const editingTargetRef = useRef(null);
   const editCardBtnRef = useRef(null);
-  const cardContainerRef = useRef(null);
-  const cardDragAreaRef = useRef(null);
-  const cardRef = useRef(null);
 
   // We need pass it to DraggableContainer to scroll it when cursore comes to edge of this element
   const columnsContainer = document.querySelector('.board-lists-container');
+
+  const mouseUp = (e, mouseState) => {
+    // If user moves mouse more then 5 pixels across X or Y than drag column.
+    // Otherwise focus titleInputRef in order to change title.
+    // if (!isMouseMoved(e, mouseState.onMouseDownPosition, 5) && document.activeElement !== titleInputRef.current) {
+    //   e.preventDefault();
+    //   editingTargetRef.current.style.display = 'none';
+
+    //   titleInputRef.current.focus();
+    //   titleInputRef.current.select();
+    // }
+  };
 
   const mouseDown = (e, { handleMouseUp, handleMouseMove }) => {
     if (e.target !== editCardBtnRef.current) {
@@ -42,6 +54,7 @@ const CardContainer = (props) => {
   const mouseEnter = (e) => {
     switchCards(e, {
       ...cardDragTargetRef,
+      column: columnId,
       _id: cardId,
     });
   };
@@ -55,13 +68,13 @@ const CardContainer = (props) => {
     },
     {
       elementToScroll: cardsContainerRef.current,
-      distanceToStartScrollingY: 20,
+      distanceToStartScrollingY: 35,
       scrollStepY: 7,
       scrollY: true,
     },
   ];
 
-  const mouseUp = () => { };
+  // action="UPDATE_CARDS"
   return (
     <DraggableContainer
       extraClasses="card-drag-area"
@@ -70,21 +83,18 @@ const CardContainer = (props) => {
       mouseEvents={{ mouseUp, mouseDown, mouseEnter }}
       elementRefs={cardRefs}
     >
-      <CardFace
+      <Card
         refs={{
           editingTargetRef,
-          tempCardRefs,
-          setCardRefs,
-          cardRefs,
-          cardDragAreaRef,
         }}
+        cardRefsAPI={cardRefsAPI}
         cards={cards}
         cardTitle={cardTitle}
         cardId={cardId}
         columnId={columnId}
         position={cardPostiion}
         handleError={handleError}
-        switchColumns={switchCards}
+        switchCards={switchCards}
       />
     </DraggableContainer>
   );
@@ -96,6 +106,11 @@ CardContainer.propTypes = {
 };
 
 
-export default React.memo(CardContainer, (prevProps, nextProps) => {
-  return true;
-});
+export default CardContainer;
+// export default React.memo(CardContainer, (prevProps, nextProps) => (
+//   prevProps.columnId === nextProps.columnId
+//   && prevProps.cardTitle === nextProps.cardTitle
+//   && prevProps.cardData.cardPosition === nextProps.cardData.cardPosition
+//   && prevProps.cardData.cardTitle === nextProps.cardData.cardTitle
+//   && prevProps.cardRefsAPI.cardRefs.length === nextProps.cardRefsAPI.cardRefs.length
+// ));

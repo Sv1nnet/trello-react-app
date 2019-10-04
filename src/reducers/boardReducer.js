@@ -1,4 +1,27 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 import { boardActionTypes, columnActionTypes, cardActionTypes } from '../types';
+
+const getSortedCards = (cards) => {
+  const sortedCards = {};
+
+  cards.forEach((card) => {
+    if (!sortedCards[card.column]) sortedCards[card.column] = [];
+    sortedCards[card.column].push(card);
+  });
+
+  for (const column in sortedCards) {
+    sortedCards[column] = sortedCards[column].sort((cardOne, cardTwo) => {
+      if (cardOne.position < cardTwo.position) return -1;
+      if (cardOne.position > cardTwo.position) return 1;
+      return 0;
+    });
+  }
+
+  console.log('sortedCards', sortedCards)
+
+  return sortedCards;
+};
 
 
 const initialState = {
@@ -26,19 +49,26 @@ const initialState = {
     },
   ],
   chat: '',
-  cards: [],
+  cards: {},
   members: [],
   isReadOnly: false,
   columns: [],
   localColumns: [],
-  localCards: [],
+  localCards: {},
 };
 
-const boardReducer = (state = initialState, action) => {
-  let data;
+const boardReducer = (state = initialState, action = { type: 'default', data: {} }) => {
+  let cards = {};
+  let data = {};
+  let newLocalCards = {};
+  let sortedCards = {};
+
   switch (action.type) {
     case boardActionTypes.CREATED:
       data = { ...action.data.data };
+      cards = [...data.cards];
+      sortedCards = getSortedCards(cards);
+
       return {
         _id: data._id,
         owner: data.owner,
@@ -47,12 +77,12 @@ const boardReducer = (state = initialState, action) => {
         description: '',
         isPrivate: data.isPrivate,
         marks: data.marks,
-        cards: data.cards,
+        cards: { ...sortedCards },
         members: data.members,
         isReadOnly: data.isReadOnly,
         columns: data.columns,
         localColumns: [],
-        localCards: [],
+        localCards: {},
       };
     case columnActionTypes.COLUMN_DELETED:
     case columnActionTypes.COLUMN_POSITIONS_UPDATED:
@@ -60,6 +90,9 @@ const boardReducer = (state = initialState, action) => {
     case boardActionTypes.BOARD_UPDATED:
     case boardActionTypes.BOARD_DOWNLOADED:
       data = { ...action.data.data };
+      cards = [...data.cards];
+      sortedCards = getSortedCards(cards);
+
       return {
         _id: data._id,
         owner: data.owner,
@@ -68,25 +101,37 @@ const boardReducer = (state = initialState, action) => {
         description: '',
         isPrivate: data.isPrivate,
         marks: data.marks,
-        cards: data.cards,
+        cards: { ...sortedCards },
         members: data.members,
         isReadOnly: data.isReadOnly,
         columns: data.columns,
         localColumns: [],
-        localCards: [],
+        localCards: {},
       };
     case columnActionTypes.COLUMN_POSITIONS_SWITCHED:
+      data = { ...action.data.data };
+
       return {
         ...state,
         localColumns: action.data.columns,
       };
     case cardActionTypes.CARD_POSITIONS_SWITCHED:
+      cards = [...action.data.cards];
+      newLocalCards = getSortedCards(cards);
+      console.log('newLocalCards', newLocalCards)
       return {
         ...state,
-        localCards: action.data.cards,
+        localCards: {
+          ...state.cards,
+          ...state.localCards,
+          ...newLocalCards,
+        },
       };
     case boardActionTypes.BOARD_MEMBER_ADDED:
       data = { ...action.data.data };
+      cards = [...data.cards];
+      sortedCards = getSortedCards(cards);
+
       return {
         _id: data.board._id,
         owner: data.board.owner,
@@ -95,15 +140,18 @@ const boardReducer = (state = initialState, action) => {
         description: '',
         isPrivate: data.board.isPrivate,
         marks: data.board.marks,
-        cards: data.board.cards,
+        cards: { ...sortedCards },
         members: data.board.members,
         isReadOnly: data.board.isReadOnly,
         columns: data.board.columns,
         localColumns: [],
-        localCards: [],
+        localCards: {},
       };
     case boardActionTypes.BOARD_MEMBER_REMOVED:
       data = { ...action.data.data };
+      cards = [...data.cards];
+      sortedCards = getSortedCards(cards);
+
       return {
         _id: data.board._id,
         owner: data.board.owner,
@@ -112,12 +160,12 @@ const boardReducer = (state = initialState, action) => {
         description: '',
         isPrivate: data.board.isPrivate,
         marks: data.board.marks,
-        cards: data.board.cards,
+        cards: { ...sortedCards },
         members: data.board.members,
         isReadOnly: data.board.isReadOnly,
         columns: data.board.columns,
         localColumns: [],
-        localCards: [],
+        localCards: {},
       };
     case boardActionTypes.BOARD_MEMBERS_RECEIVED:
       data = { ...action.data.data };
@@ -130,24 +178,33 @@ const boardReducer = (state = initialState, action) => {
       return {
         ...state,
         localColumns: [],
-        localCards: [],
+        localCards: {},
         columns: [...state.columns, data.column],
       };
     case cardActionTypes.CARD_CREATED:
       data = { ...action.data.data };
+      sortedCards = {
+        ...state.cards,
+      };
+
+      sortedCards[data.card.column] = [...state.cards[data.card.column], data.card];
+
       return {
         ...state,
+        cards: { ...sortedCards },
         localColumns: [],
-        localCards: [],
-        cards: [...state.cards, data.card],
+        localCards: {},
       };
     case cardActionTypes.CARD_DELETED:
       data = { ...action.data.data };
+      cards = [...data.cards];
+      sortedCards = getSortedCards(cards);
+
       return {
         ...state,
         localColumns: [],
-        localCards: [],
-        cards: data.cards,
+        localCards: {},
+        cards: { ...sortedCards },
       };
     case columnActionTypes.COLUMN_POSITIONS_UPDATE_FAILED:
     case boardActionTypes.BOARD_UPDATE_FAILED:
@@ -158,7 +215,7 @@ const boardReducer = (state = initialState, action) => {
       return {
         ...state,
         localColumns: [],
-        localCards: [],
+        localCards: {},
       };
   }
 };

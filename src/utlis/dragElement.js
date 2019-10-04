@@ -18,6 +18,8 @@ const setElementPosition = (initialPosition, e, element) => {
  */
 const dragElement = (event, element, { startDragCallback, dragCallback, endDragCallback } = {}) => {
   const e = event.nativeEvent || event;
+  const initialElementStyle = element.style;
+
   const initialPosition = {
     x: event.offsetX,
     y: event.offsetY,
@@ -29,18 +31,26 @@ const dragElement = (event, element, { startDragCallback, dragCallback, endDragC
     if (dragCallback) dragCallback(mouseMoveEvent);
   };
 
-  // Remove all handlers
+  // Remove all handlers on mouseUp
   const mouseUpHandler = (mouseMoveEvent) => {
     window.removeEventListener('mousemove', dragHandler);
     window.removeEventListener('mouseup', mouseUpHandler);
 
     element.classList.remove('dragging');
-    element.style = '';
+    element.style = initialElementStyle;
+
+    document.body.style.cursor = '';
 
     if (endDragCallback) endDragCallback(mouseMoveEvent);
   };
 
   element.classList.add('dragging');
+  element.style.position = 'absolute';
+  element.style.zIndex = '1001';
+  element.style.pointerEvents = 'none';
+
+  document.body.style.cursor = 'pointer';
+
   setElementPosition(initialPosition, e, element);
 
   document.body.appendChild(element);

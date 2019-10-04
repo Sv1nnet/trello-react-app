@@ -28,12 +28,14 @@ const ColumnContainer = (props) => {
     cards,
     listTitle,
     columnId,
-    columnRefs,
-    tempColumnRefs,
-    setColumnRefs,
     handleError,
     switchColumns,
+    switchCards,
+    columnRefsAPI,
+    cardRefsAPI,
   } = props;
+
+  const { columnRefs } = columnRefsAPI;
 
   // We need pass it to DraggableContainer to scroll it when cursore comes to edge of this element
   const boardColumnsContainer = document.querySelector('.board-lists-container');
@@ -88,10 +90,10 @@ const ColumnContainer = (props) => {
         refs={{
           titleInputRef,
           editingTargetRef,
-          tempColumnRefs,
-          setColumnRefs,
-          columnRefs,
         }}
+        columnRefsAPI={columnRefsAPI}
+        cardRefsAPI={cardRefsAPI}
+        switchCards={switchCards}
         columnData={{
           columnId,
           listTitle,

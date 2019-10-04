@@ -7,7 +7,7 @@ import { ColumnListContext } from '../context/ColumnListContext';
 const DraggableContainer = (props) => {
   const {
     children, // Elements to render inside DraggableContainer
-    elementRefs = [], // Array of refs that mouse event hendlers will be put on
+    elementRefs = [], // Array of refs that mouse event hendlers will be added on
     extraClasses, // Extra classes will be added to a drag container
     dragTargetRef, // Ref that is a area where element have to be dragged to
     mouseEvents, // mouseUp, mouseEnter, mouseDown events passed from element container
@@ -17,7 +17,7 @@ const DraggableContainer = (props) => {
   const { mouseUp, mouseEnter, mouseDown } = mouseEvents;
 
   const { updateColumnPositions, updateCardPositions } = useContext(ColumnListContext);
-  const refElementContainer = useRef(null);
+  const elementContainerRef = useRef(null);
 
   const mouseState = {
     mouseDown: false,
@@ -95,7 +95,7 @@ const DraggableContainer = (props) => {
 
       dragElement(
         e,
-        refElementContainer.current,
+        elementContainerRef.current,
         {
           startDragCallback: addElementsMouseEnterHandler,
           dragCallback: scrollElements(scrollOptions),
@@ -116,7 +116,7 @@ const DraggableContainer = (props) => {
 
     dragTargetRef.current.classList.remove('dragging');
 
-    dragTargetRef.current.appendChild(refElementContainer.current);
+    dragTargetRef.current.appendChild(elementContainerRef.current);
 
     if (mouseUp) mouseUp(e, mouseState);
   };
@@ -139,7 +139,7 @@ const DraggableContainer = (props) => {
     },
     handleMouseDown,
     handleMouseUp,
-    refElementContainer,
+    elementContainerRef,
   }));
 
   return (

@@ -9,10 +9,12 @@ import hasParent from './hasParent';
  */
 const switchElements = (e, source, refs, switchPosition) => {
   // Find target in columnRefs and switch it with source element
-  refs.forEach((element) => {
+  refs.some((element) => {
     if (e.target === element.current || hasParent(element.current, e.target)) {
       switchPosition(source, element);
+      return true;
     }
+    return false;
   });
 };
 

@@ -45,11 +45,18 @@ const ColumnList = (props) => {
   // every next CardList will have previously passed empty columnRefs without new refs from the other
   // CardList components. So we push a new ref in tempColumnRefs and then destructure it in setColumnRefs
   const tempColumnRefs = [];
+  const tempCardRefs = [];
 
   // columnRefs - all column refs. We need them to add mouse enter event handlers when user drags column
   const [columnRefs, setColumnRefs] = useState([]);
+  const [cardRefs, setCardRefs] = useState([]);
 
-  const { columnsState, switchColumnPositions } = useContext(ColumnListContext);
+  const {
+    columnsState,
+    switchColumnPositions,
+    cardsState,
+    switchCardPositions,
+  } = useContext(ColumnListContext);
 
   const handleError = (err) => {
     setState({
@@ -89,6 +96,10 @@ const ColumnList = (props) => {
     switchElements(e, source, columnRefs, switchColumnPositions);
   };
 
+  const switchCards = (e, source) => {
+    switchElements(e, source, cardRefs, switchCardPositions);
+  };
+
   const closeMessage = () => {
     setState({
       ...state,
@@ -103,21 +114,27 @@ const ColumnList = (props) => {
     });
   };
 
-  const { board } = props;
-
-  const columnList = columnsState.sortedColumns.map((column, i) => {
-    const columnCards = board.cards.filter(card => card.column === column._id);
+  const columnList = columnsState.sortedColumns.map((column) => {
+    const cardsInColumn = cardsState[column._id] ? [...cardsState[column._id]] : [];
     return (
       <ColumnContainer
         key={column._id}
-        cards={columnCards}
+        cards={cardsInColumn}
         listTitle={column.title}
         columnId={column._id}
-        columnRefs={columnRefs}
-        tempColumnRefs={tempColumnRefs}
-        setColumnRefs={setColumnRefs}
         handleError={handleError}
+        columnRefsAPI={{
+          columnRefs,
+          tempColumnRefs,
+          setColumnRefs,
+        }}
         switchColumns={switchColumns}
+        cardRefsAPI={{
+          cardRefs,
+          tempCardRefs,
+          setCardRefs,
+        }}
+        switchCards={switchCards}
       />
     );
   });
@@ -161,4 +178,4 @@ const mapDispatchToProps = dispatch => ({
 ColumnList.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ColumnList);
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(ColumnList));
