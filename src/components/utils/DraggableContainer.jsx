@@ -7,7 +7,7 @@ import { ColumnListContext } from '../context/ColumnListContext';
 const DraggableContainer = (props) => {
   const {
     children, // Elements to render inside DraggableContainer
-    elementRefs = [], // Array of refs that mouse event hendlers will be added on
+    elementRefs, // Array of refs that mouse event hendlers will be added on
     extraClasses, // Extra classes will be added to a drag container
     dragTargetRef, // Ref that is a area where element have to be dragged to
     mouseEvents, // mouseUp, mouseEnter, mouseDown events passed from element container
@@ -16,7 +16,11 @@ const DraggableContainer = (props) => {
 
   const { mouseUp, mouseEnter, mouseDown } = mouseEvents;
 
-  const { updateColumnPositions, updateCardPositions } = useContext(ColumnListContext);
+  const { columnContextAPI, cardsContextAPI } = useContext(ColumnListContext);
+
+  const { updateCardPositions, cardRefs } = cardsContextAPI;
+  const { updateColumnPositions } = columnContextAPI;
+
   const elementContainerRef = useRef(null);
 
   const mouseState = {
@@ -36,6 +40,8 @@ const DraggableContainer = (props) => {
     scrollVerticalInterval: undefined,
   };
 
+  // console.log('elementRefs', elementRefs)
+
   // Add mouseEnter handler on all columns except HTMLElement we drag
   const addElementsMouseEnterHandler = () => {
     const HTMLElementList = elementRefs.filter(el => el.current !== dragTargetRef.current);
@@ -47,6 +53,7 @@ const DraggableContainer = (props) => {
 
   // Remove mouseEnter handler on all columns except HTMLElement we drag(cause we don't have that handler on it)
   const removeElementsMouseEnterHandler = () => {
+    // const HTMLElementList = cardRefs.filter(el => el.current !== dragTargetRef.current);
     const HTMLElementList = elementRefs.filter(el => el.current !== dragTargetRef.current);
 
     if (HTMLElementList.length !== 0) {
@@ -107,6 +114,7 @@ const DraggableContainer = (props) => {
 
   // Remove drag state, drag style and drag event handlers.
   const handleMouseUp = (e) => {
+    // return;
     if (dragState.dragging && mouseState.mouseDown) {
       dragState.dragging = false;
     }

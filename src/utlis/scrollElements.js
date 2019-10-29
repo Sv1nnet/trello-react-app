@@ -23,35 +23,37 @@ const scrollElements = options => (e) => {
       scrollX = scrollBoth,
       scrollY = scrollBoth,
     } = option;
-    const rect = elementToScroll.getBoundingClientRect();
+    if (!elementToScroll) console.log('option', option);
+    const HTMLElement = elementToScroll.getBoundingClientRect ? elementToScroll : elementToScroll.current;
+    const rect = HTMLElement.getBoundingClientRect ? HTMLElement.getBoundingClientRect() : HTMLElement.current.getBoundingClientRect();
 
     // Scroll horizontal
     if (scrollX || scrollBoth) {
-      // If mouse position less then distanceToStartScrollingX from the right edge of screen then scroll right
-      if (((e.clientX - rect.x) >= distanceToStartScrollingX && (elementToScroll.offsetWidth - e.clientX) <= distanceToStartScrollingX)) {
-        // Scroll is not on the right edge of screen
-        const canScroll = elementToScroll.offsetWidth < (elementToScroll.scrollWidth - elementToScroll.scrollLeft);
+      // If mouse position less then distanceToStartScrollingX from the right edge of element then scroll right
+      if (((e.clientX - rect.x) >= distanceToStartScrollingX && (HTMLElement.offsetWidth - e.clientX) <= distanceToStartScrollingX)) {
+        // Scroll is not on the right edge of element
+        const canScroll = HTMLElement.offsetWidth < (HTMLElement.scrollWidth - HTMLElement.scrollLeft);
         // If there is no current horizontal scroll interval and we can scroll
         if (!scrollIntervals.scrollHorizontalInterval && canScroll) {
           scrollIntervals.scrollHorizontalInterval = setInterval(() => {
-            const isEndOfScroll = elementToScroll.offsetWidth === (elementToScroll.scrollWidth - elementToScroll.scrollLeft);
+            const isEndOfScroll = HTMLElement.offsetWidth === (HTMLElement.scrollWidth - HTMLElement.scrollLeft);
 
-            elementToScroll.scrollTo(elementToScroll.scrollLeft + scrollStepX, elementToScroll.scrollTop);
+            HTMLElement.scrollTo(HTMLElement.scrollLeft + scrollStepX, HTMLElement.scrollTop);
 
             if (isEndOfScroll) clearInterval(scrollIntervals.scrollHorizontalInterval);
           }, 1000 / 60);
         }
-        // If mouse position less then distanceToStartScrollingX from the left edge of screen then scroll left
+        // If mouse position less then distanceToStartScrollingX from the left edge of element then scroll left
       } else if ((e.clientX - rect.x) <= distanceToStartScrollingX) {
-        // Scroll is not on the left edge of screen
-        const canScroll = elementToScroll.scrollLeft > 0;
+        // Scroll is not on the left edge of element
+        const canScroll = HTMLElement.scrollLeft > 0;
 
         // If there is no current horizontal scroll interval and we can scroll
         if (!scrollIntervals.scrollHorizontalInterval && canScroll) {
           scrollIntervals.scrollHorizontalInterval = setInterval(() => {
-            const isEndOfScroll = elementToScroll.scrollLeft === 0;
+            const isEndOfScroll = HTMLElement.scrollLeft === 0;
 
-            elementToScroll.scrollTo(elementToScroll.scrollLeft - scrollStepX, elementToScroll.scrollTop);
+            HTMLElement.scrollTo(HTMLElement.scrollLeft - scrollStepX, HTMLElement.scrollTop);
 
             if (isEndOfScroll) clearInterval(scrollIntervals.scrollHorizontalInterval);
           }, 1000 / 60);
@@ -67,31 +69,31 @@ const scrollElements = options => (e) => {
 
     // Scroll vertical
     if (scrollY || scrollBoth) {
-      // If mouse position less then distanceToStartScrollingY from the top edge of screen then scroll down
-      if (((e.clientY - rect.y) >= distanceToStartScrollingY && (elementToScroll.offsetHeight + rect.y - e.clientY) <= distanceToStartScrollingY)) {
+      // If mouse position less then distanceToStartScrollingY from the top edge of element then scroll down
+      if (((e.clientY - rect.y) >= distanceToStartScrollingY && (HTMLElement.offsetHeight + rect.y - e.clientY) <= distanceToStartScrollingY)) {
         // Scroll is not on the top edge of screen
-        const canScroll = elementToScroll.offsetHeight <= (elementToScroll.scrollHeight - elementToScroll.scrollTop);
+        const canScroll = HTMLElement.offsetHeight <= (HTMLElement.scrollHeight - HTMLElement.scrollTop);
         // If there is no current vertical scroll interval and we can scroll
         if (!scrollIntervals.scrollVerticalInterval && canScroll) {
           scrollIntervals.scrollVerticalInterval = setInterval(() => {
-            const isEndOfScroll = elementToScroll.offsetHeight >= (elementToScroll.scrollHeight - elementToScroll.scrollTop);
+            const isEndOfScroll = HTMLElement.offsetHeight >= (HTMLElement.scrollHeight - HTMLElement.scrollTop);
 
-            elementToScroll.scrollTo(elementToScroll.scrollLeft, elementToScroll.scrollTop + scrollStepY);
+            HTMLElement.scrollTo(HTMLElement.scrollLeft, HTMLElement.scrollTop + scrollStepY);
 
             if (isEndOfScroll) clearInterval(scrollIntervals.scrollVerticalInterval);
           }, 1000 / 60);
         }
-        // If mouse position less then distanceToStartScrollingY from the bottom edge of screen then scroll up
+        // If mouse position less then distanceToStartScrollingY from the bottom edge of element then scroll up
       } else if ((e.clientY - rect.y) <= distanceToStartScrollingY) {
-        // Scroll is not on the bottom edge of screen
-        const canScroll = elementToScroll.scrollTop > 0;
+        // Scroll is not on the bottom edge of element
+        const canScroll = HTMLElement.scrollTop > 0;
 
         // If there is no current vertical scroll interval and we can scroll
         if (!scrollIntervals.scrollVerticalInterval && canScroll) {
           scrollIntervals.scrollVerticalInterval = setInterval(() => {
-            const isEndOfScroll = elementToScroll.scrollTop <= 0;
+            const isEndOfScroll = HTMLElement.scrollTop <= 0;
 
-            elementToScroll.scrollTo(elementToScroll.scrollLeft, elementToScroll.scrollTop - scrollStepY);
+            HTMLElement.scrollTo(HTMLElement.scrollLeft, HTMLElement.scrollTop - scrollStepY);
 
             if (isEndOfScroll) clearInterval(scrollIntervals.scrollVerticalInterval);
           }, 1000 / 60);

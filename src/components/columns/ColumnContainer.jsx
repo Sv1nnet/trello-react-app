@@ -1,21 +1,19 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import DraggableContainer from '../utils/DraggableContainer';
 import isMouseMoved from '../../utlis/isMouseMoved';
 import Column from './Column';
 import '../../styles/cardsList.sass';
+import { ColumnListContext } from '../context/ColumnListContext';
 
 
 const defaultProps = {
-  cards: [],
-  columnRefs: [],
+  
 };
 
 const propTypes = {
-  cards: PropTypes.array,
   listTitle: PropTypes.string.isRequired,
   columnId: PropTypes.string.isRequired,
-  columnRefs: PropTypes.array,
 };
 
 
@@ -30,12 +28,12 @@ const ColumnContainer = (props) => {
     columnId,
     handleError,
     switchColumns,
-    switchCards,
     columnRefsAPI,
-    cardRefsAPI,
   } = props;
 
   const { columnRefs } = columnRefsAPI;
+  const { switchColumnPositions } = useContext(ColumnListContext).columnContextAPI;
+
 
   // We need pass it to DraggableContainer to scroll it when cursore comes to edge of this element
   const boardColumnsContainer = document.querySelector('.board-lists-container');
@@ -62,10 +60,10 @@ const ColumnContainer = (props) => {
   };
 
   const mouseEnter = (e) => {
-    switchColumns(e, {
-      ...columnDragTargetRef,
-      _id: columnId,
-    });
+    const source = { _id: columnId };
+    const target = { _id: columnRefs.find(column => column.current === e.target)._id };
+
+    switchColumnPositions(source, target);
   };
 
   const scrollOptions = [
@@ -92,8 +90,6 @@ const ColumnContainer = (props) => {
           editingTargetRef,
         }}
         columnRefsAPI={columnRefsAPI}
-        cardRefsAPI={cardRefsAPI}
-        switchCards={switchCards}
         columnData={{
           columnId,
           listTitle,

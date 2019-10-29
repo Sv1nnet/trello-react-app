@@ -33,6 +33,7 @@ const dragElement = (event, element, { startDragCallback, dragCallback, endDragC
 
   // Remove all handlers on mouseUp
   const mouseUpHandler = (mouseMoveEvent) => {
+    // return;
     window.removeEventListener('mousemove', dragHandler);
     window.removeEventListener('mouseup', mouseUpHandler);
 

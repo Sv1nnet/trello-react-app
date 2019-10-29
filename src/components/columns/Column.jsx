@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,6 +7,7 @@ import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import boardActions from '../../actions/boardActions';
 import CardContainer from '../cards/CardContainer';
 import AddBoardContent from '../utils/AddBoardContent';
+import { ColumnListContext } from '../context/ColumnListContext';
 
 
 const Column = (props) => {
@@ -21,8 +22,6 @@ const Column = (props) => {
     handleError,
     refs,
     columnRefsAPI,
-    cardRefsAPI,
-    switchCards,
     elementContainerRef,
   } = props;
 
@@ -33,13 +32,21 @@ const Column = (props) => {
   } = refs;
 
   const { columnRefs, tempColumnRefs = [], setColumnRefs } = columnRefsAPI;
-  const { columnId, listTitle, cards } = columnData;
+  const { columnId, listTitle } = columnData;
+
+  const { cardsContextAPI } = useContext(ColumnListContext);
+  const {
+    renderedCardsState,
+  } = cardsContextAPI;
 
   const [titleState, setTitleState] = useState({
     title: listTitle,
   });
 
+  // Need this ref to scroll card container when card is being dragged
   const cardsContainerRef = useRef(null);
+
+  const [cardsState, setCardsState] = useState({ renderedCards: [] });
 
   const updateTitle = () => {
     const dataToUpdate = {
@@ -61,7 +68,7 @@ const Column = (props) => {
   };
 
   const resizeTitleTextarea = () => {
-    // Set textarea height 1px to recalculate it's content height
+    // Set textarea height 1px to recalculate its content height
     if (titleInputRef.current) {
       titleInputRef.current.style.height = '1px';
 
@@ -117,7 +124,7 @@ const Column = (props) => {
     const card = {
       title: cardTitle,
       column: columnId,
-      position: cards.length,
+      position: cardsState.renderedCards.length,
     };
 
     return createCard(token.token, board._id, card)
@@ -126,8 +133,6 @@ const Column = (props) => {
         return Promise.reject(err);
       });
   };
-
-  // const switchCards = () => {};
 
   // Set textarea height and add ref to columnRefs on component did mount
   useEffect(() => {
@@ -144,31 +149,33 @@ const Column = (props) => {
     setColumnRefs([...columnRefs, ...tempColumnRefs]);
   }, []);
 
-  const sortedCards = cards.sort((cardOne, cardTwo) => {
-    if (cardOne.position < cardTwo.position) return -1;
-    if (cardOne.position > cardTwo.position) return 1;
-    return 0;
-  });
+  useEffect(() => {
+  }, [board.cards]);
 
-  const cardContainers = sortedCards.map((card, i) => (
-    <CardContainer
-      key={card._id}
-      cardData={{
-        cardId: card._id,
-        cardPosition: i,
-        cardTitle: card.title,
-      }}
-      columnId={columnId}
-      refs={{
-        columnRefs,
-      }}
-      cardRefsAPI={{
-        ...cardRefsAPI,
-        cardsContainerRef,
-      }}
-      switchCards={switchCards}
-    />
-  ));
+  useEffect(() => {
+    setCardsState({
+      ...cardsState,
+      renderedCards: renderedCardsState[columnId],
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log('renderedCardsState[columnId]', renderedCardsState[columnId])
+    setCardsState({
+      ...cardsState,
+      renderedCards: [...renderedCardsState[columnId]],
+    });
+    // setCardsState({
+    //   ...cardsState,
+    //   renderedCards: renderedCardsState[columnId] ? renderedCardsState[columnId] : [...cardsState.renderedCards],
+    // });
+  }, [renderedCardsState]);
+
+  useEffect(() => {
+    console.log('cardsState', cardsState)
+  }, [cardsState]);
+
+  console.log('column rendered', titleState.title, renderedCardsState[columnId])
 
   return (
     <div
@@ -197,7 +204,8 @@ const Column = (props) => {
       </div>
       <div ref={cardsContainerRef} className="cards-container">
 
-        {cardContainers}
+        {cardsState.renderedCards}
+        {/* {renderedCardsState[columnId]} */}
 
         <textarea
           onChange={handleTitleChange}
@@ -249,3 +257,6 @@ Column.propTypes = {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Column);
+// export default connect(mapStateToProps, mapDispatchToProps)(React.memo(
+//   Column,
+//   (prevProps, nextProps) => {}));

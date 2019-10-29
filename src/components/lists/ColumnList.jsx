@@ -34,7 +34,7 @@ const propTypes = {
 
 
 const ColumnList = (props) => {
-  const [state, setState] = useState({
+  const [updatePositionsState, setUpdatePositionsState] = useState({
     err: {
       message: '',
       statusCode: undefined,
@@ -45,22 +45,32 @@ const ColumnList = (props) => {
   // every next CardList will have previously passed empty columnRefs without new refs from the other
   // CardList components. So we push a new ref in tempColumnRefs and then destructure it in setColumnRefs
   const tempColumnRefs = [];
-  const tempCardRefs = [];
 
   // columnRefs - all column refs. We need them to add mouse enter event handlers when user drags column
-  const [columnRefs, setColumnRefs] = useState([]);
-  const [cardRefs, setCardRefs] = useState([]);
+  // const [columnRefs, setColumnRefs] = useState([]);
+  // const [cardRefs, setCardRefs] = useState([]);
+
+  const {
+    columnContextAPI,
+    cardsContextAPI,
+  } = useContext(ColumnListContext);
+
+  const {
+    renderedCardsState,
+    setRenderedCardsState,
+    switchCardPositions,
+    updateCardPositions,
+  } = cardsContextAPI;
 
   const {
     columnsState,
     switchColumnPositions,
-    cardsState,
-    switchCardPositions,
-  } = useContext(ColumnListContext);
+    updateColumnPositions,
+  } = columnContextAPI;
 
   const handleError = (err) => {
-    setState({
-      ...state,
+    setUpdatePositionsState({
+      ...updatePositionsState,
       err: {
         message: err.message,
         statusCode: err.status,
@@ -92,17 +102,17 @@ const ColumnList = (props) => {
     }
   };
 
-  const switchColumns = (e, source) => {
-    switchElements(e, source, columnRefs, switchColumnPositions);
-  };
+  // const switchColumns = (e, source) => {
+  //   switchElements(e, source, columnRefs, switchColumnPositions);
+  // };
 
-  const switchCards = (e, source) => {
-    switchElements(e, source, cardRefs, switchCardPositions);
-  };
+  // const switchCards = (e, source) => {
+  //   switchElements(e, source, cardRefs, switchCardPositions);
+  // };
 
   const closeMessage = () => {
-    setState({
-      ...state,
+    setUpdatePositionsState({
+      ...updatePositionsState,
       err: {
         message: '',
         statusCode: undefined,
@@ -114,36 +124,12 @@ const ColumnList = (props) => {
     });
   };
 
-  const columnList = columnsState.sortedColumns.map((column) => {
-    const cardsInColumn = cardsState[column._id] ? [...cardsState[column._id]] : [];
-    return (
-      <ColumnContainer
-        key={column._id}
-        cards={cardsInColumn}
-        listTitle={column.title}
-        columnId={column._id}
-        handleError={handleError}
-        columnRefsAPI={{
-          columnRefs,
-          tempColumnRefs,
-          setColumnRefs,
-        }}
-        switchColumns={switchColumns}
-        cardRefsAPI={{
-          cardRefs,
-          tempCardRefs,
-          setCardRefs,
-        }}
-        switchCards={switchCards}
-      />
-    );
-  });
-
   return (
     <>
-      {state.err.message && <Messages.ErrorMessage message={state.err.message} closeMessage={closeMessage} />}
+      {updatePositionsState.err.message && <Messages.ErrorMessage message={updatePositionsState.err.message} closeMessage={closeMessage} />}
       <div className="board-lists-container d-flex align-items-start">
-        {columnList}
+        {/* {columnList} */}
+        {columnsState}
 
         <div className="add-new-column-button-container">
           <AddBoardContent
@@ -165,9 +151,9 @@ const ColumnList = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  token: state.user.token,
-  board: state.board,
+const mapStateToProps = updatePositionsState => ({
+  token: updatePositionsState.user.token,
+  board: updatePositionsState.board,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -178,4 +164,5 @@ const mapDispatchToProps = dispatch => ({
 ColumnList.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(React.memo(ColumnList));
+export default connect(mapStateToProps, mapDispatchToProps)(ColumnList);
+// export default connect(mapStateToProps, mapDispatchToProps)(React.memo(ColumnList));

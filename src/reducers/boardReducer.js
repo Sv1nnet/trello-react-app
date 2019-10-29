@@ -49,12 +49,10 @@ const initialState = {
     },
   ],
   chat: '',
-  cards: {},
+  cards: [],
   members: [],
   isReadOnly: false,
   columns: [],
-  localColumns: [],
-  localCards: {},
 };
 
 const boardReducer = (state = initialState, action = { type: 'default', data: {} }) => {
@@ -67,7 +65,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
     case boardActionTypes.CREATED:
       data = { ...action.data.data };
       cards = [...data.cards];
-      sortedCards = getSortedCards(cards);
+      // sortedCards = getSortedCards(cards);
 
       return {
         _id: data._id,
@@ -77,12 +75,14 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         description: '',
         isPrivate: data.isPrivate,
         marks: data.marks,
-        cards: { ...sortedCards },
+        cards: data.cards,
         members: data.members,
         isReadOnly: data.isReadOnly,
-        columns: data.columns,
-        localColumns: [],
-        localCards: {},
+        columns: data.columns.sort((columnOne, columnTwo) => {
+          if (columnOne.position < columnTwo.position) return -1;
+          if (columnOne.position > columnTwo.position) return 1;
+          return 0;
+        }),
       };
     case columnActionTypes.COLUMN_DELETED:
     case columnActionTypes.COLUMN_POSITIONS_UPDATED:
@@ -91,7 +91,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
     case boardActionTypes.BOARD_DOWNLOADED:
       data = { ...action.data.data };
       cards = [...data.cards];
-      sortedCards = getSortedCards(cards);
+      // sortedCards = getSortedCards(cards);
 
       return {
         _id: data._id,
@@ -101,12 +101,14 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         description: '',
         isPrivate: data.isPrivate,
         marks: data.marks,
-        cards: { ...sortedCards },
+        cards: data.cards,
         members: data.members,
         isReadOnly: data.isReadOnly,
-        columns: data.columns,
-        localColumns: [],
-        localCards: {},
+        columns: data.columns.sort((columnOne, columnTwo) => {
+          if (columnOne.position < columnTwo.position) return -1;
+          if (columnOne.position > columnTwo.position) return 1;
+          return 0;
+        }),
       };
     case columnActionTypes.COLUMN_POSITIONS_SWITCHED:
       data = { ...action.data.data };
@@ -117,20 +119,14 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
       };
     case cardActionTypes.CARD_POSITIONS_SWITCHED:
       cards = [...action.data.cards];
-      newLocalCards = getSortedCards(cards);
-      console.log('newLocalCards', newLocalCards)
+      // newLocalCards = getSortedCards(cards);
       return {
         ...state,
-        localCards: {
-          ...state.cards,
-          ...state.localCards,
-          ...newLocalCards,
-        },
       };
     case boardActionTypes.BOARD_MEMBER_ADDED:
       data = { ...action.data.data };
-      cards = [...data.cards];
-      sortedCards = getSortedCards(cards);
+      cards = [...data.board.cards];
+      // sortedCards = getSortedCards(cards);
 
       return {
         _id: data.board._id,
@@ -140,17 +136,17 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         description: '',
         isPrivate: data.board.isPrivate,
         marks: data.board.marks,
-        cards: { ...sortedCards },
+        cards: data.board.cards,
         members: data.board.members,
         isReadOnly: data.board.isReadOnly,
-        columns: data.board.columns,
-        localColumns: [],
-        localCards: {},
+        columns: data.board.columns.sort((columnOne, columnTwo) => {
+          if (columnOne.position < columnTwo.position) return -1;
+          if (columnOne.position > columnTwo.position) return 1;
+          return 0;
+        }),
       };
     case boardActionTypes.BOARD_MEMBER_REMOVED:
       data = { ...action.data.data };
-      cards = [...data.cards];
-      sortedCards = getSortedCards(cards);
 
       return {
         _id: data.board._id,
@@ -160,12 +156,14 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         description: '',
         isPrivate: data.board.isPrivate,
         marks: data.board.marks,
-        cards: { ...sortedCards },
+        cards: data.board.cards,
         members: data.board.members,
         isReadOnly: data.board.isReadOnly,
-        columns: data.board.columns,
-        localColumns: [],
-        localCards: {},
+        columns: data.board.columns.sort((columnOne, columnTwo) => {
+          if (columnOne.position < columnTwo.position) return -1;
+          if (columnOne.position > columnTwo.position) return 1;
+          return 0;
+        }),
       };
     case boardActionTypes.BOARD_MEMBERS_RECEIVED:
       data = { ...action.data.data };
@@ -177,34 +175,22 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
       data = { ...action.data.data };
       return {
         ...state,
-        localColumns: [],
-        localCards: {},
         columns: [...state.columns, data.column],
       };
     case cardActionTypes.CARD_CREATED:
       data = { ...action.data.data };
-      sortedCards = {
-        ...state.cards,
-      };
-
-      sortedCards[data.card.column] = [...state.cards[data.card.column], data.card];
 
       return {
         ...state,
-        cards: { ...sortedCards },
-        localColumns: [],
-        localCards: {},
+        cards: [...state.cards, data.card],
       };
     case cardActionTypes.CARD_DELETED:
       data = { ...action.data.data };
       cards = [...data.cards];
-      sortedCards = getSortedCards(cards);
 
       return {
         ...state,
-        localColumns: [],
-        localCards: {},
-        cards: { ...sortedCards },
+        cards: data.cards,
       };
     case columnActionTypes.COLUMN_POSITIONS_UPDATE_FAILED:
     case boardActionTypes.BOARD_UPDATE_FAILED:
@@ -214,8 +200,6 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
     default:
       return {
         ...state,
-        localColumns: [],
-        localCards: {},
       };
   }
 };
