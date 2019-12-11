@@ -1,8 +1,9 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Droppable } from 'react-beautiful-dnd';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import boardActions from '../../actions/boardActions';
 import CardContainer from '../cards/CardContainer';
@@ -12,41 +13,25 @@ import { ColumnListContext } from '../context/ColumnListContext';
 
 const Column = (props) => {
   const {
+    dragHandleProps,
+    isDragging,
     columnData,
     token,
     board,
-    handleMouseDown,
+    mouseDown,
     deleteColumn,
     updateColumn,
     createCard,
     handleError,
     refs,
-    columnRefsAPI,
-    elementContainerRef,
   } = props;
 
-  const {
-    titleInputRef,
-    editingTargetRef,
-    dragTargetRef,
-  } = refs;
-
-  const { columnRefs, tempColumnRefs = [], setColumnRefs } = columnRefsAPI;
-  const { columnId, listTitle } = columnData;
-
-  const { cardsContextAPI } = useContext(ColumnListContext);
-  const {
-    renderedCardsState,
-  } = cardsContextAPI;
+  const { columnId, listTitle, cards } = columnData;
+  const { titleInputRef, editingTargetRef } = refs;
 
   const [titleState, setTitleState] = useState({
     title: listTitle,
   });
-
-  // Need this ref to scroll card container when card is being dragged
-  const cardsContainerRef = useRef(null);
-
-  const [cardsState, setCardsState] = useState({ renderedCards: [] });
 
   const updateTitle = () => {
     const dataToUpdate = {
@@ -92,11 +77,6 @@ const Column = (props) => {
 
     if (e.nativeEvent.shiftKey) {
       deleteColumn(token.token, board._id, columnId)
-        .then(() => {
-          // Update columnRefs
-          const newRefs = columnRefs.filter(columnRef => columnRef._id !== columnId);
-          setColumnRefs([...newRefs]);
-        })
         .catch(err => handleError(err));
     }
   };
@@ -124,7 +104,7 @@ const Column = (props) => {
     const card = {
       title: cardTitle,
       column: columnId,
-      position: cardsState.renderedCards.length,
+      position: cards.length,
     };
 
     return createCard(token.token, board._id, card)
@@ -138,54 +118,14 @@ const Column = (props) => {
   useEffect(() => {
     // Set title height corresponding its content
     resizeTitleTextarea();
-
-    // // Add ref to columnRefs in board component
-    tempColumnRefs.push({
-      ...dragTargetRef,
-      _id: columnId,
-    });
-
-    // Need to spread columnRef as well in case user adds a new column (after board loaded)
-    setColumnRefs([...columnRefs, ...tempColumnRefs]);
   }, []);
-
-  useEffect(() => {
-  }, [board.cards]);
-
-  useEffect(() => {
-    setCardsState({
-      ...cardsState,
-      renderedCards: renderedCardsState[columnId],
-    });
-  }, []);
-
-  useEffect(() => {
-    console.log('renderedCardsState[columnId]', renderedCardsState[columnId])
-    setCardsState({
-      ...cardsState,
-      renderedCards: [...renderedCardsState[columnId]],
-    });
-    // setCardsState({
-    //   ...cardsState,
-    //   renderedCards: renderedCardsState[columnId] ? renderedCardsState[columnId] : [...cardsState.renderedCards],
-    // });
-  }, [renderedCardsState]);
-
-  useEffect(() => {
-    console.log('cardsState', cardsState)
-  }, [cardsState]);
-
-  console.log('column rendered', titleState.title, renderedCardsState[columnId])
 
   return (
-    <div
-      ref={elementContainerRef}
-      className="cards-list-container drag-source"
-    >
+    <div className={`${isDragging ? 'dragging' : ''} cards-list-container drag-source`}>
       <div className="list-header-container">
         <div
-          onMouseDown={handleMouseDown}
-          ref={editingTargetRef}
+          onMouseDown={mouseDown}
+          ref={(el) => { editingTargetRef.current = el; dragHandleProps.ref.current = el; }}
           className="editing-target"
         />
 
@@ -202,24 +142,39 @@ const Column = (props) => {
           <FontAwesomeIcon className="ellipsis-btn" icon={faEllipsisH} />
         </button>
       </div>
-      <div ref={cardsContainerRef} className="cards-container">
+      <Droppable droppableId={columnId} type="task">
+        {dropProvided => (
+          <div data-droppable-id={columnId} {...dropProvided.droppableProps} ref={dropProvided.innerRef} className="cards-container">
 
-        {cardsState.renderedCards}
-        {/* {renderedCardsState[columnId]} */}
+            {cards.map((card, index) => (
+              <CardContainer
+                key={card._id}
+                index={index}
+                cardData={{
+                  cardId: card._id,
+                  cardPosition: card.position,
+                  cardTitle: card.title,
+                }}
+                columnId={card.column}
+              />
+            ))}
+            {dropProvided.placeholder}
 
-        <textarea
-          onChange={handleTitleChange}
-          onKeyPress={setTitleInputBlured}
-          onBlur={updateTitle}
-          onMouseDown={handleMouseDown}
-          maxLength="128"
-          className="add-card"
-          value=""
-          placeholder="Enter a title of this card"
-          hidden
-        />
+            <textarea
+              onChange={handleTitleChange}
+              onKeyPress={setTitleInputBlured}
+              onBlur={updateTitle}
+              onMouseDown={mouseDown}
+              maxLength="128"
+              className="add-card"
+              value=""
+              placeholder="Enter a title of this card"
+              hidden
+            />
 
-      </div>
+          </div>
+        )}
+      </Droppable>
 
       <AddBoardContent
         addContent={addCard}
@@ -255,8 +210,4 @@ Column.propTypes = {
 
 };
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(Column);
-// export default connect(mapStateToProps, mapDispatchToProps)(React.memo(
-//   Column,
-//   (prevProps, nextProps) => {}));
+export default React.memo(connect(mapStateToProps, mapDispatchToProps)(Column));

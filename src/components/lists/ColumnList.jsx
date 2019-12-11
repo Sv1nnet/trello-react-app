@@ -2,17 +2,15 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
-import TextInput from '../utils/TextInput';
-import hasParent from '../../utlis/hasParent';
-import switchElements from '../../utlis/switchElements';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import DNDContext from '../utils/dragdrop/DragDropContext';
 import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
 import ColumnContainer from '../columns/ColumnContainer';
 import { ColumnListContext } from '../context/ColumnListContext';
 import '../../styles/columnList.sass';
 import AddBoardContent from '../utils/AddBoardContent';
+import scrollElements from '../../utlis/scrollElements';
 
 
 const propTypes = {
@@ -34,6 +32,9 @@ const propTypes = {
 
 
 const ColumnList = (props) => {
+  const { createColumn, token, board } = props;
+
+
   const [updatePositionsState, setUpdatePositionsState] = useState({
     err: {
       message: '',
@@ -41,32 +42,18 @@ const ColumnList = (props) => {
     },
   });
 
-  // We need use temp column refs array because every setColumnRefs returns a new array and
-  // every next CardList will have previously passed empty columnRefs without new refs from the other
-  // CardList components. So we push a new ref in tempColumnRefs and then destructure it in setColumnRefs
-  const tempColumnRefs = [];
-
-  // columnRefs - all column refs. We need them to add mouse enter event handlers when user drags column
-  // const [columnRefs, setColumnRefs] = useState([]);
-  // const [cardRefs, setCardRefs] = useState([]);
+  const boardListContainerRef = useRef(null);
 
   const {
     columnContextAPI,
     cardsContextAPI,
   } = useContext(ColumnListContext);
 
-  const {
-    renderedCardsState,
-    setRenderedCardsState,
-    switchCardPositions,
-    updateCardPositions,
-  } = cardsContextAPI;
+  // const {
+  // } = cardsContextAPI;
 
-  const {
-    columnsState,
-    switchColumnPositions,
-    updateColumnPositions,
-  } = columnContextAPI;
+  // const {
+  // } = columnContextAPI;
 
   const handleError = (err) => {
     setUpdatePositionsState({
@@ -87,7 +74,6 @@ const ColumnList = (props) => {
       return Promise.reject(err);
     }
 
-    const { createColumn, token, board } = props;
     const column = {
       title: columnTitle,
       position: board.columns.length,
@@ -101,14 +87,6 @@ const ColumnList = (props) => {
         });
     }
   };
-
-  // const switchColumns = (e, source) => {
-  //   switchElements(e, source, columnRefs, switchColumnPositions);
-  // };
-
-  // const switchCards = (e, source) => {
-  //   switchElements(e, source, cardRefs, switchCardPositions);
-  // };
 
   const closeMessage = () => {
     setUpdatePositionsState({
@@ -124,29 +102,88 @@ const ColumnList = (props) => {
     });
   };
 
+  const scrollBoard = scrollElements([
+    {
+      elementToScroll: boardListContainerRef,
+      scrollIntervals: {
+        scrollHorizontalInterval: null,
+        scrollVerticaltalInterval: null,
+      },
+      distanceToStartScrollingX: 150,
+      scrollStepX: 15,
+      scrollX: true,
+    },
+  ]);
+
+  const onDragStart = (data) => {
+    console.log('onDragStart', data)
+    const removeMouseHanlers = () => {
+      window.removeEventListener('mousemove', scrollBoard);
+      window.removeEventListener('mouseup', scrollBoard);
+    };
+
+    if (data.type === 'task') {
+      window.addEventListener('mousemove', scrollBoard);
+      window.addEventListener('mouseup', removeMouseHanlers);
+    }
+  };
+
+  const onDragUpdate = (data) => {
+    console.log('onDragUpdate', data)
+  };
+
+  const onDragEnd = (data) => {
+    console.log('onDragEnd', data)
+    // if (data.type === 'task') window.removeEventListener('mousemove', scrollBoard);
+  };
+
+
   return (
     <>
       {updatePositionsState.err.message && <Messages.ErrorMessage message={updatePositionsState.err.message} closeMessage={closeMessage} />}
-      <div className="board-lists-container d-flex align-items-start">
-        {/* {columnList} */}
-        {columnsState}
+      <DragDropContext
+        onDragStart={onDragStart}
+        onDragUpdate={onDragUpdate}
+        onDragEnd={onDragEnd}
+      >
+        <DNDContext>
+          <Droppable droppableId="all-columns" direction="horizontal" type="column">
+            {provided => (
+              <div data-droppable-id={board._id} {...provided.droppableProps} ref={(el) => { provided.innerRef(el); boardListContainerRef.current = el; }} className="board-lists-container d-flex align-items-start">
 
-        <div className="add-new-column-button-container">
-          <AddBoardContent
-            addContent={addColumn}
-            openBtnTitle="Add another column"
-            addBtnTitle="Add Column"
-            containerClass="add-new-column-inputs-container"
-            addBtnClass="add-column-btn"
-            textInputOptions={{
-              textInputName: 'columnTitle',
-              textInputId: 'column-title',
-              textInputClass: 'title-input',
-              textInputPlaceholder: 'Column title...',
-            }}
-          />
-        </div>
-      </div>
+                {board.columns.map((column, index) => (
+                  <ColumnContainer
+                    key={column._id}
+                    index={index}
+                    listTitle={column.title}
+                    columnId={column._id}
+                    position={column.position}
+                    handleError={handleError}
+                  />
+                ))}
+                {provided.placeholder}
+
+                <div className="add-new-column-button-container">
+                  <AddBoardContent
+                    addContent={addColumn}
+                    openBtnTitle="Add another column"
+                    addBtnTitle="Add Column"
+                    containerClass="add-new-column-inputs-container"
+                    addBtnClass="add-column-btn"
+                    textInputOptions={{
+                      textInputName: 'columnTitle',
+                      textInputId: 'column-title',
+                      textInputClass: 'title-input',
+                      textInputPlaceholder: 'Column title...',
+                    }}
+                  />
+                </div>
+
+              </div>
+            )}
+          </Droppable>
+        </DNDContext>
+      </DragDropContext>
     </>
   );
 };

@@ -1,6 +1,6 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
+import ReactDOM from 'react-dom';
 import isMouseMoved from '../../utlis/isMouseMoved';
-import dragElement from '../../utlis/dragElement';
 import scrollElements from '../../utlis/scrollElements';
 import { ColumnListContext } from '../context/ColumnListContext';
 
@@ -12,6 +12,8 @@ const DraggableContainer = (props) => {
     dragTargetRef, // Ref that is a area where element have to be dragged to
     mouseEvents, // mouseUp, mouseEnter, mouseDown events passed from element container
     action, // card or column positions we should update
+    elementStartedMoving,
+    id,
   } = props;
 
   const { mouseUp, mouseEnter, mouseDown } = mouseEvents;
@@ -19,7 +21,9 @@ const DraggableContainer = (props) => {
   const { columnContextAPI, cardsContextAPI } = useContext(ColumnListContext);
 
   const { updateCardPositions, cardRefs } = cardsContextAPI;
-  const { updateColumnPositions } = columnContextAPI;
+  const { updateColumnPositions, switchPositionState } = columnContextAPI;
+
+  const [renderedChildren, setRenderedChildren] = useState();
 
   const elementContainerRef = useRef(null);
 
@@ -43,22 +47,24 @@ const DraggableContainer = (props) => {
   // console.log('elementRefs', elementRefs)
 
   // Add mouseEnter handler on all columns except HTMLElement we drag
-  const addElementsMouseEnterHandler = () => {
-    const HTMLElementList = elementRefs.filter(el => el.current !== dragTargetRef.current);
+  const addElementsMouseEnterHandler = (e, HTMLElement) => {
+    if (HTMLElement) HTMLElement.addEventListener('mouseenter', mouseEnter);
+    // const HTMLElementList = elementRefs.filter(el => el.current !== dragTargetRef.current);
 
-    if (HTMLElementList.length !== 0) {
-      HTMLElementList.forEach(HTMLElement => HTMLElement.current.addEventListener('mouseenter', mouseEnter));
-    }
+    // if (HTMLElementList.length !== 0) {
+    //   HTMLElementList.forEach(HTMLElement => HTMLElement.current.addEventListener('mouseenter', mouseEnter));
+    // }
   };
 
   // Remove mouseEnter handler on all columns except HTMLElement we drag(cause we don't have that handler on it)
-  const removeElementsMouseEnterHandler = () => {
+  const removeElementsMouseEnterHandler = (e, HTMLElement) => {
+    if (HTMLElement) HTMLElement.removeEventListener('mouseenter', mouseEnter);
     // const HTMLElementList = cardRefs.filter(el => el.current !== dragTargetRef.current);
-    const HTMLElementList = elementRefs.filter(el => el.current !== dragTargetRef.current);
+    // const HTMLElementList = elementRefs.filter(el => el.current !== dragTargetRef.current);
 
-    if (HTMLElementList.length !== 0) {
-      HTMLElementList.forEach(HTMLElement => HTMLElement.current.removeEventListener('mouseenter', mouseEnter));
-    }
+    // if (HTMLElementList.length !== 0) {
+    //   HTMLElementList.forEach(HTMLElement => HTMLElement.current.removeEventListener('mouseenter', mouseEnter));
+    // }
 
     clearInterval(scrollIntervals.scrollHorizontalInterval);
     scrollIntervals.scrollHorizontalInterval = undefined;
@@ -100,15 +106,17 @@ const DraggableContainer = (props) => {
       dragState.dragging = true;
       dragTargetRef.current.classList.add('dragging');
 
-      dragElement(
-        e,
-        elementContainerRef.current,
-        {
-          startDragCallback: addElementsMouseEnterHandler,
-          dragCallback: scrollElements(scrollOptions),
-          endDragCallback: endDragHandler,
-        },
-      );
+      // dragElement(
+      //   e,
+      //   elementContainerRef,
+      //   {
+      //     startDragCallback: addElementsMouseEnterHandler,
+      //     dragCallback: scrollElements(scrollOptions),
+      //     endDragCallback: endDragHandler,
+      //   },
+      // );
+
+      elementStartedMoving(id);
     }
   };
 
@@ -124,7 +132,7 @@ const DraggableContainer = (props) => {
 
     dragTargetRef.current.classList.remove('dragging');
 
-    dragTargetRef.current.appendChild(elementContainerRef.current);
+    // dragTargetRef.current.appendChild(elementContainerRef.current);
 
     if (mouseUp) mouseUp(e, mouseState);
   };
@@ -148,11 +156,19 @@ const DraggableContainer = (props) => {
     handleMouseDown,
     handleMouseUp,
     elementContainerRef,
+    style: {
+      position: 'absolute',
+    },
+    key: child.props.columnData ? child.props.columnData.columnId : '',
   }));
+
+  useEffect(() => {
+    setRenderedChildren(childrenWithProps);
+  }, []);
 
   return (
     <div ref={dragTargetRef} className={`${extraClasses || ''} drag-target`}>
-      {childrenWithProps}
+      {switchPositionState.id === id ? ReactDOM.createPortal(renderedChildren, document.body, childrenWithProps[0].props.columnData ? childrenWithProps[0].props.columnData.columnId : '') : renderedChildren}
     </div>
   );
 };

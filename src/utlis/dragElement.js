@@ -7,18 +7,19 @@ const setElementPosition = (initialPosition, e, element) => {
 
   element.style.left = `${newListPosition.x}px`;
   element.style.top = `${newListPosition.y}px`;
+  // element.style.transform = `translate(${newListPosition.x}px, ${newListPosition.y}px)`;
 };
 
 /**
  *
  * Allow to drag HTMLElement
- * @param element {HTMLElement} HTMLElement to drag;
+ * @param element.current {HTMLElement} HTMLElement to drag;
  * @param event {Event} event object;
  * @param dragCallback {Object} mouse move event handler. Argument is passed in these callback is event object;
  */
 const dragElement = (event, element, { startDragCallback, dragCallback, endDragCallback } = {}) => {
   const e = event.nativeEvent || event;
-  const initialElementStyle = element.style;
+  const initialElementStyle = element.current.style;
 
   const initialPosition = {
     x: event.offsetX,
@@ -26,7 +27,7 @@ const dragElement = (event, element, { startDragCallback, dragCallback, endDragC
   };
 
   const dragHandler = (mouseMoveEvent) => {
-    setElementPosition(initialPosition, mouseMoveEvent, element);
+    setElementPosition(initialPosition, mouseMoveEvent, element.current);
 
     if (dragCallback) dragCallback(mouseMoveEvent);
   };
@@ -37,24 +38,24 @@ const dragElement = (event, element, { startDragCallback, dragCallback, endDragC
     window.removeEventListener('mousemove', dragHandler);
     window.removeEventListener('mouseup', mouseUpHandler);
 
-    element.classList.remove('dragging');
-    element.style = initialElementStyle;
+    element.current.classList.remove('dragging');
+    element.current.style = initialElementStyle;
 
     document.body.style.cursor = '';
 
     if (endDragCallback) endDragCallback(mouseMoveEvent);
   };
 
-  element.classList.add('dragging');
-  element.style.position = 'absolute';
-  element.style.zIndex = '1001';
-  element.style.pointerEvents = 'none';
+  element.current.classList.add('dragging');
+  element.current.style.position = 'fixed';
+  element.current.style.zIndex = '1001';
+  element.current.style.pointerEvents = 'none';
 
   document.body.style.cursor = 'pointer';
 
-  setElementPosition(initialPosition, e, element);
+  setElementPosition(initialPosition, e, element.current);
 
-  document.body.appendChild(element);
+  // document.body.appendChild(element.current);
 
   window.addEventListener('mousemove', dragHandler);
   window.addEventListener('mouseup', mouseUpHandler);
