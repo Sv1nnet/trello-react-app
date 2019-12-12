@@ -22,7 +22,7 @@ const Draggable = ({ draggableId, index, direction, type, children }) => {
     dragEnd,
   } = useContext(DragDropContext);
 
-  console.log(dragState);
+  // console.log(dragState);
 
   const draggableElementRef = useRef();
   const draggableAnchorRef = useRef();
@@ -32,6 +32,10 @@ const Draggable = ({ draggableId, index, direction, type, children }) => {
       x: null,
       y: null,
     },
+  };
+  const initialElementPosition = {
+    x: null,
+    y: null,
   };
 
   const onMouseMove = (e) => {
@@ -44,7 +48,7 @@ const Draggable = ({ draggableId, index, direction, type, children }) => {
       placeholder.dataset.type = 'placeholder';
 
       // Then start to drag the element
-      dragElement(e, draggableElementRef);
+      dragElement(e, draggableElementRef, initialElementPosition);
       // Then insert placeholder
       draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current);
 
@@ -58,6 +62,9 @@ const Draggable = ({ draggableId, index, direction, type, children }) => {
   };
 
   const onMouseUp = (e) => {
+    const placeholder = document.querySelector('[data-type="placeholder"]');
+    if (placeholder) placeholder.remove();
+
     removeEvents([
       {
         target: window,
@@ -83,8 +90,11 @@ const Draggable = ({ draggableId, index, direction, type, children }) => {
     const event = e.nativeEvent || e;
 
     if (event.button === 0) {
-      mouseState.onMouseDownPosition.y = event.y;
-      mouseState.onMouseDownPosition.x = event.x;
+      mouseState.onMouseDownPosition.y = event.clientY;
+      mouseState.onMouseDownPosition.x = event.clientX;
+
+      initialElementPosition.y = event.offsetY;
+      initialElementPosition.x = event.offsetX;
 
       addEvents([
         {

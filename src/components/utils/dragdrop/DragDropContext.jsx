@@ -76,9 +76,6 @@ const DragDropContextProvider = ({ onDragStart = () => { }, onDragUpdate = () =>
   const dragEnd = (dragElementId) => {
     onDragEnd();
 
-    const placeholder = document.querySelector('[data-type="placeholder"]');
-    placeholder.remove();
-
     // const draggingElementIndex = draggableHTMLElements.findIndex(el => dragElementId === el.dataset.draggableId);
     // const draggingElement = draggableHTMLElements[draggingElementIndex];
     // const droppableContainer = draggingElement.parentElement;

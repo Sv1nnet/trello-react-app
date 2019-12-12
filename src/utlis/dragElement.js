@@ -1,13 +1,14 @@
 /* eslint-disable no-param-reassign */
 const setElementPosition = (initialPosition, e, element) => {
-  const newListPosition = {
+  // debugger;
+  const newElementPosition = {
     x: e.clientX - initialPosition.x,
     y: e.clientY - initialPosition.y,
   };
 
-  element.style.left = `${newListPosition.x}px`;
-  element.style.top = `${newListPosition.y}px`;
-  // element.style.transform = `translate(${newListPosition.x}px, ${newListPosition.y}px)`;
+  element.style.left = `${newElementPosition.x}px`;
+  element.style.top = `${newElementPosition.y}px`;
+  // element.style.transform = `translate(${newElementPosition.x}px, ${newElementPosition.y}px)`;
 };
 
 /**
@@ -17,14 +18,9 @@ const setElementPosition = (initialPosition, e, element) => {
  * @param event {Event} event object;
  * @param dragCallback {Object} mouse move event handler. Argument is passed in these callback is event object;
  */
-const dragElement = (event, element, { startDragCallback, dragCallback, endDragCallback } = {}) => {
+const dragElement = (event, element, initialPosition, { startDragCallback, dragCallback, endDragCallback } = {}) => {
   const e = event.nativeEvent || event;
   const initialElementStyle = element.current.style;
-
-  const initialPosition = {
-    x: event.offsetX,
-    y: event.offsetY,
-  };
 
   const dragHandler = (mouseMoveEvent) => {
     setElementPosition(initialPosition, mouseMoveEvent, element.current);
@@ -34,7 +30,6 @@ const dragElement = (event, element, { startDragCallback, dragCallback, endDragC
 
   // Remove all handlers on mouseUp
   const mouseUpHandler = (mouseMoveEvent) => {
-    // return;
     window.removeEventListener('mousemove', dragHandler);
     window.removeEventListener('mouseup', mouseUpHandler);
 
@@ -54,8 +49,6 @@ const dragElement = (event, element, { startDragCallback, dragCallback, endDragC
   document.body.style.cursor = 'pointer';
 
   setElementPosition(initialPosition, e, element.current);
-
-  // document.body.appendChild(element.current);
 
   window.addEventListener('mousemove', dragHandler);
   window.addEventListener('mouseup', mouseUpHandler);
