@@ -12,6 +12,8 @@ const createPlaceholder = (elementTemplate) => {
   };
 
   const placeholder = document.createElement('div');
+  placeholder.dataset.type = 'placeholder';
+  placeholder.dataset.draggableIndex = elementTemplate.dataset.draggableIndex;
 
   for (const prop in elementSize) {
     placeholder.style[prop] = elementSize[prop];
@@ -21,5 +23,5 @@ const createPlaceholder = (elementTemplate) => {
 
   return placeholder;
 };
-
+window.createPlaceholder = createPlaceholder;
 export default createPlaceholder;

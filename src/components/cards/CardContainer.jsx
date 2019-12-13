@@ -72,7 +72,7 @@ const CardContainer = (props) => {
   // console.log('scrollOptions', scrollOptions)
   // action="UPDATE_CARDS"
   return (
-    <Draggable draggableId={cardId} index={index} direction="vertical" type="card">
+    <Draggable containerId={columnId} draggableId={cardId} index={index} direction="vertical" type="card">
       {(dragProvided, snapshot) => (
         <div {...dragProvided.draggableProps} ref={dragProvided.innerRef} className="card-drag-area drag-target">
           <Card

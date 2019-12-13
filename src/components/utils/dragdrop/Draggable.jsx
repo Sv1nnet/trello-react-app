@@ -13,7 +13,16 @@ const propTypes = {
 };
 
 
-const Draggable = ({ draggableId, index, direction, type, children }) => {
+const Draggable = (props) => {
+  const {
+    containerId,
+    draggableId,
+    index,
+    direction,
+    type,
+    children,
+  } = props;
+
   const {
     draggableHTMLElements,
     dragState,
@@ -45,25 +54,49 @@ const Draggable = ({ draggableId, index, direction, type, children }) => {
       // Here we need to keep order in this code cuz container of dragging elements scroll element once element is started dragging
       // So first of all we create a placeholder
       const placeholder = createPlaceholder(draggableElementRef.current);
-      placeholder.dataset.type = 'placeholder';
 
       // Then start to drag the element
       dragElement(e, draggableElementRef, initialElementPosition);
       // Then insert placeholder
       draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current);
+      console.log('placeholder bounries', placeholder.getBoundingClientRect())
 
-      dragStart(draggableId);
+      dragStart({ draggableContainerId: containerId, draggableId, type });
     }
   };
 
   const onMouseEnter = (e) => {
     // dragEvents.onUpdate(e);
-    if (dragState.dragging) console.log('mouseEnter')
+    if (dragState.dragging && dragState.type === type) {
+      const placeholder = document.querySelector('[data-type="placeholder"]');
+      // debugger;
+      if (placeholder) {
+        console.log('previousElementSibling', draggableElementRef.current.previousElementSibling)
+        if (placeholder.offsetTop > draggableElementRef.current.offsetTop) {
+          draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current);
+        } else if (placeholder.offsetTop < draggableElementRef.current.offsetTop) {
+          draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current.nextElementSibling);
+          placeholder.dataset.draggableIndex = index - 1;
+        }
+        // if (draggableElementRef.current.previousElementSibling === placeholder) {
+        //   draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current);
+        // } else if (draggableElementRef.current.nextElementSibling === placeholder) {
+        //   draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current.previousElementSibling)
+        // }
+      }
+      dragUpdate({ targetContainerId: containerId, targetId: draggableId, type });
+    }
   };
 
   const onMouseUp = (e) => {
     const placeholder = document.querySelector('[data-type="placeholder"]');
+    // const phOffsetY = placeholder.getBoundingClientRect().y;
+    // const phOffsetX = placeholder.getBoundingClientRect().x;
     if (placeholder) placeholder.remove();
+
+    // draggableElementRef.current.style.position = 'fixed';
+    // draggableElementRef.current.style.left = phOffsetX;
+    // draggableElementRef.current.style.top = phOffsetY;
 
     removeEvents([
       {
@@ -82,7 +115,8 @@ const Draggable = ({ draggableId, index, direction, type, children }) => {
     ]);
     // window.removeEventListener('mousemove', onMouseMove);
     // window.removeEventListener('mouseup', onMouseUp);
-    dragEnd(draggableId);
+    console.log({ containerId, draggableId, index, type })
+    dragEnd({ containerId, draggableId, index, type });
   };
 
   const onMouseDown = (e) => {
@@ -148,7 +182,7 @@ const Draggable = ({ draggableId, index, direction, type, children }) => {
 
   const snapshot = {
     ...dragState,
-    isThisElementDragging: dragState.dragging && dragState.dragElementId === draggableId,
+    isThisElementDragging: dragState.dragging && dragState.draggableId === draggableId,
   };
 
   return children(provider, snapshot);

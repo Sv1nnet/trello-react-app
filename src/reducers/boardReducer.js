@@ -122,6 +122,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
       // newLocalCards = getSortedCards(cards);
       return {
         ...state,
+        cards,
       };
     case boardActionTypes.BOARD_MEMBER_ADDED:
       data = { ...action.data.data };

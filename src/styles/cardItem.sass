@@ -4,6 +4,10 @@
   width: 260px
   &.dragging
     background-color: rgba(0, 0, 0, .2)
+    transform: rotateZ(5deg)
+    box-shadow: 0 0 15px rgba(0, 0, 0, .5)
+    & .card-item
+      box-shadow: none
 .card-item
   border-radius: 2px
   min-height: 35px
@@ -12,9 +16,6 @@
   box-shadow: 0 2px 2px #a7a7a7
   .title
     white-space: normal
-  &.dragging
-    transform: rotateZ(5deg)
-    box-shadow: 0 0 10px rgba(0, 0, 0, .5)
   &:hover
     background: #f4f6f7
     cursor: pointer

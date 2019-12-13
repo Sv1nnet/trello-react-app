@@ -6,6 +6,7 @@ import isMouseMoved from '../../utlis/isMouseMoved';
 import Column from './Column';
 import '../../styles/cardsList.sass';
 import { ColumnListContext } from '../context/ColumnListContext';
+import boardActions from '../../actions/boardActions';
 
 
 const defaultProps = {
@@ -15,6 +16,7 @@ const defaultProps = {
 const propTypes = {
   listTitle: PropTypes.string.isRequired,
   columnId: PropTypes.string.isRequired,
+  boardId: PropTypes.string.isRequired,
 };
 
 
@@ -23,6 +25,7 @@ const ColumnContainer = (props) => {
   const editingTargetRef = useRef(null);
 
   const {
+    boardId,
     listTitle,
     columnId,
     index,
@@ -68,7 +71,7 @@ const ColumnContainer = (props) => {
   };
 
   return (
-    <Draggable draggableId={columnId} index={index} direction="horizontal" type="column">
+    <Draggable containerId={boardId} draggableId={columnId} index={index} direction="horizontal" type="column">
       {(dragProvided, snapshot) => (
         <div {...dragProvided.draggableProps} ref={dragProvided.innerRef} className="column-drag-area drag-target">
           <Column

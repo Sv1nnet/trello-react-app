@@ -20,10 +20,11 @@ const setElementPosition = (initialPosition, e, element) => {
  */
 const dragElement = (event, element, initialPosition, { startDragCallback, dragCallback, endDragCallback } = {}) => {
   const e = event.nativeEvent || event;
-  const initialElementStyle = element.current.style;
+  const elementToDrag = element.current || element;
+  const initialElementStyle = elementToDrag.style;
 
   const dragHandler = (mouseMoveEvent) => {
-    setElementPosition(initialPosition, mouseMoveEvent, element.current);
+    setElementPosition(initialPosition, mouseMoveEvent, elementToDrag);
 
     if (dragCallback) dragCallback(mouseMoveEvent);
   };
@@ -33,22 +34,22 @@ const dragElement = (event, element, initialPosition, { startDragCallback, dragC
     window.removeEventListener('mousemove', dragHandler);
     window.removeEventListener('mouseup', mouseUpHandler);
 
-    element.current.classList.remove('dragging');
-    element.current.style = initialElementStyle;
+    elementToDrag.classList.remove('dragging');
+    elementToDrag.style = initialElementStyle;
 
     document.body.style.cursor = '';
 
     if (endDragCallback) endDragCallback(mouseMoveEvent);
   };
 
-  element.current.classList.add('dragging');
-  element.current.style.position = 'fixed';
-  element.current.style.zIndex = '1001';
-  element.current.style.pointerEvents = 'none';
+  elementToDrag.classList.add('dragging');
+  elementToDrag.style.position = 'fixed';
+  elementToDrag.style.zIndex = '1001';
+  elementToDrag.style.pointerEvents = 'none';
 
   document.body.style.cursor = 'pointer';
 
-  setElementPosition(initialPosition, e, element.current);
+  setElementPosition(initialPosition, e, elementToDrag);
 
   window.addEventListener('mousemove', dragHandler);
   window.addEventListener('mouseup', mouseUpHandler);

@@ -153,6 +153,7 @@ const ColumnList = (props) => {
 
                 {board.columns.map((column, index) => (
                   <ColumnContainer
+                    boardId={board._id}
                     key={column._id}
                     index={index}
                     listTitle={column.title}
