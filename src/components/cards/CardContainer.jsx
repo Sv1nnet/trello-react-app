@@ -61,12 +61,12 @@ const CardContainer = (props) => {
   useEffect(() => {
     // effect
     return () => {
-      console.log(' ---------------------- clean up --------------------')
+      // console.log(' ---------------------- clean up --------------------')
     };
   });
 
   useEffect(() => {
-    console.log('card was mounted');
+    // console.log('card was mounted');
   }, []);
 
   // console.log('scrollOptions', scrollOptions)
@@ -122,6 +122,7 @@ export default React.memo(CardContainer, (prevProps, nextProps) => {
   const result = prevProps.columnId === nextProps.columnId
     && prevProps.cardTitle === nextProps.cardTitle
     && prevProps.cardData.cardPosition === nextProps.cardData.cardPosition
-    && prevProps.cardData.cardTitle === nextProps.cardData.cardTitle;
+    && prevProps.cardData.cardTitle === nextProps.cardData.cardTitle
+    && prevProps.index === nextProps.index;
   return result;
 });

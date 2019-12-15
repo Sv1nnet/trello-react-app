@@ -27,10 +27,12 @@ class DragDropContextProvider extends Component {
       dragging: false,
       target: {
         id: null,
+        index: null,
         containerId: null,
       },
       source: {
         id: null,
+        index: null,
         containerId: null,
       },
       type: null,
@@ -50,7 +52,6 @@ class DragDropContextProvider extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('props', prevProps, this.props)
     if (prevProps.board !== this.props.board) {
       // Set state with rendered HTMLElements. This will be executed after callstack is cleared (all DOM tree is rendered)
       setTimeout(() => {
@@ -62,7 +63,6 @@ class DragDropContextProvider extends Component {
           dragDropHTMLElements[el.dataset.droppableId] = Array.from(el.children);
         });
 
-        console.log(dragDropHTMLElements);
         this.setState(state => ({
           ...state,
           draggableHTMLElements: draggableElements,
@@ -76,7 +76,7 @@ class DragDropContextProvider extends Component {
   setDraggableStyles = (dragElementId) => {
   };
 
-  dragStart = ({ draggableContainerId, draggableId, type }) => {
+  dragStart = ({ draggableContainerId, draggableId, index, type }) => {
     // const { props } = this;
     // props.onDragStart();
 
@@ -86,10 +86,12 @@ class DragDropContextProvider extends Component {
         dragging: true,
         target: {
           id: null,
+          index: null,
           containerId: null,
         },
         source: {
           id: draggableId,
+          index,
           containerId: draggableContainerId,
         },
         type,
@@ -97,7 +99,7 @@ class DragDropContextProvider extends Component {
     }));
   };
 
-  dragUpdate = ({ targetContainerId, targetId, type }) => {
+  dragUpdate = ({ targetContainerId, targetId, index, type }) => {
     // const { onDragUpdate } = this.props;
     // console.log({ containerId, target, type })
     this.setState(state => ({
@@ -106,10 +108,11 @@ class DragDropContextProvider extends Component {
         ...state.dragState,
         target: {
           id: targetId,
+          index,
           containerId: targetContainerId,
         },
       },
-    }));
+    }), () => console.log('this.state', this.state.dragState.target.index));
     // onDragUpdate();
   };
 
@@ -134,10 +137,12 @@ class DragDropContextProvider extends Component {
         dragging: false,
         target: {
           id: null,
+          index: null,
           containerId: null,
         },
         source: {
           id: null,
+          index: null,
           containerId: null,
         },
         type: null,
@@ -154,19 +159,29 @@ class DragDropContextProvider extends Component {
       if (column !== target.containerId) {
         columnsWithCards[column].cards.forEach(card => newCards.push(card));
       } else {
-        // debugger;
-        const sourceCard = { ...columnsWithCards[column].cards.find(card => card._id === source.id) };
+        const sourceCard = { ...columnsWithCards[column].cards[source.index] };
         const sourcePosition = sourceCard.position;
 
-        const targetCard = { ...columnsWithCards[column].cards.find(card => card._id === target.id) };
+        const targetCard = { ...columnsWithCards[column].cards[target.index] };
         const targetPosition = targetCard.position;
 
         const tempCards = [...columnsWithCards[column].cards];
         // debugger
-        tempCards.splice(sourceCard.position, 1);
-        tempCards.splice(targetCard.position, 0, sourceCard);
+        tempCards.splice(source.index, 1);
+        tempCards.splice(target.index, 0, sourceCard);
         tempCards.forEach((card, i) => { card.position = i; });
-        // tempCards.splice(source.position, 1, target);
+        // const sourceCard = { ...columnsWithCards[column].cards.find(card => card._id === source.id) };
+        // const sourcePosition = sourceCard.position;
+
+        // const targetCard = { ...columnsWithCards[column].cards.find(card => card._id === target.id) };
+        // const targetPosition = targetCard.position;
+
+        // const tempCards = [...columnsWithCards[column].cards];
+        // // debugger
+        // tempCards.splice(sourceCard.position, 1);
+        // tempCards.splice(targetCard.position, 0, sourceCard);
+        // tempCards.forEach((card, i) => { card.position = i; });
+        // // tempCards.splice(source.position, 1, target);
 
         // source.position = targetPosition;
         // target.position = sourcePosition;
@@ -176,7 +191,7 @@ class DragDropContextProvider extends Component {
         tempCards.forEach(card => newCards.push(card));
       }
     }
-    console.log(newCards)
+    console.log('newCards', newCards)
     props.switchCards(newCards);
   }
 

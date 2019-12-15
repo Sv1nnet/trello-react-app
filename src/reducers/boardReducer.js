@@ -120,6 +120,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
     case cardActionTypes.CARD_POSITIONS_SWITCHED:
       cards = [...action.data.cards];
       // newLocalCards = getSortedCards(cards);
+      console.log('cards', cards)
       return {
         ...state,
         cards,
