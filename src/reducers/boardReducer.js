@@ -56,7 +56,8 @@ const initialState = {
 };
 
 const boardReducer = (state = initialState, action = { type: 'default', data: {} }) => {
-  let cards = {};
+  let cards = [];
+  let columns = [];
   let data = {};
   let newLocalCards = {};
   let sortedCards = {};
@@ -111,16 +112,17 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         }),
       };
     case columnActionTypes.COLUMN_POSITIONS_SWITCHED:
-      data = { ...action.data.data };
-
+      columns = [...action.data.columns];
       return {
         ...state,
-        localColumns: action.data.columns,
+        columns: columns.sort((columnOne, columnTwo) => {
+          if (columnOne.position < columnTwo.position) return -1;
+          if (columnOne.position > columnTwo.position) return 1;
+          return 0;
+        }),
       };
     case cardActionTypes.CARD_POSITIONS_SWITCHED:
       cards = [...action.data.cards];
-      // newLocalCards = getSortedCards(cards);
-      console.log('cards', cards)
       return {
         ...state,
         cards,

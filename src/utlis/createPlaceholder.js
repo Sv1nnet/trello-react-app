@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
-const createPlaceholder = (elementTemplate) => {
+const createPlaceholder = (elementTemplate, dataset) => {
   const computedStyle = getComputedStyle(elementTemplate);
   const elementSize = {
     minWidth: `${elementTemplate.offsetWidth}px`,
@@ -12,10 +12,9 @@ const createPlaceholder = (elementTemplate) => {
   };
 
   const placeholder = document.createElement('div');
-  placeholder.dataset.type = 'placeholder';
-  placeholder.dataset.draggableIndex = elementTemplate.dataset.draggableIndex;
-  placeholder.dataset.containerId = elementTemplate.parentElement.dataset.droppableId;
-  placeholder.dataset.originalContainerId = elementTemplate.parentElement.dataset.droppableId;
+  for (const data in dataset) {
+    placeholder.dataset[data] = dataset[data];
+  }
 
   for (const prop in elementSize) {
     placeholder.style[prop] = elementSize[prop];

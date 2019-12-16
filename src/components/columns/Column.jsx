@@ -160,18 +160,6 @@ const Column = (props) => {
             ))}
             {dropProvided.placeholder}
 
-            <textarea
-              onChange={handleTitleChange}
-              onKeyPress={setTitleInputBlured}
-              onBlur={updateTitle}
-              onMouseDown={mouseDown}
-              maxLength="128"
-              className="add-card"
-              value=""
-              placeholder="Enter a title of this card"
-              hidden
-            />
-
           </div>
         )}
       </Droppable>
