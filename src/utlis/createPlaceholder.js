@@ -14,6 +14,8 @@ const createPlaceholder = (elementTemplate) => {
   const placeholder = document.createElement('div');
   placeholder.dataset.type = 'placeholder';
   placeholder.dataset.draggableIndex = elementTemplate.dataset.draggableIndex;
+  placeholder.dataset.containerId = elementTemplate.parentElement.dataset.droppableId;
+  placeholder.dataset.originalContainerId = elementTemplate.parentElement.dataset.droppableId;
 
   for (const prop in elementSize) {
     placeholder.style[prop] = elementSize[prop];

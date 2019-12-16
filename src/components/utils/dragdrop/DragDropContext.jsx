@@ -85,9 +85,9 @@ class DragDropContextProvider extends Component {
       dragState: {
         dragging: true,
         target: {
-          id: null,
-          index: null,
-          containerId: null,
+          id: draggableId,
+          index,
+          containerId: draggableContainerId,
         },
         source: {
           id: draggableId,
@@ -154,41 +154,47 @@ class DragDropContextProvider extends Component {
     const { state, context, props } = this;
     const { columnsWithCards } = context;
 
+    console.log('source', source)
+    console.log('target', target)
+
     const newCards = [];
-    for (const column in columnsWithCards) {
-      if (column !== target.containerId) {
-        columnsWithCards[column].cards.forEach(card => newCards.push(card));
-      } else {
-        const sourceCard = { ...columnsWithCards[column].cards[source.index] };
-        const sourcePosition = sourceCard.position;
+    if (source.containerId === target.containerId) {
+      for (const column in columnsWithCards) {
+        if (column !== target.containerId) {
+          columnsWithCards[column].cards.forEach(card => newCards.push(card));
+        } else {
+          const sourceCard = { ...columnsWithCards[column].cards[source.index] };
+          const targetCard = { ...columnsWithCards[column].cards[target.index] };
 
-        const targetCard = { ...columnsWithCards[column].cards[target.index] };
-        const targetPosition = targetCard.position;
+          const tempCards = [...columnsWithCards[column].cards];
 
-        const tempCards = [...columnsWithCards[column].cards];
-        // debugger
-        tempCards.splice(source.index, 1);
-        tempCards.splice(target.index, 0, sourceCard);
-        tempCards.forEach((card, i) => { card.position = i; });
-        // const sourceCard = { ...columnsWithCards[column].cards.find(card => card._id === source.id) };
-        // const sourcePosition = sourceCard.position;
+          tempCards.splice(source.index, 1);
+          tempCards.splice(target.index, 0, sourceCard);
+          tempCards.forEach((card, i) => { card.position = i; });
 
-        // const targetCard = { ...columnsWithCards[column].cards.find(card => card._id === target.id) };
-        // const targetPosition = targetCard.position;
+          tempCards.forEach(card => newCards.push(card));
+        }
+      }
+    } else {
+      const sourceCard = { ...columnsWithCards[source.containerId].cards[source.index] };
+      sourceCard.column = target.containerId;
+      // const targetCard = { ...columnsWithCards[column].cards[target.index] };
 
-        // const tempCards = [...columnsWithCards[column].cards];
-        // // debugger
-        // tempCards.splice(sourceCard.position, 1);
-        // tempCards.splice(targetCard.position, 0, sourceCard);
-        // tempCards.forEach((card, i) => { card.position = i; });
-        // // tempCards.splice(source.position, 1, target);
+      for (const column in columnsWithCards) {
+        if (column !== target.containerId && column !== source.containerId) {
+          columnsWithCards[column].cards.forEach(card => newCards.push(card));
+        } else {
+          const tempCards = [...columnsWithCards[column].cards];
 
-        // source.position = targetPosition;
-        // target.position = sourcePosition;
+          if (column === source.containerId) {
+            tempCards.splice(source.index, 1);
+          } else {
+            tempCards.splice(target.index, 0, sourceCard);
+          }
 
-        // console.log(source)
-
-        tempCards.forEach(card => newCards.push(card));
+          tempCards.forEach((card, i) => { card.position = i; });
+          tempCards.forEach(card => newCards.push(card));
+        }
       }
     }
     console.log('newCards', newCards)

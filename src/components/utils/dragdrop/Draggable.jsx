@@ -50,21 +50,28 @@ const Draggable = (props) => {
 
   const getTargetIndex = useCallback((placeholder, target) => {
     const placeholderIndex = parseInt(placeholder.dataset.draggableIndex, 10);
+    const placeholderOriginalContainerId = placeholder.dataset.originalContainerId;
     const offsetPosition = direction === 'vertical' ? 'offsetTop' : 'offsetLeft';
 
-    // placeholder comes before target item
-    if (placeholder[offsetPosition] > draggableElementRef.current[offsetPosition]) {
+    // placeholder comes after target item
+    if (placeholder[offsetPosition] > target[offsetPosition]) {
       if (placeholderIndex === index) {
         return index - 1;
       }
+      // if (placeholderIndex - index > 1) {
+      //   return index - 1;
+      // }
       return index;
     }
 
-    // placeholder comes after target item
-    if (placeholder[offsetPosition] < draggableElementRef.current[offsetPosition]) {
-      if (placeholderIndex === index) {
+    // placeholder comes before target item
+    if (placeholder[offsetPosition] < target[offsetPosition]) {
+      if (placeholderIndex === index || placeholderOriginalContainerId !== containerId) {
         return index + 1;
       }
+      // if (index - placeholderIndex > 1) {
+      //   return index + 1;
+      // }
       return index;
     }
 
@@ -98,18 +105,27 @@ const Draggable = (props) => {
     // dragEvents.onUpdate(e);
     if (dragState.dragging && dragState.type === type) {
       const placeholder = document.querySelector('[data-type="placeholder"]');
+      const container = document.querySelector(`[data-droppable-id="${containerId}"]`)
+
       const offsetPosition = direction === 'vertical' ? 'offsetTop' : 'offsetLeft';
-      let targetIndex;
+
+      let targetIndex = index;
       // debugger;
       if (placeholder) {
         targetIndex = getTargetIndex(placeholder, draggableElementRef.current);
         console.log('targetIndex', targetIndex)
 
-        if (placeholder[offsetPosition] < draggableElementRef.current[offsetPosition]) {
-          draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current.nextElementSibling);
+        if (placeholder.dataset.containerId === containerId) {
+          if (placeholder[offsetPosition] < draggableElementRef.current[offsetPosition]) {
+            draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current.nextElementSibling);
+          } else {
+            draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current);
+          }
         } else {
           draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current);
+          placeholder.dataset.containerId = containerId;
         }
+
         placeholder.dataset.draggableIndex = targetIndex;
       }
 
