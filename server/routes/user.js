@@ -253,11 +253,16 @@ router.post('/verify_user', (req, res) => {
 
     User.findById({ _id: decoded._id })
       .then((user) => {
-        console.log('verified');
+        const tokenIndex = user.tokens.findIndex(usersToken => usersToken.token === token);
+
+        if (tokenIndex === -1) return Promise.reject(new Error('Token verification failed'));
+
         res.status(200).send({ boards: user.boards });
+        console.log('verified');
       })
       .catch((err) => {
-        res.status(500).send({ err: 'Could not verify token' });
+        console.log('err', err.message);
+        res.status(500).send({ err: 'Token verification failed' });
       });
   });
 });
