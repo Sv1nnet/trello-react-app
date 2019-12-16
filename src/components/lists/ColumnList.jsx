@@ -1,16 +1,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import DNDContext from '../utils/dragdrop/DragDropContext';
+import Droppable from '../utils/dragdrop/Droppable';
+import DragDropContextProvider from '../utils/dragdrop/DragDropContext';
 import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
 import ColumnContainer from '../columns/ColumnContainer';
-import { ColumnListContext } from '../context/ColumnListContext';
 import '../../styles/columnList.sass';
 import AddBoardContent from '../utils/AddBoardContent';
-import scrollElements from '../../utlis/scrollElements';
 
 
 const propTypes = {
@@ -43,17 +41,6 @@ const ColumnList = (props) => {
   });
 
   const boardListContainerRef = useRef(null);
-
-  const {
-    columnContextAPI,
-    cardsContextAPI,
-  } = useContext(ColumnListContext);
-
-  // const {
-  // } = cardsContextAPI;
-
-  // const {
-  // } = columnContextAPI;
 
   const handleError = (err) => {
     setUpdatePositionsState({
@@ -102,89 +89,46 @@ const ColumnList = (props) => {
     });
   };
 
-  const scrollBoard = scrollElements([
-    {
-      elementToScroll: boardListContainerRef,
-      scrollIntervals: {
-        scrollHorizontalInterval: null,
-        scrollVerticaltalInterval: null,
-      },
-      distanceToStartScrollingX: 150,
-      scrollStepX: 15,
-      scrollX: true,
-    },
-  ]);
-
-  const onDragStart = (data) => {
-    console.log('onDragStart', data)
-    const removeMouseHanlers = () => {
-      window.removeEventListener('mousemove', scrollBoard);
-      window.removeEventListener('mouseup', scrollBoard);
-    };
-
-    if (data.type === 'task') {
-      window.addEventListener('mousemove', scrollBoard);
-      window.addEventListener('mouseup', removeMouseHanlers);
-    }
-  };
-
-  const onDragUpdate = (data) => {
-    console.log('onDragUpdate', data)
-  };
-
-  const onDragEnd = (data) => {
-    console.log('onDragEnd', data)
-    // if (data.type === 'task') window.removeEventListener('mousemove', scrollBoard);
-  };
-
-
   return (
     <>
       {updatePositionsState.err.message && <Messages.ErrorMessage message={updatePositionsState.err.message} closeMessage={closeMessage} />}
-      <DragDropContext
-        onDragStart={onDragStart}
-        onDragUpdate={onDragUpdate}
-        onDragEnd={onDragEnd}
-      >
-        <DNDContext>
-          <Droppable droppableId="all-columns" direction="horizontal" type="column">
-            {provided => (
-              <div data-droppable-id={board._id} {...provided.droppableProps} ref={(el) => { provided.innerRef(el); boardListContainerRef.current = el; }} className="board-lists-container d-flex align-items-start">
+      <DragDropContextProvider>
+        <Droppable droppableId={board._id} direction="horizontal" type="column">
+          {dropProvided => (
+            <div {...dropProvided.droppableProps} ref={(el) => { dropProvided.innerRef.current = el; boardListContainerRef.current = el; }} className="board-lists-container d-flex align-items-start">
 
-                {board.columns.map((column, index) => (
-                  <ColumnContainer
-                    boardId={board._id}
-                    key={column._id}
-                    index={index}
-                    listTitle={column.title}
-                    columnId={column._id}
-                    position={column.position}
-                    handleError={handleError}
-                  />
-                ))}
-                {provided.placeholder}
+              {board.columns.map((column, index) => (
+                <ColumnContainer
+                  boardId={board._id}
+                  key={column._id}
+                  index={index}
+                  listTitle={column.title}
+                  columnId={column._id}
+                  position={column.position}
+                  handleError={handleError}
+                />
+              ))}
 
-                <div className="add-new-column-button-container">
-                  <AddBoardContent
-                    addContent={addColumn}
-                    openBtnTitle="Add another column"
-                    addBtnTitle="Add Column"
-                    containerClass="add-new-column-inputs-container"
-                    addBtnClass="add-column-btn"
-                    textInputOptions={{
-                      textInputName: 'columnTitle',
-                      textInputId: 'column-title',
-                      textInputClass: 'title-input',
-                      textInputPlaceholder: 'Column title...',
-                    }}
-                  />
-                </div>
-
+              <div className="add-new-column-button-container">
+                <AddBoardContent
+                  addContent={addColumn}
+                  openBtnTitle="Add another column"
+                  addBtnTitle="Add Column"
+                  containerClass="add-new-column-inputs-container"
+                  addBtnClass="add-column-btn"
+                  textInputOptions={{
+                    textInputName: 'columnTitle',
+                    textInputId: 'column-title',
+                    textInputClass: 'title-input',
+                    textInputPlaceholder: 'Column title...',
+                  }}
+                />
               </div>
-            )}
-          </Droppable>
-        </DNDContext>
-      </DragDropContext>
+
+            </div>
+          )}
+        </Droppable>
+      </DragDropContextProvider>
     </>
   );
 };

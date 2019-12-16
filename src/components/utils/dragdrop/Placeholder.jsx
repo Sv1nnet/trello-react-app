@@ -4,10 +4,7 @@ import { DragDropContext } from './DragDropContext';
 
 
 const Placeholder = ({ elementToPlaceHold, containerId }) => {
-  const {
-    draggableHTMLElements,
-    dragState,
-  } = useContext(DragDropContext);
+  const { dragState } = useContext(DragDropContext);
 
   if (!elementToPlaceHold) return null;
 

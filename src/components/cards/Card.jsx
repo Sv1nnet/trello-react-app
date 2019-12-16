@@ -30,7 +30,7 @@ const Card = (props) => {
   };
 
   return (
-    <div tabIndex="0" role="button" onKeyPress={deleteCard} onClick={deleteCard} ref={(el) => { dragHandleProps.ref.current = el; }} className="card-item d-flex px-2 flex-wrap align-items-center drag-source">
+    <div tabIndex="0" role="button" onKeyPress={deleteCard} onClick={deleteCard} {...dragHandleProps} className="card-item d-flex px-2 flex-wrap align-items-center drag-source">
       <div onMouseDown={handleMouseDown} ref={editingTargetRef} className="h-100 w-100">
         <div className="title w-100">
           <span>{cardTitle}</span>

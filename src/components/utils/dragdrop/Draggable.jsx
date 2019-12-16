@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
+import React, { useContext, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from './DragDropContext';
 import dragElement from '../../../utlis/dragElement';
@@ -10,6 +10,11 @@ import createPlaceholder from '../../../utlis/createPlaceholder';
 
 const propTypes = {
   children: PropTypes.func.isRequired,
+  containerId: PropTypes.string.isRequired,
+  draggableId: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
+  direction: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 
@@ -24,15 +29,12 @@ const Draggable = (props) => {
   } = props;
 
   const {
-    draggableHTMLElements,
     dragState,
     dragStart,
     dragUpdate,
     dragEnd,
   } = useContext(DragDropContext);
 
-  // console.log(dragState);
-  // console.log('index', index)
   const draggableElementRef = useRef();
   const draggableAnchorRef = useRef();
 
@@ -70,7 +72,7 @@ const Draggable = (props) => {
     if (!dragState.dragging && isMouseMoved(e, mouseState.onMouseDownPosition, 5)) {
       window.removeEventListener('mousemove', onMouseMove);
 
-      // Here we need to keep order in this code cuz container of dragging elements scroll element once element is started dragging
+      // Here we need to keep order in this code cuz container of dragging element is scrolled element once element is started dragging
       // So first of all we create a placeholder
       const placeholder = createPlaceholder(draggableElementRef.current, {
         type: 'placeholder',
@@ -84,16 +86,20 @@ const Draggable = (props) => {
       dragElement(e, draggableElementRef, initialElementPosition);
       // Then insert placeholder
       draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current);
-      // console.log('placeholder bounries', placeholder.getBoundingClientRect())
 
-      dragStart({ draggableContainerId: containerId, draggableId, index, type });
+      dragStart({
+        draggableContainerId: containerId,
+        draggableId,
+        index,
+        type,
+      });
     }
   };
 
   const onMouseEnter = (e) => {
     if (dragState.dragging && dragState.type === type) {
       const placeholder = document.querySelector('[data-type="placeholder"]');
-      const container = document.querySelector(`[data-droppable-id="${containerId}"]`)
+      const container = document.querySelector(`[data-droppable-id="${containerId}"]`);
 
       const offsetPosition = direction === 'vertical' ? 'offsetTop' : 'offsetLeft';
 
@@ -118,7 +124,6 @@ const Draggable = (props) => {
         targetContainerId: containerId,
         index: targetIndex,
         targetId: draggableId,
-        type,
       });
     }
   };
@@ -174,22 +179,10 @@ const Draggable = (props) => {
     }
   };
 
-  useEffect(() => {
-    const { current } = draggableAnchorRef;
-    current.addEventListener('mousedown', onMouseDown);
-
-    return () => {
-      current.removeEventListener('mousedown', onMouseDown);
-      console.log('cleanup')
-    };
-  }, [draggableHTMLElements]);
-
   const provider = {
     dragHandleProps: {
-      // onMouseDown,
-      // onMouseMove,
-      // onMouseUp,
       ref: draggableAnchorRef,
+      onMouseDown,
     },
     draggableProps: {
       onMouseEnter,

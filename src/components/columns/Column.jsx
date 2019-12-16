@@ -1,14 +1,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Droppable } from 'react-beautiful-dnd';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
+import Droppable from '../utils/dragdrop/Droppable';
 import boardActions from '../../actions/boardActions';
 import CardContainer from '../cards/CardContainer';
 import AddBoardContent from '../utils/AddBoardContent';
-import { ColumnListContext } from '../context/ColumnListContext';
 
 
 const Column = (props) => {
@@ -114,6 +113,11 @@ const Column = (props) => {
       });
   };
 
+  const onMouseDown = (e) => {
+    mouseDown(e);
+    dragHandleProps.onMouseDown(e);
+  };
+
   // Set textarea height and add ref to columnRefs on component did mount
   useEffect(() => {
     // Set title height corresponding its content
@@ -124,7 +128,7 @@ const Column = (props) => {
     <div className={`${isDragging ? 'dragging' : ''} cards-list-container drag-source`}>
       <div className="list-header-container">
         <div
-          onMouseDown={mouseDown}
+          onMouseDown={onMouseDown}
           ref={(el) => { editingTargetRef.current = el; dragHandleProps.ref.current = el; }}
           className="editing-target"
         />
@@ -142,9 +146,9 @@ const Column = (props) => {
           <FontAwesomeIcon className="ellipsis-btn" icon={faEllipsisH} />
         </button>
       </div>
-      <Droppable droppableId={columnId} type="task">
+      <Droppable droppableId={columnId} direction="vertical" type="task">
         {dropProvided => (
-          <div data-droppable-id={columnId} {...dropProvided.droppableProps} ref={dropProvided.innerRef} className="cards-container">
+          <div {...dropProvided.droppableProps} ref={dropProvided.innerRef} className="cards-container">
 
             {cards.map((card, index) => (
               <CardContainer
@@ -158,7 +162,6 @@ const Column = (props) => {
                 columnId={card.column}
               />
             ))}
-            {dropProvided.placeholder}
 
           </div>
         )}

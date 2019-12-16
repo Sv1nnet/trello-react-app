@@ -1,8 +1,7 @@
-import React, { Component, useState, createContext, useEffect, useLayoutEffect, useContext } from 'react';
+import React, { Component, createContext } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { ColumnListContext } from '../../context/ColumnListContext';
-import createPlaceholder from '../../../utlis/createPlaceholder';
 import boardActions from '../../../actions/boardActions';
 
 const defaultProps = {
@@ -18,7 +17,7 @@ const propTypes = {
 };
 
 export const DragDropContext = createContext();
-// ({ onDragStart = () => { }, onDragUpdate = () => { }, onDragEnd = () => { }, board, children, switchCards })
+
 class DragDropContextProvider extends Component {
   static contextType = ColumnListContext;
 
@@ -37,49 +36,9 @@ class DragDropContextProvider extends Component {
       },
       type: null,
     },
-    draggableHTMLElements: [],
-    droppableHTMLElements: [],
-    dragDropHTMLElements: {},
   }
-
-  // if (!dragState.dragging) {
-  //   const placeholder = document.querySelector('[data-type="placeholder"]');
-  //   if (placeholder) placeholder.remove();
-  // }
-
-  componentDidMount() {
-
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.board !== this.props.board) {
-      // Set state with rendered HTMLElements. This will be executed after callstack is cleared (all DOM tree is rendered)
-      setTimeout(() => {
-        const dragDropHTMLElements = {};
-        const droppableElements = Array.from(document.querySelectorAll('[data-droppable-id]'));
-        const draggableElements = Array.from(document.querySelectorAll('[data-draggable-id]'));
-
-        droppableElements.forEach((el) => {
-          dragDropHTMLElements[el.dataset.droppableId] = Array.from(el.children);
-        });
-
-        this.setState(state => ({
-          ...state,
-          draggableHTMLElements: draggableElements,
-          droppableHTMLElements: droppableElements,
-          dragDropHTMLElements,
-        }));
-      }, 0);
-    }
-  }
-
-  setDraggableStyles = (dragElementId) => {
-  };
 
   dragStart = ({ draggableContainerId, draggableId, index, type }) => {
-    // const { props } = this;
-    // props.onDragStart();
-
     this.setState(state => ({
       ...state,
       dragState: {
@@ -99,9 +58,7 @@ class DragDropContextProvider extends Component {
     }));
   };
 
-  dragUpdate = ({ targetContainerId, targetId, index, type }) => {
-    // const { onDragUpdate } = this.props;
-    // console.log({ containerId, target, type })
+  dragUpdate = ({ targetContainerId, targetId, index }) => {
     this.setState(state => ({
       ...state,
       dragState: {
@@ -112,15 +69,12 @@ class DragDropContextProvider extends Component {
           containerId: targetContainerId,
         },
       },
-    }), () => console.log('this.state', this.state.dragState.target.index));
-    // onDragUpdate();
+    }));
   };
 
   dragEnd = () => {
-    console.log('DragAndDropContext dragEnd')
     const { state, switchCards, switchColumns } = this;
     const { source, target, type } = state.dragState;
-    // onDragEnd();
 
     if (source.containerId !== target.containerId || source.index !== target.index) {
       if (type === 'card') {
@@ -235,12 +189,11 @@ class DragDropContextProvider extends Component {
       dragEnd,
       dragUpdate,
     } = this;
-    const { draggableHTMLElements, dragState } = state;
+    const { dragState } = state;
 
     return (
       <DragDropContext.Provider
         value={{
-          draggableHTMLElements,
           dragState,
           dragStart,
           dragEnd,
