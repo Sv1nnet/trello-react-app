@@ -40,7 +40,7 @@ const ColumnListContextProvider = (props) => {
         position: column.position,
         cards: cards.filter(card => card.column === column._id).sort((cardOne, cardTwo) => {
           if (cardOne.position > cardTwo.position) return 1;
-          if (cardOne.position < cardTwo.position) return 1;
+          if (cardOne.position < cardTwo.position) return -1;
           return 0;
         }),
       };
@@ -65,7 +65,7 @@ const ColumnListContextProvider = (props) => {
         position: column.position,
         cards: cards.filter(card => card.column === column._id).sort((cardOne, cardTwo) => {
           if (cardOne.position > cardTwo.position) return 1;
-          if (cardOne.position < cardTwo.position) return 1;
+          if (cardOne.position < cardTwo.position) return -1;
           return 0;
         }),
       };

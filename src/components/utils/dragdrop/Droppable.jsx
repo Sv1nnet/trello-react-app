@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
-// import { DragDropContext } from './DragDropContext';
+import { DragDropContext } from './DragDropContext';
 
 
 const propTypes = {
@@ -9,12 +9,12 @@ const propTypes = {
 
 
 const Droppable = ({ droppableId, children }) => {
-  // const {
-  //   dragState,
-  //   onDragStart,
-  //   onDragUpdate,
-  //   onDragEnd,
-  // } = useContext(DragDropContext);
+  const {
+    dragState,
+    dragStart,
+    dragUpdate,
+    dragEnd,
+  } = useContext(DragDropContext);
   const droppableRef = useRef();
 
   const provider = {
