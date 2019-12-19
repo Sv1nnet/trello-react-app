@@ -50,18 +50,13 @@ const Draggable = (props) => {
   };
 
   const getTargetIndex = useCallback((placeholder, source, target, container) => {
-    const placeholderOriginalContainerId = placeholder.dataset.originalContainerId;
-    const placeholderCurrentContainerId = placeholder.dataset.containerId;
-
+    // If item just moved into another list
     if (placeholder.dataset.containerId !== containerId) {
-      // If item just moved into another list
-      if (placeholderCurrentContainerId !== containerId) {
-        if (placeholderOriginalContainerId === containerId) {
-          return index - 1;
-        }
-
-        return index;
+      if (placeholder.dataset.originalContainerId === containerId) {
+        return index - 1;
       }
+
+      return index;
     }
 
     const childrenItems = Array.from(container.querySelectorAll(`[data-droppable-id="${containerId}"] > [data-draggable-id]`)).filter(item => source.id !== item.dataset.draggableId);
