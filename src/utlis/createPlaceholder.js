@@ -1,10 +1,15 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
-const createPlaceholder = (elementTemplate, dataset) => {
-  const computedStyle = getComputedStyle(elementTemplate);
+const createPlaceholder = ({ element, dataset, shouldDeleteCurrent = false }) => {
+  if (shouldDeleteCurrent) {
+    const placeholders = document.querySelectorAll('[data-type="placeholder"]');
+    if (placeholders.length > 0) Array.prototype.forEach.call(placeholders, (placeholder => placeholder.remove()));
+  }
+
+  const computedStyle = getComputedStyle(element);
   const elementSize = {
-    minWidth: `${elementTemplate.offsetWidth}px`,
-    height: `${elementTemplate.offsetHeight}px`,
+    minWidth: `${element.offsetWidth}px`,
+    height: `${element.offsetHeight}px`,
     marginLeft: computedStyle.marginLeft,
     marginRight: computedStyle.marginRight,
     marginTop: computedStyle.marginTop,

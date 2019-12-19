@@ -74,12 +74,16 @@ const Draggable = (props) => {
 
       // Here we need to keep order in this code cuz container of dragging element is scrolled element once element is started dragging
       // So first of all we create a placeholder
-      const placeholder = createPlaceholder(draggableElementRef.current, {
-        type: 'placeholder',
-        draggableIndex: index,
-        draggableId: -1, // Need this prop to find placeholder in getTargetIndex function
-        containerId,
-        originalContainerId: containerId,
+      const placeholder = createPlaceholder({
+        element: draggableElementRef.current,
+        dataset: {
+          type: 'placeholder',
+          draggableIndex: index,
+          draggableId: -1, // Need this prop to find placeholder in getTargetIndex function
+          containerId,
+          originalContainerId: containerId,
+        },
+        shouldDeleteCurrent: true,
       });
 
       // Then start to drag the element
