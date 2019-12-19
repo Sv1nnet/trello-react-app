@@ -4,17 +4,12 @@ import PropTypes from 'prop-types';
 import { ColumnListContext } from '../../context/ColumnListContext';
 import boardActions from '../../../actions/boardActions';
 
-const defaultProps = {
-  onDragStart: () => { },
-  onDragUpdate: () => { },
-  onDragEnd: () => { },
-};
 
 const propTypes = {
-  onDragStart: PropTypes.func,
-  onDragUpdate: PropTypes.func,
-  onDragEnd: PropTypes.func,
+  switchCards: PropTypes.func.isRequired,
+  switchColumns: PropTypes.func.isRequired,
 };
+
 
 export const DragDropContext = createContext();
 
@@ -206,8 +201,7 @@ class DragDropContextProvider extends Component {
   }
 }
 
-DragDropContext.defaultProps = defaultProps;
-DragDropContext.propTypes = propTypes;
+DragDropContextProvider.propTypes = propTypes;
 
 const mapStateToProps = state => ({
   board: state.board,

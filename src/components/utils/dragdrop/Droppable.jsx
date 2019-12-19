@@ -1,6 +1,7 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from './DragDropContext';
+import scrollElements from '../../../utlis/scrollElements';
 
 
 const propTypes = {
@@ -15,6 +16,7 @@ const Droppable = ({ droppableId, children }) => {
     dragUpdate,
     dragEnd,
   } = useContext(DragDropContext);
+
   const droppableRef = useRef();
 
   const provider = {
@@ -25,18 +27,45 @@ const Droppable = ({ droppableId, children }) => {
     innerRef: droppableRef,
   };
 
-  // const scrollBoard = scrollElements([
-  //   {
-  //     elementToScroll: boardListContainerRef,
-  //     scrollIntervals: {
-  //       scrollHorizontalInterval: null,
-  //       scrollVerticaltalInterval: null,
-  //     },
-  //     distanceToStartScrollingX: 150,
-  //     scrollStepX: 15,
-  //     scrollX: true,
-  //   },
-  // ]);
+  const scrollDroppable = scrollElements([
+    {
+      elementToScroll: droppableRef,
+      scrollIntervals: {
+        scrollHorizontalInterval: null,
+        scrollVerticaltalInterval: null,
+      },
+      distanceToStartScrollingX: 150,
+      scrollStepX: 15,
+      scrollX: true,
+    },
+  ]);
+
+  const onMouseUp = (e) => {
+    window.removeEventListener('mousemove', scrollDroppable);
+  };
+
+  const onMouseLeave = (e) => {
+    window.removeEventListener('mousemove', scrollDroppable);
+  };
+
+  const onMouseEnter = (e) => {
+    // const removeMouseHanlers = () => {
+    //   window.removeEventListener('mousemove', scrollDroppable);
+    //   window.removeEventListener('mouseup', scrollDroppable);
+    // };
+
+    window.addEventListener('mousemove', scrollDroppable);
+    // window.addEventListener('mouseleave', onMouseLeave);
+
+    // window.addEventListener('mouseup', removeMouseHanlers);
+    // window.addEventListener('mouseleave', removeMouseHanlers);
+  };
+
+  useEffect(() => () => {
+    console.log('droppable cleaned');
+    window.removeEventListener('mousemove', scrollDroppable);
+    window.removeEventListener('mouseleave', onMouseLeave);
+  });
 
   // const onDragStart = (data) => {
   //   const removeMouseHanlers = () => {
@@ -50,7 +79,7 @@ const Droppable = ({ droppableId, children }) => {
   //   }
   // };
 
-  return children(provider);
+  return children(provider, dragState);
 };
 
 

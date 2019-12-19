@@ -92,7 +92,6 @@ class MembersForm extends Component {
   handleAddMember = (member) => {
     const { addMember, token, boardId } = this.props;
 
-    console.log('request sent')
     return addMember(token.token, boardId, member)
       .catch((err) => {
         this.setState(state => ({

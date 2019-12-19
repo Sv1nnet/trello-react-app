@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import Droppable from '../utils/dragdrop/Droppable';
 import boardActions from '../../actions/boardActions';
-import CardContainer from '../cards/CardContainer';
+import Card from '../cards/Card';
 import AddBoardContent from '../utils/AddBoardContent';
 
 
@@ -151,7 +151,7 @@ const Column = (props) => {
           <div {...dropProvided.droppableProps} ref={dropProvided.innerRef} className="cards-container">
 
             {cards.map((card, index) => (
-              <CardContainer
+              <Card
                 key={card._id}
                 index={index}
                 cardData={{

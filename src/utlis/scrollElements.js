@@ -37,7 +37,6 @@ const scrollElements = options => (e) => {
         // If there is no current horizontal scroll interval and we can scroll
         if (!scrollIntervals.scrollHorizontalInterval && canScroll) {
           scrollIntervals.scrollHorizontalInterval = setInterval(() => {
-
             const isEndOfScroll = HTMLElement.offsetWidth === (HTMLElement.scrollWidth - HTMLElement.scrollLeft);
 
             HTMLElement.scrollTo(HTMLElement.scrollLeft + scrollStepX, HTMLElement.scrollTop);

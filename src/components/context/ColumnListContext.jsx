@@ -3,7 +3,6 @@
 /* eslint-disable no-restricted-syntax */
 import React, { useState, useEffect, createContext } from 'react';
 import { connect } from 'react-redux';
-import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
 
 export const ColumnListContext = createContext();
@@ -11,7 +10,6 @@ export const ColumnListContext = createContext();
 const ColumnListContextProvider = (props) => {
   const {
     children,
-    token,
     board,
   } = props;
 
@@ -78,6 +76,7 @@ const ColumnListContextProvider = (props) => {
     <ColumnListContext.Provider
       value={{
         columnsWithCards,
+        handleError,
       }}
     >
       {updatePositionsState.message && <Messages.ErrorMessage message={updatePositionsState.message} closeMessage={closeMessage} />}
@@ -87,19 +86,7 @@ const ColumnListContextProvider = (props) => {
 };
 
 const mapStateToProps = state => ({
-  token: state.user.token,
   board: state.board,
 });
 
-const mapDispatchToProps = dispatch => ({
-  // Send request to the server to update column positions
-  updateColumnPositions: (token, boardId, columns) => dispatch(boardActions.updateColumnPositions(token, boardId, columns)),
-  // Switch column positions locally with no sending request until column stop being dragged (mouseUp event)
-  switchColumnPositions: newColumns => dispatch(boardActions.switchColumnPositions(newColumns)),
-  // Send request to the server to update card positions
-  updateCardPositions: (token, boardId, cards) => dispatch(boardActions.updateCardPositions(token, boardId, cards)),
-  // Switch cards positions locally with no sending request until card stop being dragged (mouseUp event)
-  switchCardPositions: newCards => dispatch(boardActions.switchCardPositions(newCards)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ColumnListContextProvider);
+export default connect(mapStateToProps)(ColumnListContextProvider);

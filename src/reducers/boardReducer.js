@@ -2,28 +2,6 @@
 /* eslint-disable no-restricted-syntax */
 import { boardActionTypes, columnActionTypes, cardActionTypes } from '../types';
 
-const getSortedCards = (cards) => {
-  const sortedCards = {};
-
-  cards.forEach((card) => {
-    if (!sortedCards[card.column]) sortedCards[card.column] = [];
-    sortedCards[card.column].push(card);
-  });
-
-  for (const column in sortedCards) {
-    sortedCards[column] = sortedCards[column].sort((cardOne, cardTwo) => {
-      if (cardOne.position < cardTwo.position) return -1;
-      if (cardOne.position > cardTwo.position) return 1;
-      return 0;
-    });
-  }
-
-  console.log('sortedCards', sortedCards)
-
-  return sortedCards;
-};
-
-
 const initialState = {
   _id: '',
   title: '',
@@ -59,14 +37,11 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
   let cards = [];
   let columns = [];
   let data = {};
-  let newLocalCards = {};
-  let sortedCards = {};
 
   switch (action.type) {
     case boardActionTypes.CREATED:
       data = { ...action.data.data };
       cards = [...data.cards];
-      // sortedCards = getSortedCards(cards);
 
       return {
         _id: data._id,
@@ -92,7 +67,6 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
     case boardActionTypes.BOARD_DOWNLOADED:
       data = { ...action.data.data };
       cards = [...data.cards];
-      // sortedCards = getSortedCards(cards);
 
       return {
         _id: data._id,
@@ -130,7 +104,6 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
     case boardActionTypes.BOARD_MEMBER_ADDED:
       data = { ...action.data.data };
       cards = [...data.board.cards];
-      // sortedCards = getSortedCards(cards);
 
       return {
         _id: data.board._id,
