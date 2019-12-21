@@ -1,7 +1,8 @@
-import React, { useContext, useRef, useEffect } from 'react';
+import React, { useContext, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from './DragDropContext';
 import scrollElements from '../../../utlis/scrollElements';
+import createPlaceholder from '../../../utlis/createPlaceholder';
 
 
 const propTypes = {
@@ -9,75 +10,69 @@ const propTypes = {
 };
 
 
-const Droppable = ({ droppableId, children }) => {
+const Droppable = ({ type, droppableId, children }) => {
+  const context = useContext(DragDropContext);
   const {
     dragState,
-    dragStart,
     dragUpdate,
-    dragEnd,
-  } = useContext(DragDropContext);
+  } = context;
 
   const droppableRef = useRef();
 
+  const onMouseEnter = useCallback(() => {
+    const { current } = droppableRef;
+    const draggedElement = document.querySelector(`[data-draggable-id="${context.dragState.source.id}"]`);
+
+    const droppableChildren = Array.from(current.querySelectorAll('[data-draggable-id]:not([data-type="placeholder"])'));
+    const isDroppablEmpty = droppableChildren.length === 0;
+    const hasOnlyBeingDraggedChild = droppableChildren.length === 1 && context.dragState.source.id === droppableChildren[0].dataset.draggableId;
+
+    if (draggedElement && (isDroppablEmpty || hasOnlyBeingDraggedChild)) {
+      const placeholder = document.querySelector('[data-type="placeholder"]');
+
+      if (placeholder) {
+        placeholder.dataset.containerId = droppableId;
+        placeholder.dataset.draggableIndex = 0;
+      }
+
+      current.appendChild(placeholder);
+
+      dragUpdate({
+        targetContainerId: droppableId,
+        index: 0,
+        targetId: context.dragState.source.id,
+      });
+    }
+  }, [context.dragState.source.id, dragUpdate, droppableId]);
+
+  const onMouseUp = useCallback(() => {
+    const { current } = droppableRef;
+    current.removeEventListener('mouseenter', onMouseEnter);
+    current.removeEventListener('mouseenter', onMouseUp);
+  }, [onMouseEnter]);
+
+  useEffect(() => {
+    const { current } = droppableRef;
+    const droppableChildren = Array.from(current.querySelectorAll('[data-draggable-id]:not([data-type="placeholder"])'));
+    const isDroppablEmpty = droppableChildren.length === 0;
+    const hasOnlyBeingDraggedChild = droppableChildren.length === 1 && context.dragState.source.id === droppableChildren[0].dataset.draggableId;
+
+    if (context.dragState.dragging && context.dragState.type === type && (isDroppablEmpty || hasOnlyBeingDraggedChild)) {
+      current.addEventListener('mouseenter', onMouseEnter);
+      current.addEventListener('mouseup', onMouseUp);
+    }
+    return () => {
+      current.removeEventListener('mouseenter', onMouseEnter);
+      current.removeEventListener('mouseup', onMouseUp);
+    };
+  }, [context.dragState.dragging, context.dragState.source.id, context.dragState.type, onMouseEnter, onMouseUp, type]);
+
   const provider = {
     droppableProps: {
-      // onMouseEnter,
       'data-droppable-id': droppableId,
     },
     innerRef: droppableRef,
   };
-
-  const scrollDroppable = scrollElements([
-    {
-      elementToScroll: droppableRef,
-      scrollIntervals: {
-        scrollHorizontalInterval: null,
-        scrollVerticaltalInterval: null,
-      },
-      distanceToStartScrollingX: 150,
-      scrollStepX: 15,
-      scrollX: true,
-    },
-  ]);
-
-  const onMouseUp = (e) => {
-    window.removeEventListener('mousemove', scrollDroppable);
-  };
-
-  const onMouseLeave = (e) => {
-    window.removeEventListener('mousemove', scrollDroppable);
-  };
-
-  const onMouseEnter = (e) => {
-    // const removeMouseHanlers = () => {
-    //   window.removeEventListener('mousemove', scrollDroppable);
-    //   window.removeEventListener('mouseup', scrollDroppable);
-    // };
-
-    window.addEventListener('mousemove', scrollDroppable);
-    // window.addEventListener('mouseleave', onMouseLeave);
-
-    // window.addEventListener('mouseup', removeMouseHanlers);
-    // window.addEventListener('mouseleave', removeMouseHanlers);
-  };
-
-  useEffect(() => () => {
-    console.log('droppable cleaned');
-    window.removeEventListener('mousemove', scrollDroppable);
-    window.removeEventListener('mouseleave', onMouseLeave);
-  });
-
-  // const onDragStart = (data) => {
-  //   const removeMouseHanlers = () => {
-  //     window.removeEventListener('mousemove', scrollBoard);
-  //     window.removeEventListener('mouseup', scrollBoard);
-  //   };
-
-  //   if (data.type === 'task') {
-  //     window.addEventListener('mousemove', scrollBoard);
-  //     window.addEventListener('mouseup', removeMouseHanlers);
-  //   }
-  // };
 
   return children(provider, dragState);
 };

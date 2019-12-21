@@ -146,7 +146,7 @@ const Column = (props) => {
           <FontAwesomeIcon className="ellipsis-btn" icon={faEllipsisH} />
         </button>
       </div>
-      <Droppable droppableId={columnId} direction="vertical" type="task">
+      <Droppable droppableId={columnId} direction="vertical" type="card">
         {dropProvided => (
           <div {...dropProvided.droppableProps} ref={dropProvided.innerRef} className="cards-container">
 

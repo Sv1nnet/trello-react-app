@@ -176,6 +176,10 @@ class DragDropContextProvider extends Component {
     props.switchCards(newCards);
   }
 
+  scrollElements = (e) => {
+
+  }
+
   render() {
     const {
       state,

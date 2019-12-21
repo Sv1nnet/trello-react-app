@@ -59,7 +59,10 @@ const Draggable = (props) => {
       return index;
     }
 
-    const childrenItems = Array.from(container.querySelectorAll(`[data-droppable-id="${containerId}"] > [data-draggable-id]`)).filter(item => source.id !== item.dataset.draggableId);
+    const childrenItems = Array
+      .from(container.querySelectorAll(`[data-droppable-id="${containerId}"] > [data-draggable-id]`))
+      .filter(item => source.id !== item.dataset.draggableId);
+
     return childrenItems.findIndex(item => item === placeholder);
   }, [index, containerId]);
 
@@ -74,7 +77,7 @@ const Draggable = (props) => {
         dataset: {
           type: 'placeholder',
           draggableIndex: index,
-          draggableId: -1, // Need this prop to find placeholder in getTargetIndex function
+          draggableId: 'placeholder', // Need this prop to find placeholder in getTargetIndex function
           containerId,
           originalContainerId: containerId,
         },
