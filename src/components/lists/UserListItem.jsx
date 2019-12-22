@@ -15,7 +15,18 @@ const propTypes = {
 };
 
 
-const UserListItem = ({ userId, email, nickname, isMember, isOwner, disabled, addMember, removeMember }) => {
+const UserListItem = (props) => {
+  const {
+    userId,
+    email,
+    nickname,
+    isMember,
+    isOwner,
+    disabled,
+    addMember,
+    removeMember,
+  } = props;
+
   const [state, setState] = useState({
     loading: false,
     isMember,
@@ -48,7 +59,7 @@ const UserListItem = ({ userId, email, nickname, isMember, isOwner, disabled, ad
       );
     }
 
-    // If uesr owner then we can't remove him from baord member so we need disable button
+    // If user owner then we can't remove him from baord member so we need disable button
     if (isOwner) {
       return (
         <button type="button" className="member-control-btn btn btn-sm btn-danger owner" title={title} disabled>

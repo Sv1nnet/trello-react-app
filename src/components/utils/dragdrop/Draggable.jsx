@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useCallback } from 'react';
+import { useContext, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from './DragDropContext';
 import dragElement from '../../../utlis/dragElement';
@@ -98,7 +98,7 @@ const Draggable = (props) => {
     }
   };
 
-  const onMouseEnter = (e) => {
+  const onMouseEnter = () => {
     if (dragState.dragging && dragState.type === type) {
       const placeholder = document.querySelector('[data-type="placeholder"]');
       const container = document.querySelector(`[data-droppable-id="${containerId}"]`);
@@ -130,7 +130,7 @@ const Draggable = (props) => {
     }
   };
 
-  const onMouseUp = (e) => {
+  const onMouseUp = () => {
     const placeholder = document.querySelector('[data-type="placeholder"]');
     if (placeholder) placeholder.remove();
 

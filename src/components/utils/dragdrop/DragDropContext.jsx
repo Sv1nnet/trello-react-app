@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React, { Component, createContext } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -33,7 +34,14 @@ class DragDropContextProvider extends Component {
     },
   }
 
-  dragStart = ({ draggableContainerId, draggableId, index, type }) => {
+  dragStart = (props) => {
+    const {
+      draggableContainerId,
+      draggableId,
+      index,
+      type,
+    } = props;
+
     this.setState(state => ({
       ...state,
       dragState: {

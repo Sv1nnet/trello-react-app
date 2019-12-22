@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Draggable from '../utils/dragdrop/Draggable';

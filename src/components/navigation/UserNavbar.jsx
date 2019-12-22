@@ -85,7 +85,7 @@ class UserNavbar extends Component {
   }
 
   // This works on small screen. Search button showed instead of search text input so when we click the button search popup appears
-  handleSearchButtonClick = (e) => {
+  handleSearchButtonClick = () => {
     const isSearchBarActive = this.searchBar.current.classList.contains('active');
 
     if (isSearchBarActive) {

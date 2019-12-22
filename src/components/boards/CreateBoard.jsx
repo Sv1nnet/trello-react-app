@@ -43,7 +43,12 @@ const CreateBoard = (props) => {
     e.preventDefault();
 
     const { token } = props;
-    props.createBoard({ token, title: state.title, access: state.access, description: state.description })
+    props.createBoard({
+      token,
+      title: state.title,
+      access: state.access,
+      description: state.description,
+    })
       .then((res) => {
         setState({
           err: {
@@ -73,7 +78,6 @@ const CreateBoard = (props) => {
 
   if (state.boardCreated) {
     close();
-    console.log('new board id', state.newBoardId);
     return <Redirect to={`/board/${state.newBoardId}`} />;
   }
 

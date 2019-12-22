@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,6 +8,51 @@ import Droppable from '../utils/dragdrop/Droppable';
 import boardActions from '../../actions/boardActions';
 import Card from '../cards/Card';
 import AddBoardContent from '../utils/AddBoardContent';
+import resizeTextarea from '../../utlis/resizeTextarea';
+
+
+const propTypes = {
+  dragHandleProps: PropTypes.shape({
+    ref: PropTypes.shape({
+      current: PropTypes.object,
+    }).isRequired,
+    onMouseDown: PropTypes.func.isRequired,
+  }).isRequired,
+  isDragging: PropTypes.bool.isRequired,
+  columnData: PropTypes.shape({
+    columnId: PropTypes.string.isRequired,
+    listTitle: PropTypes.string.isRequired,
+    position: PropTypes.number.isRequired,
+    cards: PropTypes.arrayOf(PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      column: PropTypes.string.isRequired,
+      comments: PropTypes.array.isRequired,
+      marks: PropTypes.array.isRequired,
+      position: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+    })),
+  }).isRequired,
+  token: PropTypes.shape({
+    access: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  board: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+  }).isRequired,
+  mouseDown: PropTypes.func.isRequired,
+  deleteColumn: PropTypes.func.isRequired,
+  updateColumn: PropTypes.func.isRequired,
+  createCard: PropTypes.func.isRequired,
+  handleError: PropTypes.func.isRequired,
+  refs: PropTypes.shape({
+    titleInputRef: PropTypes.shape({
+      current: PropTypes.object,
+    }).isRequired,
+    editingTargetRef: PropTypes.shape({
+      current: PropTypes.object,
+    }).isRequired,
+  }).isRequired,
+};
 
 
 const Column = (props) => {
@@ -51,17 +96,17 @@ const Column = (props) => {
     }
   };
 
-  const resizeTitleTextarea = () => {
-    // Set textarea height 1px to recalculate its content height
-    if (titleInputRef.current) {
-      titleInputRef.current.style.height = '1px';
+  // const resizeTextarea = () => {
+  //   // Set textarea height 1px to recalculate its content height
+  //   if (titleInputRef.current) {
+  //     titleInputRef.current.style.height = '1px';
 
-      const { scrollHeight } = titleInputRef.current;
-      const newHeight = `${scrollHeight + 2}px`;
+  //     const { scrollHeight } = titleInputRef.current;
+  //     const newHeight = `${scrollHeight + 2}px`;
 
-      titleInputRef.current.style.height = newHeight;
-    }
-  };
+  //     titleInputRef.current.style.height = newHeight;
+  //   }
+  // };
 
   const setTitleInputBlured = (e) => {
     if (e.key === 'Enter') {
@@ -88,7 +133,7 @@ const Column = (props) => {
       title: e.target.value,
     });
 
-    resizeTitleTextarea();
+    resizeTextarea(titleInputRef);
   };
 
   const addCard = (e, cardTitle) => {
@@ -121,7 +166,7 @@ const Column = (props) => {
   // Set textarea height and add ref to columnRefs on component did mount
   useEffect(() => {
     // Set title height corresponding its content
-    resizeTitleTextarea();
+    resizeTextarea(titleInputRef);
   }, []);
 
   return (
@@ -197,8 +242,6 @@ const mapDispatchToProps = dispatch => ({
   createCard: (token, boardId, card) => dispatch(boardActions.createCard(token, boardId, card)),
 });
 
-Column.propTypes = {
-
-};
+Column.propTypes = propTypes;
 
 export default React.memo(connect(mapStateToProps, mapDispatchToProps)(Column));

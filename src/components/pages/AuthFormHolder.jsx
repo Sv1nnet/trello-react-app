@@ -242,7 +242,14 @@ class AuthFormHolder extends Component {
   }
 
   // Validate inputs
-  validate = ({ email, nickname, password, confirmPassword }, formType) => {
+  validate = (dataToValidate, formType) => {
+    const {
+      email,
+      nickname,
+      password,
+      confirmPassword,
+    } = dataToValidate;
+
     if (!isEmail(email)) return 'Invalid email';
 
     switch (formType) {

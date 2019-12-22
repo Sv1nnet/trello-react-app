@@ -1,4 +1,6 @@
-import React, { useContext, useRef, useEffect, useCallback } from 'react';
+import {
+  useContext, useRef, useEffect, useCallback,
+} from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from './DragDropContext';
 

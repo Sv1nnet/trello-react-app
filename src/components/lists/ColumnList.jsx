@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Droppable from '../utils/dragdrop/Droppable';
@@ -31,7 +31,6 @@ const propTypes = {
 
 const ColumnList = (props) => {
   const { createColumn, token, board } = props;
-
 
   const [updatePositionsState, setUpdatePositionsState] = useState({
     err: {
@@ -66,13 +65,11 @@ const ColumnList = (props) => {
       position: board.columns.length,
     };
 
-    if (column.title) {
-      return createColumn(token.token, board._id, column)
-        .catch((err) => {
-          handleError(err);
-          return Promise.reject(err);
-        });
-    }
+    return createColumn(token.token, board._id, column)
+      .catch((err) => {
+        handleError(err);
+        return Promise.reject(err);
+      });
   };
 
   const closeMessage = () => {
@@ -95,7 +92,7 @@ const ColumnList = (props) => {
       <DragDropContextProvider>
         <Droppable droppableId={board._id} direction="horizontal" type="column">
           {dropProvided => (
-            <div {...dropProvided.droppableProps} ref={(el) => { dropProvided.innerRef.current = el; boardListContainerRef.current = el; }} className="board-lists-container d-flex align-items-start">
+            <div {...dropProvided.droppableProps} ref={(el) => { const { innerRef } = dropProvided; innerRef.current = el; boardListContainerRef.current = el; }} className="board-lists-container d-flex align-items-start">
 
               {board.columns.map((column, index) => (
                 <ColumnContainer

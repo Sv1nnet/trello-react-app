@@ -1,22 +1,19 @@
-import React, { useRef, useContext, useEffect } from 'react';
+import React, { useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
-// import { Draggable, Droppable } from 'react-beautiful-dnd';
 import Draggable from '../utils/dragdrop/Draggable';
 import isMouseMoved from '../../utlis/isMouseMoved';
 import Column from './Column';
 import '../../styles/cardsList.sass';
 import { ColumnListContext } from '../context/ColumnListContext';
-import boardActions from '../../actions/boardActions';
 
-
-const defaultProps = {
-
-};
 
 const propTypes = {
+  boardId: PropTypes.string.isRequired,
   listTitle: PropTypes.string.isRequired,
   columnId: PropTypes.string.isRequired,
-  boardId: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
+  position: PropTypes.number.isRequired,
+  handleError: PropTypes.func.isRequired,
 };
 
 
@@ -98,7 +95,6 @@ const ColumnContainer = (props) => {
 };
 
 
-ColumnContainer.defaultProps = defaultProps;
 ColumnContainer.propTypes = propTypes;
 
 
