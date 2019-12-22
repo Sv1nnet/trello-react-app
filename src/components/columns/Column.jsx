@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -95,18 +95,6 @@ const Column = (props) => {
         });
     }
   };
-
-  // const resizeTextarea = () => {
-  //   // Set textarea height 1px to recalculate its content height
-  //   if (titleInputRef.current) {
-  //     titleInputRef.current.style.height = '1px';
-
-  //     const { scrollHeight } = titleInputRef.current;
-  //     const newHeight = `${scrollHeight + 2}px`;
-
-  //     titleInputRef.current.style.height = newHeight;
-  //   }
-  // };
 
   const setTitleInputBlured = (e) => {
     if (e.key === 'Enter') {
