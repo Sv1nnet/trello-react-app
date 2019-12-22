@@ -6,7 +6,8 @@ const createBoard = ({ token, title, access, description }) => (dispatch, getSta
   return api.board.createBoard(token, { title, access, description })
     .then((res) => {
       dispatch({ type: userActionTypes.BOARD_ADDED, data: res }); // Add board to user reducer
-      return dispatch({ type: boardActionTypes.CREATED, data: res }).data;
+      dispatch({ type: boardActionTypes.CREATED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -27,10 +28,8 @@ const loadAllBoards = token => (dispatch, getState) => {
         dispatch({
           type: boardActionTypes.BOARD_UPDATED,
           data: {
-            data: {
-              ...board,
-              title: currentBoard.title,
-            },
+            ...board,
+            title: currentBoard.title,
           },
         });
       }
@@ -49,7 +48,8 @@ const loadAllBoards = token => (dispatch, getState) => {
 const getBoard = (token, id) => (dispatch, getState) => {
   return api.board.getBoard(token, id)
     .then((res) => {
-      return dispatch({ type: boardActionTypes.BOARD_DOWNLOADED, data: res }).data;
+      dispatch({ type: boardActionTypes.BOARD_DOWNLOADED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -65,7 +65,8 @@ const updateBoard = (token, id, data) => (dispatch, getState) => {
   return api.board.updateBoard(token, id, data)
     .then((res) => {
       dispatch({ type: userActionTypes.BOARD_TITLE_UPDATED, data: res });
-      return dispatch({ type: boardActionTypes.BOARD_UPDATED, data: res }).data;
+      dispatch({ type: boardActionTypes.BOARD_UPDATED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -169,7 +170,8 @@ const createColumn = (token, boardId, column) => (dispatch, getState) => {
 const deleteColumn = (token, boardId, columnId) => (dispatch, getState) => {
   return api.board.deleteColumn(token, boardId, columnId)
     .then((res) => {
-      return dispatch({ type: columnActionTypes.COLUMN_DELETED, data: res }).data;
+      dispatch({ type: columnActionTypes.COLUMN_DELETED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -190,7 +192,8 @@ const updateColumn = (token, boardId, columnId, dataToUpdate) => (dispatch, getS
 
   return api.board.updateColumn(token, boardId, columnId, data)
     .then((res) => {
-      return dispatch({ type: columnActionTypes.COLUMN_UPDATED, data: res }).data;
+      dispatch({ type: columnActionTypes.COLUMN_UPDATED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -210,7 +213,8 @@ const updateColumnPositions = (token, boardId, dataToUpdate) => (dispatch, getSt
   console.log('actions', data);
   return api.board.updateColumnPositions(token, boardId, data)
     .then((res) => {
-      return dispatch({ type: columnActionTypes.COLUMN_POSITIONS_UPDATED, data: res }).data;
+      dispatch({ type: columnActionTypes.COLUMN_POSITIONS_UPDATED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(

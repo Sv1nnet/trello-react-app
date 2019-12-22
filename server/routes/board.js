@@ -161,6 +161,7 @@ router.post('/', (req, res) => {
                 marks: board.marks,
                 boards: board.boards,
                 columns: board.columns,
+                cards: board.cards,
               }));
           } else {
             res.status(400).json({ err: 'Could not find the user' });

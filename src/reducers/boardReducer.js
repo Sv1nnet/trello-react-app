@@ -40,7 +40,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
 
   switch (action.type) {
     case boardActionTypes.CREATED:
-      data = { ...action.data.data };
+      data = { ...action.data };
       cards = [...data.cards];
 
       return {
@@ -65,7 +65,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
     case columnActionTypes.COLUMN_UPDATED:
     case boardActionTypes.BOARD_UPDATED:
     case boardActionTypes.BOARD_DOWNLOADED:
-      data = { ...action.data.data };
+      data = { ...action.data };
       cards = [...data.cards];
 
       return {

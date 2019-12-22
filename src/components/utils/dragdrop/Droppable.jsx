@@ -1,8 +1,6 @@
 import React, { useContext, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from './DragDropContext';
-import scrollElements from '../../../utlis/scrollElements';
-import createPlaceholder from '../../../utlis/createPlaceholder';
 
 
 const propTypes = {
