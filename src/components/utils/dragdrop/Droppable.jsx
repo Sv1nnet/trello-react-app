@@ -21,10 +21,16 @@ const Droppable = ({ type, droppableId, children }) => {
     const { current } = droppableRef;
     const draggedElement = document.querySelector(`[data-draggable-id="${context.dragState.source.id}"]`);
 
+    // Since we can put an dragged element into different list only if it comes over another element (onMouseEnter event)
+    // we can't just put it into an empty list. A list with a single element. We need to do following steps:
+    // 1) Get all draggable children in empty container (droppable)
     const droppableChildren = Array.from(current.querySelectorAll('[data-draggable-id]:not([data-type="placeholder"])'));
+    // 2) Find out if the container is really empty
     const isDroppablEmpty = droppableChildren.length === 0;
+    // 3) Or we are currently dragging an element from it, so the element in DOM still in visually empty container
     const hasOnlyBeingDraggedChild = droppableChildren.length === 1 && context.dragState.source.id === droppableChildren[0].dataset.draggableId;
 
+    // 4) If any of those conditions is true we can put an element (a placeholder during dragging) into empty (or visually empty) container
     if (draggedElement && (isDroppablEmpty || hasOnlyBeingDraggedChild)) {
       const placeholder = document.querySelector('[data-type="placeholder"]');
 
@@ -51,10 +57,17 @@ const Droppable = ({ type, droppableId, children }) => {
 
   useEffect(() => {
     const { current } = droppableRef;
+
+    // Since we can put an dragged element into different list only if it comes over another element (onMouseEnter event)
+    // we can't just put it into an empty list. A list with a single element. We need to do following steps:
+    // 1) Get all draggable children in empty container (droppable)
     const droppableChildren = Array.from(current.querySelectorAll('[data-draggable-id]:not([data-type="placeholder"])'));
+    // 2) Find out if the container is really empty
     const isDroppablEmpty = droppableChildren.length === 0;
+    // 3) Or we are currently dragging an element from it, so the element in DOM still in visually empty container
     const hasOnlyBeingDraggedChild = droppableChildren.length === 1 && context.dragState.source.id === droppableChildren[0].dataset.draggableId;
 
+    // 4) If any of those conditions is true we can hire event handler for empty containers (droppable)
     if (context.dragState.dragging && context.dragState.type === type && (isDroppablEmpty || hasOnlyBeingDraggedChild)) {
       current.addEventListener('mouseenter', onMouseEnter);
       current.addEventListener('mouseup', onMouseUp);
