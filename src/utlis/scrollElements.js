@@ -8,6 +8,7 @@
  * 5) scrollX - bool.
  * 6) scrollY - bool.
  * 7) scrollBoth - bool.
+ * @returns function to be added on mouseMove event on an element that we want to scroll
  */
 
 const scrollElements = options => (e) => {
@@ -64,7 +65,7 @@ const scrollElements = options => (e) => {
         // does he need to set a new scroll interval or another one still exists
       } else {
         clearInterval(scrollIntervals.scrollHorizontalInterval);
-        scrollIntervals.scrollHorizontalInterval = undefined;
+        scrollIntervals.scrollHorizontalInterval = null;
       }
     }
 
@@ -104,7 +105,7 @@ const scrollElements = options => (e) => {
         // does he need to set a new vertical scroll interval or another one still exists
       } else {
         clearInterval(scrollIntervals.scrollVerticalInterval);
-        scrollIntervals.scrollVerticalInterval = undefined;
+        scrollIntervals.scrollVerticalInterval = null;
       }
     }
   });

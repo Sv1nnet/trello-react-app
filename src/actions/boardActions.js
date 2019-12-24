@@ -2,7 +2,7 @@ import { boardActionTypes, userActionTypes, columnActionTypes, cardActionTypes }
 import api from '../api';
 import createErrorResponseObject from '../utlis/createErrorResponseObject';
 
-const createBoard = ({ token, title, access, description }) => (dispatch, getState) => {
+const createBoard = ({ token, title, access, description }) => (dispatch) => {
   return api.board.createBoard(token, { title, access, description })
     .then((res) => {
       dispatch({ type: userActionTypes.BOARD_ADDED, data: res }); // Add board to user reducer
@@ -45,7 +45,7 @@ const loadAllBoards = token => (dispatch, getState) => {
     });
 };
 
-const getBoard = (token, id) => (dispatch, getState) => {
+const getBoard = (token, id) => (dispatch) => {
   return api.board.getBoard(token, id)
     .then((res) => {
       dispatch({ type: boardActionTypes.BOARD_DOWNLOADED, data: res.data });
@@ -61,7 +61,7 @@ const getBoard = (token, id) => (dispatch, getState) => {
     });
 };
 
-const updateBoard = (token, id, data) => (dispatch, getState) => {
+const updateBoard = (token, id, data) => (dispatch) => {
   return api.board.updateBoard(token, id, data)
     .then((res) => {
       dispatch({ type: userActionTypes.BOARD_TITLE_UPDATED, data: res });
@@ -78,7 +78,7 @@ const updateBoard = (token, id, data) => (dispatch, getState) => {
     });
 };
 
-const findUsers = (token, email) => (dispatch, getState) => {
+const findUsers = (token, email) => (dispatch) => {
   const encodedEmail = window.encodeURIComponent(email);
 
   return api.board.findUsers(token, encodedEmail)
@@ -95,7 +95,7 @@ const findUsers = (token, email) => (dispatch, getState) => {
     });
 };
 
-const getMembers = (token, id) => (dispatch, getState) => {
+const getMembers = (token, id) => (dispatch) => {
   return api.board.getMembers(token, id)
     .then((res) => {
       return dispatch({ type: boardActionTypes.BOARD_MEMBERS_RECEIVED, data: res }).data;
@@ -110,7 +110,7 @@ const getMembers = (token, id) => (dispatch, getState) => {
     });
 };
 
-const addMember = (token, id, userId) => (dispatch, getState) => {
+const addMember = (token, id, userId) => (dispatch) => {
   const data = {
     member: userId,
   };
@@ -129,7 +129,7 @@ const addMember = (token, id, userId) => (dispatch, getState) => {
     });
 };
 
-const removeMember = (token, id, userId) => (dispatch, getState) => {
+const removeMember = (token, id, userId) => (dispatch) => {
   const data = {
     member: userId,
   };
@@ -148,7 +148,7 @@ const removeMember = (token, id, userId) => (dispatch, getState) => {
     });
 };
 
-const createColumn = (token, boardId, column) => (dispatch, getState) => {
+const createColumn = (token, boardId, column) => (dispatch) => {
   const columnData = {
     column,
   };
@@ -167,7 +167,7 @@ const createColumn = (token, boardId, column) => (dispatch, getState) => {
     });
 };
 
-const deleteColumn = (token, boardId, columnId) => (dispatch, getState) => {
+const deleteColumn = (token, boardId, columnId) => (dispatch) => {
   return api.board.deleteColumn(token, boardId, columnId)
     .then((res) => {
       dispatch({ type: columnActionTypes.COLUMN_DELETED, data: res.data });
@@ -183,7 +183,7 @@ const deleteColumn = (token, boardId, columnId) => (dispatch, getState) => {
     });
 };
 
-const updateColumn = (token, boardId, columnId, dataToUpdate) => (dispatch, getState) => {
+const updateColumn = (token, boardId, columnId, dataToUpdate) => (dispatch) => {
   const data = {
     dataToUpdate,
   };
@@ -205,7 +205,7 @@ const updateColumn = (token, boardId, columnId, dataToUpdate) => (dispatch, getS
     });
 };
 
-const updateColumnPositions = (token, boardId, dataToUpdate) => (dispatch, getState) => {
+const updateColumnPositions = (token, boardId, dataToUpdate) => (dispatch) => {
   const data = {
     columns: dataToUpdate,
   };
@@ -226,11 +226,11 @@ const updateColumnPositions = (token, boardId, dataToUpdate) => (dispatch, getSt
     });
 };
 
-const switchColumnPositions = newColumns => (dispatch, getState) => {
+const switchColumnPositions = newColumns => (dispatch) => {
   dispatch({ type: columnActionTypes.COLUMN_POSITIONS_SWITCHED, data: { columns: newColumns } });
 };
 
-const createCard = (token, boardId, card) => (dispatch, getState) => {
+const createCard = (token, boardId, card) => (dispatch) => {
   const cardData = {
     card,
   };
@@ -249,7 +249,7 @@ const createCard = (token, boardId, card) => (dispatch, getState) => {
     });
 };
 
-const deleteCard = (token, boardId, cardId) => (dispatch, getState) => {
+const deleteCard = (token, boardId, cardId) => (dispatch) => {
   return api.board.deleteCard(token, boardId, cardId)
     .then((res) => {
       return dispatch({ type: cardActionTypes.CARD_DELETED, data: res }).data;
@@ -264,7 +264,7 @@ const deleteCard = (token, boardId, cardId) => (dispatch, getState) => {
     });
 };
 
-const updateCardPositions = (token, boardId, dataToUpdate) => (dispatch, getState) => {
+const updateCardPositions = (token, boardId, dataToUpdate) => (dispatch) => {
   const data = {
     columns: dataToUpdate,
   };
@@ -283,7 +283,7 @@ const updateCardPositions = (token, boardId, dataToUpdate) => (dispatch, getStat
     });
 };
 
-const switchCardPositions = newCards => (dispatch, getState) => {
+const switchCardPositions = newCards => (dispatch) => {
   dispatch({ type: cardActionTypes.CARD_POSITIONS_SWITCHED, data: { cards: newCards } });
 };
 
