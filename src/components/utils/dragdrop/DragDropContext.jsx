@@ -151,6 +151,7 @@ class DragDropContextProvider extends Component {
     const onMouseUp = () => {
       elementToScroll.removeEventListener('mousemove', scrollElement);
       elementToScroll.removeEventListener('mouseenter', onMouseEnter);
+      elementToScroll.removeEventListener('mouseleave', onMouseLeave);
       window.removeEventListener('mouseup', onMouseUp);
 
       clearScrollIntervals({
