@@ -31,7 +31,7 @@ const scrollElements = options => (e) => {
     } = option;
 
     const HTMLElement = elementToScroll.getBoundingClientRect ? elementToScroll : elementToScroll.current;
-    const rect = HTMLElement.getBoundingClientRect ? HTMLElement.getBoundingClientRect() : HTMLElement.current.getBoundingClientRect();
+    const rect = HTMLElement.getBoundingClientRect();
 
     // Scroll horizontal
     if (scrollX || scrollBoth) {

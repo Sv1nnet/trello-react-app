@@ -102,6 +102,7 @@ const Draggable = (props) => {
     if (dragState.dragging && dragState.type === type) {
       const placeholder = document.querySelector('[data-type="placeholder"]');
       const container = document.querySelector(`[data-droppable-id="${containerId}"]`);
+      const containerScrollPosition = container.scrollTop;
 
       const offsetPosition = direction === 'vertical' ? 'offsetTop' : 'offsetLeft';
 
@@ -112,6 +113,13 @@ const Draggable = (props) => {
             draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current.nextElementSibling);
           } else {
             draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current);
+
+            // We need this condition because when we drag a card above another card
+            // and card's container is being scrolled by scrollElements function a vertical scroll
+            // of the container jumps back due to inserting an element before a card we mouse move on
+            if (direction === 'vertical') {
+              container.scrollTo(0, containerScrollPosition);
+            }
           }
         } else {
           draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current);

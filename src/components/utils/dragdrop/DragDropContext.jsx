@@ -60,7 +60,6 @@ class DragDropContextProvider extends Component {
     if (dragState.dragging && prevState.dragState.dragging !== dragState.dragging) {
       const boardListContainer = document.querySelector('.board-lists-container');
       scrollElement({
-        elementToScroll: boardListContainer,
         scrollOption: {
           elementToScroll: boardListContainer,
           scrollIntervals,
@@ -73,7 +72,6 @@ class DragDropContextProvider extends Component {
 
       const cardListContainer = document.querySelector(`[data-droppable-id="${dragState.target.containerId}"]`);
       scrollElement({
-        elementToScroll: cardListContainer,
         scrollOption: {
           elementToScroll: cardListContainer,
           scrollIntervals,
@@ -123,12 +121,12 @@ class DragDropContextProvider extends Component {
 
   scrollElement = (options) => {
     const {
-      elementToScroll,
       scrollOption,
       horizontal = false,
       vertical = false,
       both = false,
     } = options;
+    const { elementToScroll } = scrollOption;
 
     const { scrollIntervals, clearScrollIntervals } = this;
     const scrollOptions = [scrollOption];
