@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { DragDropContext } from './DragDropContext';
 import dragElement from '../../../utlis/dragElement';
 import isMouseMoved from '../../../utlis/isMouseMoved';
-import removeEvents from '../../../utlis/removeEvents';
-import addEvents from '../../../utlis/addEvents';
 import createPlaceholder from '../../../utlis/createPlaceholder';
 
 

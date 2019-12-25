@@ -99,7 +99,14 @@ class DragDropContextProvider extends Component {
     }
   }
 
-  clearScrollIntervals = ({ scrollIntervals, horizontal = false, vertical = false, both = true }) => {
+  clearScrollIntervals = (options) => {
+    const {
+      scrollIntervals,
+      horizontal = false,
+      vertical = false,
+      both = true,
+    } = options;
+
     if (both) {
       window.clearInterval(scrollIntervals.scrollHorizontalInterval);
       window.clearInterval(scrollIntervals.scrollVerticalInterval);
@@ -315,12 +322,6 @@ class DragDropContextProvider extends Component {
     }
 
     props.switchCards(newCards);
-  }
-
-  scrollElements = (e) => {
-    const { dragState } = this.state;
-    const boardListContainer = document.querySelector('.board-lists-container');
-    const elementToScroll = document.querySelector(`[data-droppable-id="${dragState.target.containerId}"]`);
   }
 
   render() {
