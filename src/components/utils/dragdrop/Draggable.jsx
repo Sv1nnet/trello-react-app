@@ -134,21 +134,9 @@ const Draggable = (props) => {
     const placeholder = document.querySelector('[data-type="placeholder"]');
     if (placeholder) placeholder.remove();
 
-    removeEvents([
-      {
-        target: window,
-        events: [
-          {
-            type: 'mousemove',
-            handler: onMouseMove,
-          },
-          {
-            type: 'mouseup',
-            handler: onMouseUp,
-          },
-        ],
-      },
-    ]);
+    window.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('mouseup', onMouseUp);
+
     dragEnd();
   };
 
@@ -163,21 +151,8 @@ const Draggable = (props) => {
       initialElementPosition.y = event.offsetY;
       initialElementPosition.x = event.offsetX;
 
-      addEvents([
-        {
-          target: window,
-          events: [
-            {
-              type: 'mousemove',
-              handler: onMouseMove,
-            },
-            {
-              type: 'mouseup',
-              handler: onMouseUp,
-            },
-          ],
-        },
-      ]);
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
     }
   };
 
