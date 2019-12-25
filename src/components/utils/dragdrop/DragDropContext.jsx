@@ -49,77 +49,55 @@ class DragDropContextProvider extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { clearScrollIntervals, scrollIntervals } = this;
+    const { clearScrollIntervals, scrollIntervals, scrollElement } = this;
     const { dragState } = this.state;
 
     if (!dragState.dragging && prevState.dragState.dragging !== dragState.dragging) {
-      clearScrollIntervals({ scrollIntervals });
-      return;
+      // Clear intervals if for a some reason scroll interval wasn't cleared after drag ended
+      if (scrollIntervals.scrollHorizontalInterval || scrollIntervals.scrollVerticalInterval) clearScrollIntervals({ scrollIntervals });
     }
 
     if (dragState.dragging && prevState.dragState.dragging !== dragState.dragging) {
       const boardListContainer = document.querySelector('.board-lists-container');
-
-      const scrollOptions = [
-        {
+      scrollElement({
+        elementToScroll: boardListContainer,
+        scrollOption: {
           elementToScroll: boardListContainer,
           scrollIntervals,
           distanceToStartScrollingX: 200,
           scrollStepX: 10,
           scrollX: true,
         },
-      ];
+        horizontal: true,
+      });
 
-      const scrollBoard = scrollElements(scrollOptions);
-
-      const onMouseLeave = () => {
-        clearScrollIntervals({ scrollIntervals, vertical: true });
-      };
-
-      const onMouseEnter = () => {
-        boardListContainer.addEventListener('mousemove', scrollBoard);
-      };
-
-      const onMouseUp = () => {
-        console.log('mouse up');
-
-        boardListContainer.removeEventListener('mousemove', scrollBoard);
-        boardListContainer.removeEventListener('mouseenter', onMouseEnter);
-        window.removeEventListener('mouseup', onMouseUp);
-
-        // window.clearInterval(this.scrollIntervals.scrollHorizontalInterval);
-        // window.clearInterval(this.scrollIntervals.scrollVerticalInterval);
-      };
-
-      boardListContainer.addEventListener('mousemove', scrollBoard);
-      boardListContainer.addEventListener('mouseleave', onMouseLeave);
-      boardListContainer.addEventListener('mouseenter', onMouseEnter);
-
-      window.addEventListener('mouseup', onMouseUp);
-
-      // this.scrollIntervals.scrollVerticalInterval;
+      const cardListContainer = document.querySelector(`[data-droppable-id="${dragState.target.containerId}"]`);
+      scrollElement({
+        elementToScroll: cardListContainer,
+        scrollOption: {
+          elementToScroll: cardListContainer,
+          scrollIntervals,
+          distanceToStartScrollingY: 100,
+          scrollStepY: 7,
+          scrollY: true,
+        },
+        vertical: true,
+      });
     }
 
     if (dragState.dragging && prevState.dragState.target.containerId !== dragState.target.containerId) {
-      // const elementToScroll = document.querySelector(`[data-droppable-id="${dragState.target.containerId}"]`);
-      // const scrollOptions = [
-      //   {
-      //     elementToScroll,
-      //     scrollIntervals: this.scrollIntervals,
-      //     distanceToStartScrollingX: 50,
-      //     distanceToStartScrollingY: 50,
+      // const cardListContainer = document.querySelector(`[data-droppable-id="${dragState.target.containerId}"]`);
+      // scrollElement({
+      //   elementToScroll: cardListContainer,
+      //   scrollOption: {
+      //     elementToScroll: cardListContainer,
+      //     scrollIntervals,
+      //     distanceToStartScrollingY: 100,
+      //     scrollStepY: 7,
       //     scrollY: true,
       //   },
-      // ];
-
-      // const scrollContainer = scrollElements(scrollOptions);
-      // const onMouseUp = () => {
-      //   elementToScroll.removeEventListener('mousemove', scrollContainer);
-      //   window.removeEventListener('mouseup', onMouseUp);
-      // };
-
-      // elementToScroll.addEventListener('mousemove', scrollContainer);
-      // window.addEventListener('mouseup', onMouseUp);
+      //   vertical: true,
+      // });
     }
   }
 
@@ -141,6 +119,53 @@ class DragDropContextProvider extends Component {
       window.clearInterval(scrollIntervals.scrollVerticalInterval);
       scrollIntervals.scrollVerticalInterval = null;
     }
+  }
+
+  scrollElement = (options) => {
+    const {
+      elementToScroll,
+      scrollOption,
+      horizontal = false,
+      vertical = false,
+      both = false,
+    } = options;
+
+    const { scrollIntervals, clearScrollIntervals } = this;
+    const scrollOptions = [scrollOption];
+
+    const scrollElement = scrollElements(scrollOptions);
+
+    const onMouseLeave = () => {
+      clearScrollIntervals({
+        scrollIntervals,
+        vertical,
+        horizontal,
+        both,
+      });
+    };
+
+    const onMouseEnter = () => {
+      elementToScroll.addEventListener('mousemove', scrollElement);
+    };
+
+    const onMouseUp = () => {
+      elementToScroll.removeEventListener('mousemove', scrollElement);
+      elementToScroll.removeEventListener('mouseenter', onMouseEnter);
+      window.removeEventListener('mouseup', onMouseUp);
+
+      clearScrollIntervals({
+        scrollIntervals,
+        vertical,
+        horizontal,
+        both,
+      });
+    };
+
+    elementToScroll.addEventListener('mousemove', scrollElement);
+    elementToScroll.addEventListener('mouseleave', onMouseLeave);
+    elementToScroll.addEventListener('mouseenter', onMouseEnter);
+
+    window.addEventListener('mouseup', onMouseUp);
   }
 
   dragStart = (props) => {

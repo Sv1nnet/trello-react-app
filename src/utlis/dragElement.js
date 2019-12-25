@@ -14,9 +14,15 @@ const setElementPosition = (initialPosition, e, element) => {
 /**
  *
  * Allow to drag HTMLElement
- * @param element.current {HTMLElement} HTMLElement to drag;
- * @param event {Event} event object;
- * @param dragCallback {Object} mouse move event handler. Argument is passed in these callback is event object;
+ * @param {HTMLElement} element HTML Element or React ref object to drag.
+ * @param {Event} event event object.
+ * @param {Object} initialPosition object with initial element coords.
+ * @param {number} initialPosition.x x element position.
+ * @param {number} initialPosition.y y element position.
+ * @param {Object} dragCallback mouse move event handler. Argument is passed in these callback is event object.
+ * @param {function} dragCallback.startDragCallback mouse start moving event handler.
+ * @param {function} dragCallback.dragCallback mouse move event handler.
+ * @param {function} dragCallback.endDragCallback mouse end moving event handler.
  */
 const dragElement = (event, element, initialPosition, { startDragCallback, dragCallback, endDragCallback } = {}) => {
   const e = event.nativeEvent || event;
