@@ -93,7 +93,8 @@ const Draggable = (props) => {
         draggableId,
         index,
         type,
-      });
+      },
+      dragHandlers.onDragStart);
     }
   };
 
@@ -133,7 +134,7 @@ const Draggable = (props) => {
         targetContainerId: containerId,
         index: targetIndex,
         targetId: draggableId,
-      });
+      }, dragHandlers.onDragUpdate);
     }
   };
 

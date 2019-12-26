@@ -199,7 +199,7 @@ class DragDropContextProvider extends Component {
     window.addEventListener('mouseup', onMouseUp);
   }
 
-  dragStart = (sourceData) => {
+  dragStart = (sourceData, handler) => {
     const {
       draggableContainerId,
       draggableId,
@@ -224,10 +224,13 @@ class DragDropContextProvider extends Component {
         },
         type,
       },
-    }), () => { if (props.onDragStart) props.onDragStart(this.state); });
+    }), () => {
+      if (handler) handler(this.state);
+      if (props.onDragStart) props.onDragStart(this.state);
+    });
   };
 
-  dragUpdate = ({ targetContainerId, targetId, index }) => {
+  dragUpdate = ({ targetContainerId, targetId, index }, handler) => {
     const { props } = this;
 
     this.setState(state => ({
@@ -240,7 +243,10 @@ class DragDropContextProvider extends Component {
           containerId: targetContainerId,
         },
       },
-    }), () => { if (props.onDragUpdate) props.onDragUpdate(this.state); });
+    }), () => {
+      if (handler) handler(this.state);
+      if (props.onDragUpdate) props.onDragUpdate(this.state);
+    });
   };
 
   dragEnd = (handler) => {
