@@ -49,7 +49,7 @@ class DragDropContextProvider extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { clearScrollIntervals, scrollIntervals, scrollElement } = this;
+    const { clearScrollIntervals, scrollIntervals, hireScrollElementHandlers } = this;
     const { dragState } = this.state;
 
     if (!dragState.dragging && prevState.dragState.dragging !== dragState.dragging) {
@@ -59,7 +59,7 @@ class DragDropContextProvider extends Component {
 
     if (dragState.dragging && prevState.dragState.dragging !== dragState.dragging) {
       const boardListContainer = document.querySelector('.board-lists-container');
-      scrollElement({
+      hireScrollElementHandlers({
         scrollOption: {
           elementToScroll: boardListContainer,
           scrollIntervals,
@@ -70,32 +70,19 @@ class DragDropContextProvider extends Component {
         horizontal: true,
       });
 
-      const cardListContainer = document.querySelector(`[data-droppable-id="${dragState.target.containerId}"]`);
-      scrollElement({
-        scrollOption: {
-          elementToScroll: cardListContainer,
-          scrollIntervals,
-          distanceToStartScrollingY: 100,
-          scrollStepY: 7,
-          scrollY: true,
-        },
-        vertical: true,
-      });
-    }
-
-    if (dragState.dragging && prevState.dragState.target.containerId !== dragState.target.containerId) {
-      // const cardListContainer = document.querySelector(`[data-droppable-id="${dragState.target.containerId}"]`);
-      // scrollElement({
-      //   elementToScroll: cardListContainer,
-      //   scrollOption: {
-      //     elementToScroll: cardListContainer,
-      //     scrollIntervals,
-      //     distanceToStartScrollingY: 100,
-      //     scrollStepY: 7,
-      //     scrollY: true,
-      //   },
-      //   vertical: true,
-      // });
+      if (dragState.type === 'card') {
+        const cardListContainer = document.querySelector(`[data-droppable-id="${dragState.target.containerId}"]`);
+        hireScrollElementHandlers({
+          scrollOption: {
+            elementToScroll: cardListContainer,
+            scrollIntervals,
+            distanceToStartScrollingY: 100,
+            scrollStepY: 7,
+            scrollY: true,
+          },
+          vertical: true,
+        });
+      }
     }
   }
 
@@ -126,7 +113,7 @@ class DragDropContextProvider extends Component {
     }
   }
 
-  scrollElement = (options) => {
+  hireScrollElementHandlers = (options) => {
     const {
       scrollOption,
       horizontal = false,
@@ -140,7 +127,14 @@ class DragDropContextProvider extends Component {
 
     const scrollElement = scrollElements(scrollOptions);
 
+    const onMouseEnter = () => {
+      console.log('mouseenter');
+      elementToScroll.addEventListener('mousemove', scrollElement);
+    };
+
     const onMouseLeave = () => {
+      console.log('mouseleave');
+      elementToScroll.removeEventListener('mouseenter', onMouseEnter);
       clearScrollIntervals({
         scrollIntervals,
         vertical,
@@ -149,11 +143,8 @@ class DragDropContextProvider extends Component {
       });
     };
 
-    const onMouseEnter = () => {
-      elementToScroll.addEventListener('mousemove', scrollElement);
-    };
-
     const onMouseUp = () => {
+      console.log('mouseup', elementToScroll);
       elementToScroll.removeEventListener('mousemove', scrollElement);
       elementToScroll.removeEventListener('mouseenter', onMouseEnter);
       elementToScroll.removeEventListener('mouseleave', onMouseLeave);

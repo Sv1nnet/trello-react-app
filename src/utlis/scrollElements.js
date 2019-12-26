@@ -1,22 +1,21 @@
 /**
  * Get a function that has to be hired on mouseMove event.
  * @param {Object[]} options - array width objects that contain options for scrolling.
- * @param {HTMLElement} options[].elementToScroll - HTMLElement or React ref object we want to scroll.
- * @param {number} [options[].distanceToStartScrollingX] - int - distance in pixels between edge of element and cursor to start scrolling.
- * @param {number} [options[].distanceToStartScrollingY] - int - distance in pixels between edge of element and cursor to start scrolling.
- * @param {Object} options[].scrollIntervals - object that contains scrollHorizontalInterval.
- * @param {number} options[].scrollIntervals.scrollHorizontalInterval - object that contains scrollHorizontalInterval.
- * @param {number} options[].scrollIntervals.scrollVerticalInterval - object that contains scrollHorizontalInterval.
- * @param {boolean} [options[].scrollX=5] - should we scroll acroos this axis.
- * @param {boolean} [options[].scrollY=5] - should we scroll acroos this axis.
- * @param {boolean} [options[].scrollBoth=false] - should we scroll both axises.
- * @param {number} [options[].scrollStepX=false] - int - distance in pixels an element will be scrolled by.
- * @param {number} [options[].scrollStepY=false] - int - distance in pixels an element will be scrolled by.
+ * @param {HTMLElement} options.elementToScroll - HTMLElement or React ref object we want to scroll.
+ * @param {number} [options.distanceToStartScrollingX=20] - int - distance in pixels between edge of element and cursor to start scrolling.
+ * @param {number} [options.distanceToStartScrollingY=20] - int - distance in pixels between edge of element and cursor to start scrolling.
+ * @param {Object} options.scrollIntervals - object that contains scrollHorizontalInterval.
+ * @param {number} options.scrollIntervals.scrollHorizontalInterval - object that contains scrollHorizontalInterval.
+ * @param {number} options.scrollIntervals.scrollVerticalInterval - object that contains scrollHorizontalInterval.
+ * @param {boolean} [options.scrollX=5] - should we scroll acroos this axis.
+ * @param {boolean} [options.scrollY=5] - should we scroll acroos this axis.
+ * @param {boolean} [options.scrollBoth=false] - should we scroll both axises.
+ * @param {number} [options.scrollStepX=false] - int - distance in pixels an element will be scrolled by.
+ * @param {number} [options.scrollStepY=false] - int - distance in pixels an element will be scrolled by.
  * @returns function to be added on mouseMove event on an element that we want to scroll
  */
 
 const scrollElements = options => (e) => {
-  // console.log('mouse move')
   options.forEach((option) => {
     const {
       elementToScroll,
@@ -29,6 +28,7 @@ const scrollElements = options => (e) => {
       scrollX = scrollBoth,
       scrollY = scrollBoth,
     } = option;
+    // console.log('mouse move', elementToScroll)
 
     const HTMLElement = elementToScroll.getBoundingClientRect ? elementToScroll : elementToScroll.current;
     const rect = HTMLElement.getBoundingClientRect();
