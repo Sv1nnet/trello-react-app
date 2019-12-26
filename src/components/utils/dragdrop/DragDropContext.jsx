@@ -49,8 +49,16 @@ class DragDropContextProvider extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { clearScrollIntervals, scrollIntervals, hireScrollElementHandlers } = this;
-    const { dragState } = this.state;
+    const {
+      clearScrollIntervals,
+      scrollIntervals,
+      hireScrollElementHandlers,
+      state,
+      context,
+    } = this;
+
+    const { dragState } = state;
+    const { columnsWithCards } = context;
 
     if (!dragState.dragging && prevState.dragState.dragging !== dragState.dragging) {
       // Clear intervals if for a some reason scroll interval wasn't cleared after drag ended
@@ -67,20 +75,27 @@ class DragDropContextProvider extends Component {
           scrollStepX: 10,
           scrollX: true,
         },
+        dragStartedInCurrentContainer: true,
         horizontal: true,
       });
 
       if (dragState.type === 'card') {
-        const cardListContainer = document.querySelector(`[data-droppable-id="${dragState.target.containerId}"]`);
-        hireScrollElementHandlers({
-          scrollOption: {
-            elementToScroll: cardListContainer,
-            scrollIntervals,
-            distanceToStartScrollingY: 100,
-            scrollStepY: 7,
-            scrollY: true,
-          },
-          vertical: true,
+        const columnIds = Object.keys(columnsWithCards);
+
+        columnIds.forEach((id) => {
+          const cardListContainer = document.querySelector(`[data-droppable-id="${id}"]`);
+
+          hireScrollElementHandlers({
+            scrollOption: {
+              elementToScroll: cardListContainer,
+              scrollIntervals,
+              distanceToStartScrollingY: 100,
+              scrollStepY: 7,
+              scrollY: true,
+            },
+            dragStartedInCurrentContainer: id === dragState.source.containerId,
+            vertical: true,
+          });
         });
       }
     }
@@ -116,6 +131,7 @@ class DragDropContextProvider extends Component {
   hireScrollElementHandlers = (options) => {
     const {
       scrollOption,
+      dragStartedInCurrentContainer = false,
       horizontal = false,
       vertical = false,
       both = false,
@@ -128,12 +144,10 @@ class DragDropContextProvider extends Component {
     const scrollElement = scrollElements(scrollOptions);
 
     const onMouseEnter = () => {
-      console.log('mouseenter');
       elementToScroll.addEventListener('mousemove', scrollElement);
     };
 
     const onMouseLeave = () => {
-      console.log('mouseleave');
       elementToScroll.removeEventListener('mouseenter', onMouseEnter);
       clearScrollIntervals({
         scrollIntervals,
@@ -144,7 +158,6 @@ class DragDropContextProvider extends Component {
     };
 
     const onMouseUp = () => {
-      console.log('mouseup', elementToScroll);
       elementToScroll.removeEventListener('mousemove', scrollElement);
       elementToScroll.removeEventListener('mouseenter', onMouseEnter);
       elementToScroll.removeEventListener('mouseleave', onMouseLeave);
@@ -158,7 +171,7 @@ class DragDropContextProvider extends Component {
       });
     };
 
-    elementToScroll.addEventListener('mousemove', scrollElement);
+    if (dragStartedInCurrentContainer) elementToScroll.addEventListener('mousemove', scrollElement);
     elementToScroll.addEventListener('mouseleave', onMouseLeave);
     elementToScroll.addEventListener('mouseenter', onMouseEnter);
 
