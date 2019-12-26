@@ -89,7 +89,9 @@ const ColumnList = (props) => {
   return (
     <>
       {updatePositionsState.err.message && <Messages.ErrorMessage message={updatePositionsState.err.message} closeMessage={closeMessage} />}
-      <DragDropContextProvider>
+      <DragDropContextProvider
+        handleError={handleError}
+      >
         <Droppable droppableId={board._id} direction="horizontal" type="column">
           {dropProvided => (
             <div {...dropProvided.droppableProps} ref={(el) => { const { innerRef } = dropProvided; innerRef.current = el; boardListContainerRef.current = el; }} className="board-lists-container d-flex align-items-start">

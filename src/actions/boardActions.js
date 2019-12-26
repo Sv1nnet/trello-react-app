@@ -205,6 +205,7 @@ const updateColumn = (token, boardId, columnId, dataToUpdate) => (dispatch) => {
     });
 };
 
+// Send new column positions to the server
 const updateColumnPositions = (token, boardId, dataToUpdate) => (dispatch) => {
   const data = {
     columns: dataToUpdate,
@@ -226,8 +227,13 @@ const updateColumnPositions = (token, boardId, dataToUpdate) => (dispatch) => {
     });
 };
 
-const switchColumnPositions = newColumns => (dispatch) => {
+const switchColumnPositions = (token, boardId, newColumns) => (dispatch, getState) => {
+  // Save changes locally
   dispatch({ type: columnActionTypes.COLUMN_POSITIONS_SWITCHED, data: { columns: newColumns } });
+
+  const { columns } = getState().board;
+  // Save changes on the server
+  return updateColumnPositions(token, boardId, columns)(dispatch);
 };
 
 const createCard = (token, boardId, card) => (dispatch) => {

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 /* eslint-disable no-param-reassign */
 import React, { Component, createContext } from 'react';
 import { connect } from 'react-redux';
@@ -8,8 +9,27 @@ import scrollElements from '../../../utlis/scrollElements';
 
 
 const propTypes = {
+  user: PropTypes.shape({
+    token: PropTypes.shape({
+      token: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  board: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+  }).isRequired,
+  handleError: PropTypes.func.isRequired,
+  onDragStart: PropTypes.func,
+  onDragUpdate: PropTypes.func,
+  onDragEnd: PropTypes.func,
   switchCards: PropTypes.func.isRequired,
   switchColumns: PropTypes.func.isRequired,
+};
+
+
+const defaultProps = {
+  onDragStart: null,
+  onDragUpdate: null,
+  onDragEnd: null,
 };
 
 
@@ -179,13 +199,14 @@ class DragDropContextProvider extends Component {
     window.addEventListener('mouseup', onMouseUp);
   }
 
-  dragStart = (props) => {
+  dragStart = (sourceData) => {
     const {
       draggableContainerId,
       draggableId,
       index,
       type,
-    } = props;
+    } = sourceData;
+    const { props } = this;
 
     this.setState(state => ({
       ...state,
@@ -203,10 +224,12 @@ class DragDropContextProvider extends Component {
         },
         type,
       },
-    }));
+    }), () => { if (props.onDragStart) props.onDragStart(this.state); });
   };
 
   dragUpdate = ({ targetContainerId, targetId, index }) => {
+    const { props } = this;
+
     this.setState(state => ({
       ...state,
       dragState: {
@@ -217,18 +240,40 @@ class DragDropContextProvider extends Component {
           containerId: targetContainerId,
         },
       },
-    }));
+    }), () => { if (props.onDragUpdate) props.onDragUpdate(this.state); });
   };
 
-  dragEnd = () => {
-    const { state, switchCards, switchColumns } = this;
+  dragEnd = (handler) => {
+    const {
+      state,
+      props,
+      switchCards,
+      switchColumns,
+    } = this;
+
     const { source, target, type } = state.dragState;
+    let switchResultPromise;
 
     if (source.containerId !== target.containerId || source.index !== target.index) {
       if (type === 'card') {
-        switchCards(source, target);
+        switchResultPromise = switchCards(source, target);
       } else {
-        switchColumns(source, target);
+        switchResultPromise = switchColumns(source, target);
+      }
+
+      if (switchResultPromise) {
+        switchResultPromise
+          .then((data) => {
+            if (handler) return handler(data);
+
+            return data;
+          })
+          .catch((err) => {
+            props.handleError(err);
+            if (handler) return Promise.reject(handler(err));
+
+            return Promise.reject(err);
+          });
       }
     }
 
@@ -248,12 +293,16 @@ class DragDropContextProvider extends Component {
         },
         type: null,
       },
-    }));
+    }), () => { if (props.onDragEnd) props.onDragEnd(this.state); });
   };
 
   switchColumns = (source, target) => {
     const { context, props } = this;
     const { columnsWithCards } = context;
+
+    const { token } = props.user;
+    const { board } = props;
+
     const newColumns = [];
 
     for (const column in columnsWithCards) {
@@ -280,7 +329,7 @@ class DragDropContextProvider extends Component {
       newColumns.push(newColumn);
     }
 
-    props.switchColumns(newColumns);
+    return props.switchColumns(token.token, board._id, newColumns);
   }
 
   switchCards = (source, target) => {
@@ -354,15 +403,19 @@ class DragDropContextProvider extends Component {
   }
 }
 
+
 DragDropContextProvider.propTypes = propTypes;
+DragDropContextProvider.defaultProps = defaultProps;
+
 
 const mapStateToProps = state => ({
+  user: state.user,
   board: state.board,
 });
 
 const mapDispatchToProps = dispatch => ({
   switchCards: data => dispatch(boardActions.switchCardPositions(data)),
-  switchColumns: data => dispatch(boardActions.switchColumnPositions(data)),
+  switchColumns: (token, boardId, data) => dispatch(boardActions.switchColumnPositions(token, boardId, data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DragDropContextProvider);

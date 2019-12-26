@@ -24,6 +24,7 @@ const Draggable = (props) => {
     direction,
     type,
     children,
+    dragHandlers = {},
   } = props;
 
   const {
@@ -143,7 +144,7 @@ const Draggable = (props) => {
     window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('mouseup', onMouseUp);
 
-    dragEnd();
+    dragEnd(dragHandlers.onDragEnd);
   };
 
   const onMouseDown = (e) => {
