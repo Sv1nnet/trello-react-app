@@ -65,6 +65,7 @@ class DragDropContextProvider extends Component {
       if (scrollIntervals.scrollHorizontalInterval || scrollIntervals.scrollVerticalInterval) clearScrollIntervals({ scrollIntervals });
     }
 
+    // If we just started dragging
     if (dragState.dragging && prevState.dragState.dragging !== dragState.dragging) {
       const boardListContainer = document.querySelector('.board-lists-container');
       hireScrollElementHandlers({
@@ -79,12 +80,12 @@ class DragDropContextProvider extends Component {
         horizontal: true,
       });
 
+      // If we dragging a card add scroll events on cards containers
       if (dragState.type === 'card') {
         const columnIds = Object.keys(columnsWithCards);
 
         columnIds.forEach((id) => {
           const cardListContainer = document.querySelector(`[data-droppable-id="${id}"]`);
-
           hireScrollElementHandlers({
             scrollOption: {
               elementToScroll: cardListContainer,
