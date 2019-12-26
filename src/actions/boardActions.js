@@ -211,7 +211,6 @@ const updateColumnPositions = (token, boardId, dataToUpdate) => (dispatch) => {
     columns: dataToUpdate,
   };
 
-  console.log('actions', data);
   return api.board.updateColumnPositions(token, boardId, data)
     .then((res) => {
       dispatch({ type: columnActionTypes.COLUMN_POSITIONS_UPDATED, data: res.data });

@@ -31,6 +31,8 @@ const ColumnContainer = (props) => {
   } = props;
 
   const { columnsWithCards } = useContext(ColumnListContext);
+  const { cards } = columnsWithCards[columnId];
+
   const mouseState = {
     onMouseDownPosition: {
       x: null,
@@ -82,7 +84,7 @@ const ColumnContainer = (props) => {
               columnId,
               listTitle,
               position,
-              cards: columnsWithCards[columnId].cards,
+              cards,
             }}
             mouseDown={mouseDown}
             mouseUp={mouseUp}

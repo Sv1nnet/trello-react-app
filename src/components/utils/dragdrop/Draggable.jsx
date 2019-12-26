@@ -6,6 +6,10 @@ import isMouseMoved from '../../../utlis/isMouseMoved';
 import createPlaceholder from '../../../utlis/createPlaceholder';
 
 
+const defaultProps = {
+  dragHandlers: {},
+};
+
 const propTypes = {
   children: PropTypes.func.isRequired,
   containerId: PropTypes.string.isRequired,
@@ -13,6 +17,11 @@ const propTypes = {
   index: PropTypes.number.isRequired,
   direction: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  dragHandlers: PropTypes.shape({
+    onDragStart: PropTypes.func,
+    onDragUpdate: PropTypes.func,
+    onDragEnd: PropTypes.func,
+  }),
 };
 
 
@@ -24,7 +33,7 @@ const Draggable = (props) => {
     direction,
     type,
     children,
-    dragHandlers = {},
+    dragHandlers,
   } = props;
 
   const {
@@ -190,6 +199,7 @@ const Draggable = (props) => {
 
 
 Draggable.propTypes = propTypes;
+Draggable.defaultProps = defaultProps;
 
 
 export default Draggable;
