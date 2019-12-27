@@ -106,6 +106,8 @@ class DragDropContextProvider extends Component {
 
         columnIds.forEach((id) => {
           const cardListContainer = document.querySelector(`[data-droppable-id="${id}"]`);
+          const dragStartedInCurrentContainer = id === dragState.source.containerId;
+
           hireScrollElementHandlers({
             scrollOption: {
               elementToScroll: cardListContainer,
@@ -114,7 +116,7 @@ class DragDropContextProvider extends Component {
               scrollStepY: 7,
               scrollY: true,
             },
-            dragStartedInCurrentContainer: id === dragState.source.containerId,
+            dragStartedInCurrentContainer,
             vertical: true,
           });
         });
@@ -299,7 +301,7 @@ class DragDropContextProvider extends Component {
         },
         type: null,
       },
-    }), () => { if (props.onDragEnd) props.onDragEnd(this.state); });
+    }), () => { if (props.onDragEnd) props.onDragEnd(state); });
   };
 
   switchColumns = (source, target) => {
