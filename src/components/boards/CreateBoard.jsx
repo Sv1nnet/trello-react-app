@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -76,8 +76,11 @@ const CreateBoard = (props) => {
     setState({ ...state, err: { status: undefined, message: '' } });
   };
 
+  useEffect(() => {
+    if (state.boardCreated) close();
+  }, [close, state.boardCreated]);
+
   if (state.boardCreated) {
-    close();
     return <Redirect to={`/board/${state.newBoardId}`} />;
   }
 
