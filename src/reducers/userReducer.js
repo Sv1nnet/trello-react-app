@@ -40,7 +40,7 @@ const userReducer = (state = initialState, action) => {
         ...state,
       };
     case userActionTypes.TOKEN_VERIFIED:
-      data = { ...action.data.data };
+      data = { ...action.data };
       return {
         ...state,
         userData: {
@@ -49,7 +49,7 @@ const userReducer = (state = initialState, action) => {
         },
       };
     case userActionTypes.BOARD_TITLE_UPDATED:
-      data = { ...action.data.data };
+      data = { ...action.data };
       return {
         ...state,
         userData: {
@@ -66,7 +66,7 @@ const userReducer = (state = initialState, action) => {
         },
       };
     case userActionTypes.BOARD_ADDED:
-      data = { ...action.data.data };
+      data = { ...action.data };
       return {
         ...state,
         userData: {
@@ -76,7 +76,7 @@ const userReducer = (state = initialState, action) => {
       };
     case userActionTypes.EMAIL_CONFIRMED:
     case userActionTypes.LOGGEDIN:
-      data = { ...action.data.data };
+      data = { ...action.data };
       newState = {
         ...state,
         userData: {
@@ -112,7 +112,7 @@ const userReducer = (state = initialState, action) => {
         ...state,
       };
     case userActionTypes.ALL_BOARDS_DOWNLOADED:
-      data = { ...action.data.data };
+      data = { ...action.data };
       return {
         ...state,
         userData: {

@@ -5,7 +5,7 @@ import createErrorResponseObject from '../utlis/createErrorResponseObject';
 const createBoard = ({ token, title, access, description }) => (dispatch) => {
   return api.board.createBoard(token, { title, access, description })
     .then((res) => {
-      dispatch({ type: userActionTypes.BOARD_ADDED, data: res }); // Add board to user reducer
+      dispatch({ type: userActionTypes.BOARD_ADDED, data: res.data }); // Add board to user reducer
       dispatch({ type: boardActionTypes.CREATED, data: res.data });
       return res;
     })
@@ -33,7 +33,9 @@ const loadAllBoards = token => (dispatch, getState) => {
           },
         });
       }
-      return dispatch({ type: userActionTypes.ALL_BOARDS_DOWNLOADED, data: res }).data;
+
+      dispatch({ type: userActionTypes.ALL_BOARDS_DOWNLOADED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -64,7 +66,7 @@ const getBoard = (token, id) => (dispatch) => {
 const updateBoard = (token, id, data) => (dispatch) => {
   return api.board.updateBoard(token, id, data)
     .then((res) => {
-      dispatch({ type: userActionTypes.BOARD_TITLE_UPDATED, data: res });
+      dispatch({ type: userActionTypes.BOARD_TITLE_UPDATED, data: res.data });
       dispatch({ type: boardActionTypes.BOARD_UPDATED, data: res.data });
       return res;
     })
@@ -83,7 +85,8 @@ const findUsers = (token, email) => (dispatch) => {
 
   return api.board.findUsers(token, encodedEmail)
     .then((res) => {
-      return dispatch({ type: boardActionTypes.BOARD_USERS_FOUND, data: res }).data;
+      dispatch({ type: boardActionTypes.BOARD_USERS_FOUND, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -98,7 +101,8 @@ const findUsers = (token, email) => (dispatch) => {
 const getMembers = (token, id) => (dispatch) => {
   return api.board.getMembers(token, id)
     .then((res) => {
-      return dispatch({ type: boardActionTypes.BOARD_MEMBERS_RECEIVED, data: res }).data;
+      dispatch({ type: boardActionTypes.BOARD_MEMBERS_RECEIVED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -117,7 +121,8 @@ const addMember = (token, id, userId) => (dispatch) => {
 
   return api.board.addMember(token, id, data)
     .then((res) => {
-      return dispatch({ type: boardActionTypes.BOARD_MEMBER_ADDED, data: res }).data;
+      dispatch({ type: boardActionTypes.BOARD_MEMBER_ADDED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -136,7 +141,8 @@ const removeMember = (token, id, userId) => (dispatch) => {
 
   return api.board.removeMember(token, id, data)
     .then((res) => {
-      return dispatch({ type: boardActionTypes.BOARD_MEMBER_REMOVED, data: res }).data;
+      dispatch({ type: boardActionTypes.BOARD_MEMBER_REMOVED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -155,7 +161,8 @@ const createColumn = (token, boardId, column) => (dispatch) => {
 
   return api.board.createColumn(token, boardId, columnData)
     .then((res) => {
-      return dispatch({ type: columnActionTypes.COLUMN_CREATED, data: res }).data;
+      dispatch({ type: columnActionTypes.COLUMN_CREATED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -242,7 +249,8 @@ const createCard = (token, boardId, card) => (dispatch) => {
 
   return api.board.createCard(token, boardId, cardData)
     .then((res) => {
-      return dispatch({ type: cardActionTypes.CARD_CREATED, data: res }).data;
+      dispatch({ type: cardActionTypes.CARD_CREATED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -257,7 +265,8 @@ const createCard = (token, boardId, card) => (dispatch) => {
 const deleteCard = (token, boardId, cardId) => (dispatch) => {
   return api.board.deleteCard(token, boardId, cardId)
     .then((res) => {
-      return dispatch({ type: cardActionTypes.CARD_DELETED, data: res }).data;
+      dispatch({ type: cardActionTypes.CARD_DELETED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -276,7 +285,8 @@ const updateCardPositions = (token, boardId, dataToUpdate) => (dispatch) => {
 
   return api.board.updateCardPositions(token, boardId, data)
     .then((res) => {
-      return dispatch({ type: cardActionTypes.CARD_POSITIONS_UPDATED, data: res }).data;
+      dispatch({ type: cardActionTypes.CARD_POSITIONS_UPDATED, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(

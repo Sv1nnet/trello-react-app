@@ -29,7 +29,8 @@ const resetPassword = ({ token, password }) => (dispatch, getState) => {
 
   return api.auth.resetPassword(token, data)
     .then((res) => {
-      return dispatch({ type: RESET_PASSWORD, data: res }).data;
+      dispatch({ type: RESET_PASSWORD, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -50,7 +51,8 @@ const forgotPassword = ({ email }) => (dispatch, getState) => {
 
   return api.auth.forgotPassword(data)
     .then((res) => {
-      return dispatch({ type: FORGOT_PASSWORD, data: res }).data;
+      dispatch({ type: FORGOT_PASSWORD, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -72,7 +74,8 @@ const login = ({ email, password }) => (dispatch, getState) => {
 
   return api.auth.login(data)
     .then((res) => {
-      return dispatch({ type: LOGGEDIN, data: res }).data;
+      dispatch({ type: LOGGEDIN, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -86,7 +89,8 @@ const login = ({ email, password }) => (dispatch, getState) => {
 
 const verifyToken = token => (dispatch, getState) => api.auth.verifyToken(token)
   .then((res) => {
-    return dispatch({ type: TOKEN_VERIFIED, data: res }).data;
+    dispatch({ type: TOKEN_VERIFIED, data: res.data });
+    return res;
   })
   .catch((err) => {
     return Promise.reject(
@@ -99,7 +103,7 @@ const verifyToken = token => (dispatch, getState) => api.auth.verifyToken(token)
 
 const logout = token => (dispatch, getState) => api.auth.logout(token)
   .then((res) => {
-    dispatch({ type: LOGGEDOUT, data: res });
+    dispatch({ type: LOGGEDOUT, data: res.data });
   })
   .catch((err) => {
     return Promise.reject(
@@ -124,7 +128,8 @@ const signup = ({ email, password, nickname, firstName, lastName }) => (dispatch
 
   return api.auth.signup(data)
     .then((res) => {
-      return dispatch({ type: SIGNEDUP, data: res }).data;
+      dispatch({ type: SIGNEDUP, data: res.data });
+      return res;
     })
     .catch((err) => {
       return Promise.reject(
@@ -138,7 +143,8 @@ const signup = ({ email, password, nickname, firstName, lastName }) => (dispatch
 
 const confirmEmail = token => (dispatch, getState) => api.auth.confirmEmail(token)
   .then((res) => {
-    return dispatch({ type: EMAIL_CONFIRMED, data: res }).data;
+    dispatch({ type: EMAIL_CONFIRMED, data: res.data });
+    return res;
   })
   .catch((err) => {
     return Promise.reject(
