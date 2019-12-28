@@ -22,10 +22,8 @@ const ColumnListContextProvider = (props) => {
 
   const handleError = (err) => {
     setUpdatePositionsState({
-      err: {
-        message: err.message,
-        statusCode: err.status,
-      },
+      message: err.message,
+      statusCode: err.status,
     });
   };
 

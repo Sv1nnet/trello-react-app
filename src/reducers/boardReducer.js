@@ -61,6 +61,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
       };
     case columnActionTypes.COLUMN_DELETED:
     case columnActionTypes.COLUMN_POSITIONS_UPDATED:
+    case cardActionTypes.CARD_POSITIONS_UPDATED:
     case columnActionTypes.COLUMN_UPDATED:
     case boardActionTypes.BOARD_UPDATED:
     case boardActionTypes.BOARD_DOWNLOADED:
@@ -177,6 +178,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         cards: data.cards,
       };
     case columnActionTypes.COLUMN_POSITIONS_UPDATE_FAILED:
+    case cardActionTypes.CARD_POSITIONS_UPDATE_FAILED:
     case boardActionTypes.BOARD_UPDATE_FAILED:
     case cardActionTypes.CARD_DELETE_FAILED:
     case columnActionTypes.COLUMN_CREATE_FAILED:

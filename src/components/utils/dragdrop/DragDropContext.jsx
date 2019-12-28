@@ -344,6 +344,9 @@ class DragDropContextProvider extends Component {
     const { context, props } = this;
     const { columnsWithCards } = context;
 
+    const { token } = props.user;
+    const { board } = props;
+
     const newCards = [];
     if (source.containerId === target.containerId) {
       for (const column in columnsWithCards) {
@@ -383,7 +386,7 @@ class DragDropContextProvider extends Component {
       }
     }
 
-    props.switchCards(newCards);
+    return props.switchCards(token.token, board._id, newCards);
   }
 
   render() {
@@ -422,7 +425,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  switchCards: data => dispatch(boardActions.switchCardPositions(data)),
+  switchCards: (token, boardId, data) => dispatch(boardActions.switchCardPositions(token, boardId, data)),
   switchColumns: (token, boardId, data) => dispatch(boardActions.switchColumnPositions(token, boardId, data)),
 });
 
