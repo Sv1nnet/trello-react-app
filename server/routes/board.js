@@ -555,50 +555,51 @@ router.post('/:id/delete_card/:cardId', (req, res) => {
   });
 });
 
-// router.post('/:id/update_card_positions', (req, res) => {
-//   const token = req.headers.authorization.split(' ')[1];
-//   const boardId = req.params.id;
-//   const { cards } = req.body;
+router.post('/:id/update_card_positions', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const boardId = req.params.id;
+  const { cards } = req.body;
 
-//   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
-//     if (err) {
-//       return res.status(400).send({ err: 'Invalid token' });
-//     }
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(400).send({ err: 'Invalid token' });
+    }
 
-//     try {
-//       const board = await Board.findById(boardId)
-//         .catch((err) => {
-//           console.log('Could not find a board', err);
-//           return Promise.reject(new Error('Could not change column positions'));
-//         });
+    try {
+      const board = await Board.findById(boardId)
+        .catch((err) => {
+          console.log('Could not find a board', err);
+          return Promise.reject(new Error('Could not change card positions'));
+        });
 
-//       const isOwner = decoded._id === board.owner.toHexString();
-//       const isMember = isOwner || board.members.find(member => member._id.toHexString() === decoded._id);
+      const isOwner = decoded._id === board.owner.toHexString();
+      const isMember = isOwner || board.members.find(member => member._id.toHexString() === decoded._id);
 
-//       if (isOwner || (isMember && !board.isReadOnly)) {
-//         cards.forEach((column) => {
-//           const dataToUpdate = {
-//             position: column.position,
-//           };
+      if (isOwner || (isMember && !board.isReadOnly)) {
+        cards.forEach((card) => {
+          const dataToUpdate = {
+            position: card.position,
+            column: card.column,
+          };
 
-//           board.updateColumn(column._id, dataToUpdate);
-//         });
+          board.updateCard(card._id, dataToUpdate);
+        });
 
-//         const savedBoard = await board.save().catch((err) => {
-//           console.log('Could not save board with a new column positions', err);
-//           return Promise.reject(new Error('Could not save the board with a new column positions'));
-//         });
+        const savedBoard = await board.save().catch((err) => {
+          console.log('Could not save board with a new card positions', err);
+          return Promise.reject(new Error('Could not save the board with a new card positions'));
+        });
 
-//         return res.status(200).send(savedBoard);
-//       }
+        return res.status(200).send(savedBoard);
+      }
 
-//       res.status(400).send({ err: 'Only board owner can change column positions' });
-//     } catch (e) {
-//       console.log('Send error response', e);
-//       res.status(400).send({ err: e.message });
-//     }
-//   });
-// });
+      res.status(400).send({ err: 'Only board owner can change card positions' });
+    } catch (e) {
+      console.log('Send error response', e);
+      res.status(400).send({ err: e.message });
+    }
+  });
+});
 
 module.exports = {
   boardRouter: router,
