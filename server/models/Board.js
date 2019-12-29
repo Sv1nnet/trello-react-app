@@ -94,7 +94,11 @@ BoardSchema.methods.deleteColumn = function deleteColumn(columnId) {
   const board = this;
 
   board.columns.id(columnId).remove();
-  board.columns = board.columns.map((column, i) => { column.position = i; return column; });
+  board.columns = board.columns.sort((columnOne, columnTwo) => {
+    if (columnOne.position < columnTwo.position) return -1;
+    if (columnOne.position > columnTwo.position) return 1;
+    return 0;
+  }).map((column, i) => { column.position = i; return column; });
 
   board.cards.forEach((card, i) => {
     if (card.column.toHexString() === columnId) {
