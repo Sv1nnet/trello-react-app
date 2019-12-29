@@ -123,23 +123,27 @@ BoardSchema.methods.updateCard = function updateCard(cardId, dataToUpdate) {
 
 BoardSchema.methods.deleteCard = function deleteCard(cardId) {
   const board = this;
-  const tempCards = board.cards.filter(card => card._id.toHexString() !== cardId);
+  board.cards.id(cardId).remove();
+  // const tempCards = board.cards.filter(card => card._id.toHexString() !== cardId);
   const columns = {};
   const newCards = [];
 
-  tempCards.forEach((card) => {
-    const column = card.column.toHexString();
-
-    if (!columns[column]) columns[column] = [];
-
-    columns[column].push(card);
+  board.column.forEach((column) => {
+    columns[column._id] = board.cards
+      .filter(card => card.column === column._id)
+      .sort((cardOne, cardTwo) => {
+        if (cardOne.position > cardTwo.position) return 1;
+        if (cardOne.position < cardTwo.position) return -1;
+        return 0;
+      })
+      .forEach((card, i) => {
+        card.position = i;
+        card.update({ position: i });
+      });
   });
 
   for (const column in columns) {
-    columns[column].forEach((card, i) => {
-      card.position = i;
-      newCards.push(card);
-    });
+    columns[column].forEach((card) => { newCards.push(card); });
   }
 
   board.cards = newCards;
