@@ -519,8 +519,6 @@ router.post('/:id/delete_card/:cardId', (req, res) => {
   const boardId = req.params.id;
   const { cardId } = req.params;
 
-  console.log(cardId)
-
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
       return res.status(400).send({ err: 'Invalid token' });
