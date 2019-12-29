@@ -128,7 +128,7 @@ BoardSchema.methods.deleteCard = function deleteCard(cardId) {
   const columns = {};
   const newCards = [];
 
-  board.column.forEach((column) => {
+  board.columns.forEach((column) => {
     columns[column._id] = board.cards
       .filter(card => card.column === column._id)
       .sort((cardOne, cardTwo) => {
