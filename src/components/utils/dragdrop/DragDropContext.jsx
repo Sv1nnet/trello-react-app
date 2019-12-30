@@ -35,10 +35,6 @@ const defaultProps = {
 
 export const DragDropContext = createContext();
 
-/*
- * I use class component rather than function one cuz I need a reference on a current context's state object
- * in Draggable and Droppable components. I use the state in event handlers that I add with a browser API not React.
- */
 class DragDropContextProvider extends Component {
   static contextType = ColumnListContext;
 
