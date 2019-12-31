@@ -118,12 +118,15 @@ BoardSchema.methods.updateCard = function updateCard(cardId, dataToUpdate) {
   const board = this;
   const cardToUpdate = board.cards.find(card => card._id.toHexString() === cardId);
 
-  cardToUpdate.update(dataToUpdate);
+  if (cardToUpdate) cardToUpdate.update(dataToUpdate);
 };
 
 BoardSchema.methods.deleteCard = function deleteCard(cardId) {
   const board = this;
-  board.cards.id(cardId).remove();
+  const cardToDelete = board.cards.id(cardId);
+  if (!cardToDelete) return;
+
+  cardToDelete.remove();
 
   const columns = {};
   const newCards = [];
