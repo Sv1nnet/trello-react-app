@@ -86,6 +86,12 @@ const AddBoardContent = (props) => {
 
   const handleChange = (e) => {
     const { target } = e;
+console.log(target.value[target.value.length - 1])
+    if (target.value[target.value.length - 1].charCodeAt(0) === 10) {
+      e.preventDefault();
+      return;
+    }
+
     setAddCardState({
       ...addContentState,
       contentTitle: target.value,
@@ -100,7 +106,7 @@ const AddBoardContent = (props) => {
   };
 
   const handleKeyUp = (e) => {
-    if (e.nativeEvent.charCode === 13 || e.nativeEvent.key === 'Enter') {
+    if ((e.nativeEvent.charCode === 13 || e.nativeEvent.key === 'Enter') && e.nativeEvent.shiftKey) {
       addContent(e, addContentState.contentTitle)
         .then((res) => {
           closeAddContentInput(null, true);
