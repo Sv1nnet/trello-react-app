@@ -3,15 +3,18 @@ import PropTypes from 'prop-types';
 import '../../styles/searchInput.sass';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
+import resizeTextarea from '../../utlis/resizeTextarea';
 
 
 const propTypes = {
   hideSearchBtn: PropTypes.bool,
   hideCrossBtn: PropTypes.bool,
+  inputType: PropTypes.string,
   textColor: PropTypes.string,
   inputValue: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
+  maxLength: PropTypes.string,
   id: PropTypes.string,
   name: PropTypes.string,
   classList: PropTypes.string,
@@ -20,18 +23,21 @@ const propTypes = {
 };
 
 const defaultProps = {
-  hideSearchBtn: false,
-  hideCrossBtn: false,
-  textColor: '',
+  hideSearchBtn: false, // don't display search button
+  hideCrossBtn: false, // don't display cross (clear input field) button
+  inputType: 'input', // type of input HTML element (input or textarea)
+  textColor: '', // color of input text
   placeholder: '',
+  maxLength: '', // max length for textarea element
   id: '',
   name: '',
-  classList: '',
-  focusAfterCleared: false,
-  focusAfterActivated: false,
+  classList: '', // list of extra classes
+  focusAfterCleared: false, // whether input should be in focus after it was cleaned by cross button
+  focusAfterActivated: false, // whether input should be in focus after it was mounted
 };
 
-
+// Input component to input text for search or create a card, column, etc.
+// Can be input or textarea HTML element.
 class TextInput extends Component {
   constructor(props) {
     super(props);
@@ -42,10 +48,26 @@ class TextInput extends Component {
   }
 
   componentDidMount() {
-    const { props } = this;
+    const { props, inputElement } = this;
+    const { inputType, focusAfterActivated, selectOnMounted } = props;
 
-    if (props.focusAfterActivated) this.inputElement.current.focus();
-    if (props.selectOnMounted) this.inputElement.current.select();
+    // set new size of textarea to fit its content
+    if (inputType === 'textarea') {
+      resizeTextarea(inputElement);
+    }
+
+    if (focusAfterActivated) this.inputElement.current.focus();
+    if (selectOnMounted) this.inputElement.current.select();
+  }
+
+  componentDidUpdate() {
+    const { inputType } = this.props;
+    const { inputElement } = this;
+
+    // set new size of textarea to fit its content
+    if (inputType === 'textarea') {
+      resizeTextarea(inputElement);
+    }
   }
 
   onFocus = (e) => {
@@ -96,12 +118,11 @@ class TextInput extends Component {
     if (props.focusAfterCleared) this.inputElement.current.focus();
   }
 
-  render() {
+  getInput = () => {
     const emptyValue = '';
     const { props } = this;
     const {
-      hideSearchBtn,
-      hideCrossBtn,
+      inputType,
       textColor = emptyValue,
       inputValue = emptyValue,
       onChange,
@@ -109,6 +130,7 @@ class TextInput extends Component {
       id,
       name,
       classList,
+      maxLength,
     } = props;
 
     const {
@@ -116,15 +138,10 @@ class TextInput extends Component {
       onBlur,
       onKeyUp,
       onKeyPress,
-      onCrossBtnClick,
-      onSearchBtnClick,
     } = this;
 
-    const crossBtnActive = inputValue ? 'active' : '';
-    const searchBtnActive = !inputValue ? 'active' : '';
-
-    return (
-      <div className="search-input-container position-relative">
+    return inputType === 'input'
+      ? (
         <input
           ref={this.inputElement}
           style={{ color: textColor }}
@@ -137,9 +154,52 @@ class TextInput extends Component {
           className={`nav-link ${classList}`}
           placeholder={placeholder || 'Search'}
           value={inputValue}
-          id={id || ''}
-          name={name || ''}
+          id={id}
+          name={name}
         />
+      )
+      : (
+        <textarea
+          ref={this.inputElement}
+          style={{ color: textColor }}
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onKeyPress={onKeyPress}
+          onKeyUp={onKeyUp}
+          type="text"
+          className={`nav-link ${classList}`}
+          placeholder={placeholder || 'Search'}
+          value={inputValue}
+          id={id}
+          name={name}
+          maxLength={maxLength}
+        />
+      );
+  }
+
+  render() {
+    const emptyValue = '';
+    const { props } = this;
+    const {
+      hideSearchBtn,
+      hideCrossBtn,
+      inputValue = emptyValue,
+    } = props;
+
+    const {
+      getInput,
+      onCrossBtnClick,
+      onSearchBtnClick,
+    } = this;
+
+    const crossBtnActive = inputValue ? 'active' : '';
+    const searchBtnActive = !inputValue ? 'active' : '';
+    const input = getInput();
+
+    return (
+      <div className="search-input-container position-relative">
+        {input}
 
         <div ref={this.crossBtn} className={`icon-container ${crossBtnActive}`}>
           <FontAwesomeIcon style={{ display: hideCrossBtn ? 'none' : '' }} onClick={onCrossBtnClick} className="dropdown-search-icon clear-input-button" icon={faTimes} />

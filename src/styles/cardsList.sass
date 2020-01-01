@@ -36,6 +36,27 @@
     max-width: 80%
     box-sizing: border-box
     line-height: 1.1
+  
+    
+
+.list-header-container
+  .list-menu-button
+    display: flex
+    align-items: center
+    background-color: rgba(0, 0, 0, 0)
+    border: none
+    transition: .2s
+    width: 30px
+    float: right
+    line-height: 32px
+    height: 20px
+    margin-top: 5px
+    margin-right: 5px
+    border-radius: 3px
+    .ellipsis-btn
+      transform: scale(.7)
+    &:hover
+      background-color: rgba(0, 0, 0, .2)
   textarea
     background-color: transparent
     border: 1px solid transparent
@@ -58,25 +79,7 @@
     &:focus
       background-color: white
       border: 1px solid blue
-
-.list-header-container
-  .list-menu-button
-    display: flex
-    align-items: center
-    background-color: rgba(0, 0, 0, 0)
-    border: none
-    transition: .2s
-    width: 30px
-    float: right
-    line-height: 32px
-    height: 20px
-    margin-top: 5px
-    margin-right: 5px
-    border-radius: 3px
-    .ellipsis-btn
-      transform: scale(.7)
-    &:hover
-      background-color: rgba(0, 0, 0, .2)
+    
 
 .cards-container
   overflow-y: auto

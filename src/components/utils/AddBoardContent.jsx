@@ -120,6 +120,8 @@ const AddBoardContent = (props) => {
             <>
               <TextInput
                 type="text"
+                inputType="textarea"
+                maxLength="128"
                 name={textInputName}
                 id={textInputId}
                 classList={`w-100 ${textInputClass}`}
@@ -131,6 +133,7 @@ const AddBoardContent = (props) => {
                 focusAfterActivated
                 focusAfterCleared
                 hideSearchBtn
+                hideCrossBtn
               />
 
               <div className="buttons-container">
