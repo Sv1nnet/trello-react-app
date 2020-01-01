@@ -41,7 +41,8 @@ const deleteCard = (token, boardId, cardId) => (dispatch) => {
 
 const updateCardPositions = (token, boardId, dataToUpdate) => (dispatch) => {
   const data = {
-    cards: dataToUpdate,
+    cards: dataToUpdate.cards,
+    timeOfChange: dataToUpdate.timeOfChange,
   };
 
   return api.board.updateCardPositions(token, boardId, data)
@@ -60,11 +61,12 @@ const updateCardPositions = (token, boardId, dataToUpdate) => (dispatch) => {
 };
 
 const switchCardPositions = (token, boardId, newCards) => (dispatch, getState) => {
-  dispatch({ type: cardActionTypes.CARD_POSITIONS_SWITCHED, data: { cards: newCards } });
+  const timeOfChange = Date.now();
+  dispatch({ type: cardActionTypes.CARD_POSITIONS_SWITCHED, data: { cards: newCards, timeOfLastChange: timeOfChange } });
 
   const { cards } = getState().board;
   // Save changes on the server
-  return updateCardPositions(token, boardId, cards)(dispatch);
+  return updateCardPositions(token, boardId, { cards, timeOfChange })(dispatch);
 };
 
 export {

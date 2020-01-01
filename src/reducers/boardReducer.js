@@ -60,8 +60,6 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         cashedColumns: columns,
       };
     case columnActionTypes.COLUMN_DELETED:
-    case columnActionTypes.COLUMN_POSITIONS_UPDATED:
-    case cardActionTypes.CARD_POSITIONS_UPDATED:
     case columnActionTypes.COLUMN_UPDATED:
     case boardActionTypes.BOARD_UPDATED:
     case boardActionTypes.BOARD_DOWNLOADED:
@@ -86,6 +84,66 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         isReadOnly: data.isReadOnly,
         columns,
         cashedColumns: columns,
+        timeOfLastChange: null,
+      };
+    case columnActionTypes.COLUMN_POSITIONS_UPDATED:
+      data = { ...action.data };
+
+      if (data.timeOfLastChange === state.timeOfLastChange) {
+        columns = data.columns.sort((columnOne, columnTwo) => {
+          if (columnOne.position < columnTwo.position) return -1;
+          if (columnOne.position > columnTwo.position) return 1;
+          return 0;
+        });
+      } else {
+        columns = [...state.columns];
+      }
+
+      return {
+        _id: data._id,
+        owner: data.owner,
+        title: data.title,
+        history: [],
+        description: '',
+        isPrivate: data.isPrivate,
+        marks: data.marks,
+        cards: data.cards,
+        cashedCards: data.cards,
+        members: data.members,
+        isReadOnly: data.isReadOnly,
+        columns,
+        cashedColumns: columns,
+        timeOfLastChange: null,
+      };
+    case cardActionTypes.CARD_POSITIONS_UPDATED:
+      data = { ...action.data };
+      columns = data.columns.sort((columnOne, columnTwo) => {
+        if (columnOne.position < columnTwo.position) return -1;
+        if (columnOne.position > columnTwo.position) return 1;
+        return 0;
+      });
+
+      if (data.timeOfLastChange === state.timeOfLastChange) {
+        cards = [...data.cards];
+      } else {
+        cards = [...state.cards];
+      }
+
+      return {
+        _id: data._id,
+        owner: data.owner,
+        title: data.title,
+        history: [],
+        description: '',
+        isPrivate: data.isPrivate,
+        marks: data.marks,
+        cards,
+        cashedCards: data.cards,
+        members: data.members,
+        isReadOnly: data.isReadOnly,
+        columns,
+        cashedColumns: columns,
+        timeOfLastChange: null,
       };
     case columnActionTypes.COLUMN_POSITIONS_SWITCHED:
       columns = action.data.columns.sort((columnOne, columnTwo) => {
@@ -126,6 +184,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         isReadOnly: data.board.isReadOnly,
         columns,
         cashedColumns: columns,
+        timeOfLastChange: null,
       };
     case boardActionTypes.BOARD_MEMBER_REMOVED:
       data = { ...action.data };

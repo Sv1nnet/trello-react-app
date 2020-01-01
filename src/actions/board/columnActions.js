@@ -63,7 +63,8 @@ const updateColumn = (token, boardId, columnId, dataToUpdate) => (dispatch) => {
 // Send new column positions to the server
 const updateColumnPositions = (token, boardId, dataToUpdate) => (dispatch) => {
   const data = {
-    columns: dataToUpdate,
+    columns: dataToUpdate.columns,
+    timeOfChange: dataToUpdate.timeOfChange,
   };
 
   return api.board.updateColumnPositions(token, boardId, data)
@@ -82,12 +83,14 @@ const updateColumnPositions = (token, boardId, dataToUpdate) => (dispatch) => {
 };
 
 const switchColumnPositions = (token, boardId, newColumns) => (dispatch, getState) => {
+  const timeOfChange = Date.now();
+
   // Save changes locally
-  dispatch({ type: columnActionTypes.COLUMN_POSITIONS_SWITCHED, data: { columns: newColumns } });
+  dispatch({ type: columnActionTypes.COLUMN_POSITIONS_SWITCHED, data: { columns: newColumns, timeOfLastChange: timeOfChange } });
 
   const { columns } = getState().board;
   // Save changes on the server
-  return updateColumnPositions(token, boardId, columns)(dispatch);
+  return updateColumnPositions(token, boardId, { columns, timeOfChange })(dispatch);
 };
 
 export {

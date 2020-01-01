@@ -556,7 +556,7 @@ router.post('/:id/delete_card/:cardId', (req, res) => {
 router.post('/:id/update_card_positions', (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const boardId = req.params.id;
-  const { cards } = req.body;
+  const { cards, timeOfChange } = req.body;
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
@@ -588,7 +588,7 @@ router.post('/:id/update_card_positions', (req, res) => {
           return Promise.reject(new Error('Could not save the board with a new card positions'));
         });
 
-        return res.status(200).send(savedBoard);
+        return res.status(200).send({ ...savedBoard._doc, timeOfChange });
       }
 
       res.status(400).send({ err: 'Only board owner can change card positions' });
