@@ -27,7 +27,11 @@ const defaultProps = {
   addBtnClass: '',
 };
 
-
+/**
+ * Allows to add column or card
+ * @param {Object} props component's props
+ * @returns {Component} rendered React component
+ */
 const AddBoardContent = (props) => {
   const {
     addContent,
@@ -53,7 +57,7 @@ const AddBoardContent = (props) => {
 
   const addContentContainerRef = useRef(null);
 
-  const closeAddContentInput = (e, shouldClose) => {    
+  const closeAddContentInput = (e, shouldClose) => {
     if (shouldClose || !hasParent(addContentContainerRef.current, e.target)) {
       if (e) e.preventDefault();
       window.removeEventListener('mousedown', closeAddContentInput);
@@ -100,7 +104,7 @@ const AddBoardContent = (props) => {
 
   const handleAddContent = (e) => {
     addContent(e, addContentState.contentTitle)
-      .then((res) => {
+      .then(() => {
         closeAddContentInput(null, true);
       });
   };
@@ -108,7 +112,7 @@ const AddBoardContent = (props) => {
   const handleKeyUp = (e) => {
     if (e.nativeEvent.charCode === 13 || e.nativeEvent.key === 'Enter') {
       addContent(e, addContentState.contentTitle)
-        .then((res) => {
+        .then(() => {
           closeAddContentInput(null, true);
         });
     }

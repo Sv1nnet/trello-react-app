@@ -80,9 +80,12 @@ const updateBoard = (token, id, data) => (dispatch) => {
     });
 };
 
+const clearBoardData = () => dispatch => dispatch({ type: boardActionTypes.CLEAR_BOARD_DATA, data: null });
+
 export {
   createBoard,
   loadAllBoards,
   getBoard,
   updateBoard,
+  clearBoardData,
 };

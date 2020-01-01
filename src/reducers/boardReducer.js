@@ -33,6 +33,7 @@ const initialState = {
   isReadOnly: false,
   columns: [],
   cashedColumns: [],
+  timeOfLastChange: null,
 };
 
 const boardReducer = (state = initialState, action = { type: 'default', data: {} }) => {
@@ -246,6 +247,10 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         ...state,
         cards: state.cashedCards,
         columns: state.cashedColumns,
+      };
+    case boardActionTypes.CLEAR_BOARD_DATA:
+      return {
+        ...initialState,
       };
     default:
       return {

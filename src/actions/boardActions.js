@@ -3,6 +3,7 @@ import {
   loadAllBoards,
   getBoard,
   updateBoard,
+  clearBoardData,
 } from './board/boardActions';
 import {
   createColumn,
@@ -38,4 +39,5 @@ export default {
   createCard,
   deleteCard,
   switchCardPositions,
+  clearBoardData,
 };

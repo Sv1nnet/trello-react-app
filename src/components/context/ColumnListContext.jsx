@@ -4,6 +4,7 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { connect } from 'react-redux';
 import Messages from '../utils/Messages';
+import boardActions from '../../actions/boardActions';
 
 export const ColumnListContext = createContext();
 
@@ -11,6 +12,7 @@ const ColumnListContextProvider = (props) => {
   const {
     children,
     board,
+    clearBoardData,
   } = props;
 
   const { columns, cards } = board;
@@ -70,6 +72,10 @@ const ColumnListContextProvider = (props) => {
     setColumnsWithCards(newColumnsWithCards);
   }, [cards, columns]);
 
+  useEffect(() => () => {
+    clearBoardData();
+  }, []);
+
   return (
     <ColumnListContext.Provider
       value={{
@@ -87,4 +93,10 @@ const mapStateToProps = state => ({
   board: state.board,
 });
 
-export default connect(mapStateToProps)(ColumnListContextProvider);
+const mapDispatchToProps = dispatch => ({
+  // Clear board data after transition to another page.
+  // We need it to prevent from showing wrong baord data.
+  clearBoardData: () => dispatch(boardActions.clearBoardData()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ColumnListContextProvider);
