@@ -46,7 +46,7 @@ const AddBoardContent = (props) => {
     textInputPlaceholder,
   } = textInputOptions;
 
-  const [addContentState, setAddCardState] = useState({
+  const [addContentState, setAddContentState] = useState({
     inputActive: false,
     contentTitle: '',
   });
@@ -59,7 +59,7 @@ const AddBoardContent = (props) => {
     if (shouldClose || !hasParent(addContentContainerRef.current, e.target)) {
       window.removeEventListener('click', closeAddContentInput);
 
-      setAddCardState({
+      setAddContentState({
         inputActive: false,
         contentTitle: '',
       });
@@ -69,7 +69,7 @@ const AddBoardContent = (props) => {
   const openCreateContentInput = (e) => {
     e.preventDefault();
 
-    setAddCardState({
+    setAddContentState({
       ...addContentState,
       inputActive: true,
     });
@@ -78,7 +78,7 @@ const AddBoardContent = (props) => {
   };
 
   const clearInput = () => {
-    setAddCardState({
+    setAddContentState({
       ...addContentState,
       contentTitle: '',
     });
@@ -93,7 +93,7 @@ const AddBoardContent = (props) => {
       return;
     }
 
-    setAddCardState({
+    setAddContentState({
       ...addContentState,
       contentTitle: target.value,
     });
@@ -107,7 +107,7 @@ const AddBoardContent = (props) => {
   };
 
   const handleKeyUp = (e) => {
-    if ((e.nativeEvent.charCode === 13 || e.nativeEvent.key === 'Enter') && e.nativeEvent.shiftKey) {
+    if (e.nativeEvent.charCode === 13 || e.nativeEvent.key === 'Enter') {
       addContent(e, addContentState.contentTitle)
         .then((res) => {
           closeAddContentInput(null, true);
