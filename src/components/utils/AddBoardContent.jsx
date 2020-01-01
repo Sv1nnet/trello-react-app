@@ -86,7 +86,8 @@ const AddBoardContent = (props) => {
 
   const handleChange = (e) => {
     const { target } = e;
-console.log(target.value[target.value.length - 1])
+
+    // Prevent from adding new line in card title
     if (target.value[target.value.length - 1].charCodeAt(0) === 10) {
       e.preventDefault();
       return;
