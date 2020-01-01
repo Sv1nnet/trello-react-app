@@ -53,11 +53,10 @@ const AddBoardContent = (props) => {
 
   const addContentContainerRef = useRef(null);
 
-  const closeAddContentInput = (e, shouldClose) => {
-    if (e) e.preventDefault();
-
+  const closeAddContentInput = (e, shouldClose) => {    
     if (shouldClose || !hasParent(addContentContainerRef.current, e.target)) {
-      window.removeEventListener('click', closeAddContentInput);
+      if (e) e.preventDefault();
+      window.removeEventListener('mousedown', closeAddContentInput);
 
       setAddContentState({
         inputActive: false,
@@ -74,7 +73,7 @@ const AddBoardContent = (props) => {
       inputActive: true,
     });
 
-    window.addEventListener('click', closeAddContentInput);
+    window.addEventListener('mousedown', closeAddContentInput);
   };
 
   const clearInput = () => {
