@@ -108,7 +108,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         description: '',
         isPrivate: data.isPrivate,
         marks: data.marks,
-        cards: data.cards,
+        cards: state.cards,
         cashedCards: data.cards,
         members: data.members,
         isReadOnly: data.isReadOnly,
@@ -118,11 +118,6 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
       };
     case cardActionTypes.CARD_POSITIONS_UPDATED:
       data = { ...action.data };
-      columns = data.columns.sort((columnOne, columnTwo) => {
-        if (columnOne.position < columnTwo.position) return -1;
-        if (columnOne.position > columnTwo.position) return 1;
-        return 0;
-      });
 
       if (data.timeOfLastChange === state.timeOfLastChange) {
         cards = [...data.cards];
@@ -142,7 +137,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         cashedCards: data.cards,
         members: data.members,
         isReadOnly: data.isReadOnly,
-        columns,
+        columns: state.columns,
         cashedColumns: columns,
         timeOfLastChange: null,
       };
