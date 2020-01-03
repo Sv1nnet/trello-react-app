@@ -3,8 +3,19 @@
 /* eslint-disable no-restricted-syntax */
 import React, { useState, useEffect, createContext } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Messages from '../utils/Messages';
 import boardActions from '../../actions/boardActions';
+
+
+const propTypes = {
+  board: PropTypes.shape({
+    columns: PropTypes.array.isRequired,
+    cards: PropTypes.array.isRequired,
+  }).isRequired,
+  clearBoardData: PropTypes.func.isRequired,
+};
+
 
 export const ColumnListContext = createContext();
 
@@ -98,5 +109,9 @@ const mapDispatchToProps = dispatch => ({
   // We need it to prevent from showing wrong baord data.
   clearBoardData: () => dispatch(boardActions.clearBoardData()),
 });
+
+
+ColumnListContextProvider.propTypes = propTypes;
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(ColumnListContextProvider);

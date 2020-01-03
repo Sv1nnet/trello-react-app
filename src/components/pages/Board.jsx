@@ -245,11 +245,11 @@ class Board extends Component {
               </PopupContainer>
             )}
 
-            {/* {state.isMenuPopupActive && (
-            <PopupContainer removeElement={handlePopupBtnClick} closeBtn classesToNotClosePopup={['members-board-input']} extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
-              <MembersForm members={members} />
-            </PopupContainer>
-          )} */}
+            {state.popup.isMenuPopupActive && (
+              <PopupContainer removeElement={handlePopupBtnClick} closeBtn classesToNotClosePopup={['members-board-input']} extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
+                <div style={{height: '500px', width: '200px'}} />
+              </PopupContainer>
+            )}
           </div>
 
           <ColumnListContextProvider>

@@ -212,6 +212,7 @@ const Column = (props) => {
           textInputId: 'card-title',
           textInputClass: 'card-title-input',
           textInputPlaceholder: 'Card title...',
+          textInputType: 'textarea',
         }}
       />
 

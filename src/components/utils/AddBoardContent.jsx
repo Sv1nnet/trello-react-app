@@ -18,6 +18,7 @@ const proptTypes = {
     textInputId: PropTypes.string.isRequired,
     textInputClass: PropTypes.string.isRequired,
     textInputPlaceholder: PropTypes.string.isRequired,
+    textInputType: PropTypes.string,
   }).isRequired,
 };
 
@@ -48,6 +49,7 @@ const AddBoardContent = (props) => {
     textInputId,
     textInputClass,
     textInputPlaceholder,
+    textInputType,
   } = textInputOptions;
 
   const [addContentState, setAddContentState] = useState({
@@ -130,7 +132,7 @@ const AddBoardContent = (props) => {
             <>
               <TextInput
                 type="text"
-                inputType="textarea"
+                inputType={textInputType || 'input'}
                 maxLength="128"
                 name={textInputName}
                 id={textInputId}

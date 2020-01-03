@@ -120,6 +120,7 @@ const ColumnList = (props) => {
                     textInputId: 'column-title',
                     textInputClass: 'title-input',
                     textInputPlaceholder: 'Column title...',
+                    textInputType: 'textarea',
                   }}
                 />
               </div>
@@ -146,4 +147,3 @@ ColumnList.propTypes = propTypes;
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(ColumnList);
-// export default connect(mapStateToProps, mapDispatchToProps)(React.memo(ColumnList));
