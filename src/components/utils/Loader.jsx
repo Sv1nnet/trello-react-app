@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -8,18 +9,20 @@ const propTypes = {
   bg: PropTypes.bool,
   bgStyles: PropTypes.object,
   bgClasses: PropTypes.arrayOf(PropTypes.string),
+  style: PropTypes.object,
 };
 
 const defaultProps = {
   bg: false,
   bgStyles: null,
   bgClasses: null,
+  style: null,
 };
 
 
-const Loader = ({ bg, bgStyles, bgClasses }) => (
+const Loader = ({ bg, bgStyles, bgClasses, style }) => (
   <>
-    <div className="position-absolute text-center w-100 h-100 loader-container">
+    <div style={style} className="position-absolute text-center w-100 h-100 loader-container">
       <div className="spinner-border mx-auto text-primary" role="status">
         <span className="sr-only">Loading...</span>
       </div>
@@ -28,12 +31,12 @@ const Loader = ({ bg, bgStyles, bgClasses }) => (
   </>
 );
 
-const FormLoader = ({ bg, bgStyles }) => (
-  <Loader bgClasses={['form-loader-bg']} bg={bg} bgStules={bgStyles} />
+const FormLoader = ({ bg, bgStyles, style }) => (
+  <Loader bgClasses={['form-loader-bg']} bg={bg} bgStyles={bgStyles} style={style} />
 );
 
-const PageLoader = ({ bg, bgStyles }) => (
-  <Loader bgClasses={['page-loader-bg']} bg={bg} bgStules={bgStyles} />
+const PageLoader = ({ bg, bgStyles, style }) => (
+  <Loader bgClasses={['page-loader-bg']} bg={bg} bgStyles={bgStyles} style={style} />
 );
 
 
