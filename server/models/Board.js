@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const { ColumnSchema } = require('./Column');
 const { CardSchema } = require('./Card');
-const { HistorySchema } = require('./History');
+const { ActivitySchema } = require('./Activity');
 const { MarkSchema } = require('./Mark');
 
 const { Schema } = mongoose;
@@ -17,7 +17,7 @@ const BoardSchema = new Schema({
     type: String,
     required: true,
   },
-  history: [HistorySchema],
+  activities: [ActivitySchema],
   description: {
     type: String,
   },

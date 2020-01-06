@@ -11,8 +11,7 @@ const propTypes = {
 };
 
 
-const BoardListItem = (props) => {
-  const { id, title } = props;
+const BoardListItem = ({ id, title }) => {
   const url = `/board/${id}`;
   return (
     <div className="col-12 px-0 dropdown-board-list-item pt-2">

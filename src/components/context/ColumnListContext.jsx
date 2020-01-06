@@ -1,4 +1,3 @@
-/* eslint-disable no-loop-func */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 import React, { useState, useEffect, createContext } from 'react';
@@ -85,6 +84,7 @@ const ColumnListContextProvider = (props) => {
 
   useEffect(() => () => {
     clearBoardData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

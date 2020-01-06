@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const HistorySchema = new Schema({
+const ActivitySchema = new Schema({
   author: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -11,11 +11,15 @@ const HistorySchema = new Schema({
     type: String,
     required: true,
   },
+  date: {
+    type: String,
+    required: true,
+  },
 });
 
-const History = mongoose.model('histories', HistorySchema);
+const Activity = mongoose.model('activities', ActivitySchema);
 
 module.exports = {
-  HistorySchema,
-  History,
+  ActivitySchema,
+  Activity,
 };

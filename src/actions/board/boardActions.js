@@ -2,6 +2,8 @@ import { boardActionTypes, userActionTypes } from '../../types';
 import api from '../../api';
 import createErrorResponseObject from '../../utlis/createErrorResponseObject';
 
+const clearBoardData = () => dispatch => dispatch({ type: boardActionTypes.CLEAR_BOARD_DATA, data: null });
+
 const createBoard = ({ token, title, access, description }) => (dispatch) => {
   return api.board.createBoard(token, { title, access, description })
     .then((res) => {
@@ -79,8 +81,6 @@ const updateBoard = (token, id, data) => (dispatch) => {
       );
     });
 };
-
-const clearBoardData = () => dispatch => dispatch({ type: boardActionTypes.CLEAR_BOARD_DATA, data: null });
 
 export {
   createBoard,

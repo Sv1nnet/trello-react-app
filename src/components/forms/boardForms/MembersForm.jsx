@@ -7,7 +7,7 @@ import TextInput from '../../utils/TextInput';
 import Loader from '../../utils/Loader';
 import actions from '../../../actions/boardActions';
 import Messages from '../../utils/Messages';
-import UserList from '../../lists/UserListItem';
+import User from '../../lists/UserListItem';
 
 
 const propTypes = {
@@ -113,7 +113,12 @@ class MembersForm extends Component {
 
   // Remove member from this board
   handleRemoveMember = (member) => {
-    const { removeMember, token, boardId, updateMembers } = this.props;
+    const {
+      removeMember,
+      token,
+      boardId,
+      updateMembers,
+    } = this.props;
 
     return removeMember(token.token, boardId, member)
       .then(() => {
@@ -331,7 +336,7 @@ class MembersForm extends Component {
               }
 
               return (
-                <UserList
+                <User
                   addMember={this.handleAddMember}
                   removeMember={this.handleRemoveMember}
                   key={user._id}

@@ -13,6 +13,7 @@ import RenameBoardForm from '../forms/boardForms/RenameBoardForm';
 import ReadonlyAccessBoardForm from '../forms/boardForms/ReadonlyAccessBoardForm';
 import PublicAccessBoardForm from '../forms/boardForms/PublicAccessBoardForm';
 import MembersForm from '../forms/boardForms/MembersForm';
+import BoardMenu from '../boards/BoardMenu';
 import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
 import ColumnList from '../lists/ColumnList';
@@ -241,13 +242,13 @@ class Board extends Component {
 
             {state.popup.isMembersPopupActive && (
               <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
-                <MembersForm closePopup={(e) => { handlePopupBtnClick(e, 'isMembersPopupActive'); }} updateMembers={this.updateMembers} members={members} boardId={_id} ownerId={owner} />
+                <MembersForm updateMembers={this.updateMembers} members={members} boardId={_id} ownerId={owner} />
               </PopupContainer>
             )}
 
             {state.popup.isMenuPopupActive && (
-              <PopupContainer removeElement={handlePopupBtnClick} closeBtn classesToNotClosePopup={['members-board-input']} extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
-                <div style={{height: '500px', width: '200px'}} />
+              <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-board-menu']}>
+                <BoardMenu closePopup={(e) => { handlePopupBtnClick(e, 'isMenuPopupActive'); }} />
               </PopupContainer>
             )}
           </div>
