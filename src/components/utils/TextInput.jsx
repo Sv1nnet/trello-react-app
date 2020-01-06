@@ -120,7 +120,7 @@ class TextInput extends Component {
 
   getInput = () => {
     const emptyValue = '';
-    const { props } = this;
+    const { props, inputElement } = this;
     const {
       inputType,
       textColor = emptyValue,
@@ -140,41 +140,29 @@ class TextInput extends Component {
       onKeyPress,
     } = this;
 
+    const inputProps = {
+      onChange,
+      onFocus,
+      onBlur,
+      onKeyPress,
+      onKeyUp,
+      ref: inputElement,
+      style: { color: textColor },
+      type: 'text',
+      className: `nav-link ${classList}`,
+      placeholder: placeholder || 'Search',
+      value: inputValue,
+      maxLength,
+      id,
+      name,
+    };
+
     return inputType === 'input'
       ? (
-        <input
-          ref={this.inputElement}
-          style={{ color: textColor }}
-          onChange={onChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onKeyPress={onKeyPress}
-          onKeyUp={onKeyUp}
-          type="text"
-          className={`nav-link ${classList}`}
-          placeholder={placeholder || 'Search'}
-          value={inputValue}
-          id={id}
-          name={name}
-        />
+        <input {...inputProps} />
       )
       : (
-        <textarea
-          ref={this.inputElement}
-          style={{ color: textColor }}
-          onChange={onChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onKeyPress={onKeyPress}
-          onKeyUp={onKeyUp}
-          type="text"
-          className={`nav-link ${classList}`}
-          placeholder={placeholder || 'Search'}
-          value={inputValue}
-          id={id}
-          name={name}
-          maxLength={maxLength}
-        />
+        <textarea {...inputProps} />
       );
   }
 
