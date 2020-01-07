@@ -70,7 +70,7 @@ const BoardMenu = (props) => {
         {
           status.loading
             ? <Loader.FormLoader style={{ transform: 'scale(0.7)' }} />
-            : <button type="button" onClick={loadActivities}>Load more activities</button>
+            : <button style={{ display: 'block', margin: '0 auto' }} type="button" onClick={loadActivities}>Load more activities</button>
         }
       </div>
     </div>
