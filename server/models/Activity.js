@@ -17,6 +17,10 @@ const ActivitySchema = new Schema({
   },
 });
 
+ActivitySchema.methods.addActivity = function addActivity({ type, data }) {
+
+};
+
 const Activity = mongoose.model('activities', ActivitySchema);
 
 module.exports = {

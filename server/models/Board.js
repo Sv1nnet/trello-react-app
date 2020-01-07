@@ -54,9 +54,9 @@ const BoardSchema = new Schema({
   columns: [ColumnSchema],
 });
 
-BoardSchema.methods.addMember = function addMember(memberId) {
+BoardSchema.methods.addMember = function addMember(member) {
   const board = this;
-  board.members.push(memberId);
+  board.members.push(member);
 };
 
 BoardSchema.methods.removeMember = function removeMember(memberId) {
@@ -86,8 +86,6 @@ BoardSchema.methods.updateColumn = async function addColumn(columnId, dataToUpda
   const columnToUpdate = board.columns.id(columnId);
 
   columnToUpdate.update(dataToUpdate);
-  // const columnToUpdate = board.columns.find(column => column._id.toHexString() === columnId);
-  // columnToUpdate.update(dataToUpdate);
 };
 
 BoardSchema.methods.deleteColumn = function deleteColumn(columnId) {
@@ -152,7 +150,13 @@ BoardSchema.methods.deleteCard = function deleteCard(cardId) {
   }
 
   board.cards = newCards;
-  console.log('new cards', board.cards)
+};
+
+BoardSchema.methods.addActivity = function addActivity(activity) {
+  const board = this;
+  board.activities.push(activity);
+  console.log('activity', activity);
+  console.log('board.activities', board.activities);
 };
 
 const Board = mongoose.model('boards', BoardSchema);

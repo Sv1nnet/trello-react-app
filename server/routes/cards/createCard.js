@@ -4,6 +4,8 @@ const _ = require('lodash');
 const { Card } = require('../../models/Card');
 const { Board } = require('../../models/Board');
 
+const addActivity = require('../../utils/addActivity');
+
 const createCard = (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const boardId = req.params.id;
@@ -36,13 +38,16 @@ const createCard = (req, res) => {
           return Promise.reject(new Error('Could not save the board with a new card'));
         });
 
-        return res.status(200).send({ card: _.pick(newCard, ['_id', 'title', 'position', 'column', 'marks', 'description', 'comments']) });
+        const { activity, error } = await addActivity('card', { type: 'create', data: { authorId: decoded._id, date: 'test date', boardId: board._id, name: card.title } });
+        if (error) Promise.reject(error);
+
+        return res.status(200).send({ card: _.pick(newCard, ['_id', 'title', 'position', 'column', 'marks', 'description', 'comments', 'activities']) });
       }
 
       res.status(400).send({ err: 'Only board owner can add new cards' });
     } catch (e) {
       console.log('Send error response', e);
-      res.status(400).send({ err: e.message });
+      return res.status(400).send({ err: e.message });
     }
   });
 };

@@ -1,12 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 const express = require('express');
-const jwt = require('jsonwebtoken');
-const { ObjectId } = require('mongoose');
-const _ = require('lodash');
-const { Board } = require('../models/Board');
-const { Column } = require('../models/Column');
-const { User } = require('../models/User');
-const { Card } = require('../models/Card');
 
 // Board
 const getUserBoards = require('./board/getUserBoards');

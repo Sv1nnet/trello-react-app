@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const _ = require('lodash');
 const { User } = require('../../models/User');
 
 const findUsers = (req, res) => {
