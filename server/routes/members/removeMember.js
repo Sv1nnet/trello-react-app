@@ -26,10 +26,11 @@ const removeMember = (req, res) => {
           user.removeBoard({ _id: board.id });
 
           const savedBoard = await board.save();
-
           const savedUser = await user.save();
 
-          return res.status(200).send({ message: 'Member removed', board: savedBoard });
+          const activities = await board.getActivities();
+
+          return res.status(200).send({ message: 'Member removed', board: { ...savedBoard._doc, activities } });
         }
         return res.status(200).send({ message: 'Member already removed', board });
       }
