@@ -25,10 +25,11 @@ const addMember = (req, res) => {
           user.addBoard({ _id: board.id, title: board.title });
 
           const savedBoard = await board.save();
-
           const savedUser = await user.save();
 
-          return res.status(200).send({ message: 'Member added', board: savedBoard });
+          const activities = await board.getActivities();
+console.log(activities)
+          return res.status(200).send({ message: 'Member added', board: { ...savedBoard._doc, activities } });
         }
         return res.status(200).send({ message: 'Member already added', board });
       }
