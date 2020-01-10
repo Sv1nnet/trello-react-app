@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const { Board } = require('../../models/Board');
+const { Card } = require('../../models/Card');
 
 const deleteCard = (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
@@ -29,6 +30,8 @@ const deleteCard = (req, res) => {
           console.log('Could not save board with a new card', err);
           return Promise.reject(new Error('Could not save the board with a new card'));
         });
+
+        await Card.deleteOne({ _id: cardId }).catch(err => console.log('err in deleting card', err));
 
         return res.status(200).send({ cards: board.cards, activities: await board.getActivities() });
       }

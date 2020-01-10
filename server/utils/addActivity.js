@@ -6,13 +6,16 @@ const { Board } = require('../models/Board');
 /**
  * These are data you need to pass with data in action:
  * 1) for board actions: addMember, removeMember - "name" is a name of the member; rename - "name" is a new name of the board;
- * 2) for column actions: create, delete - "name" is a name of the column; rename - "prevName" is previous a name of the column and "newName" is a new name of the column;
- * 3) for card actions: create, delete, description - "name" is a name of the card; rename - "prevName" and "newName" are card names; moved - "cardName" is a card name, "prevName" is the source column's name, "newName" is the target column's name; addComment - "comment" comment's body, "name" - card name;
+ * 2) for column actions: create - "name" is a name of the column; rename - "prevName" is previous a name of the column and "newName" is a new name of the column;
+ * 3) for card actions: create, description - "name" is a name of the card; rename - "prevName" and "newName" are card names; moved - "cardName" is a card name, "prevName" is the source column's name, "newName" is the target column's name; addComment - "comment" comment's body, "name" - card name;
  * @param {string} source where action accured: board, column, card
  * @param {Object} action action with type of activity and its data
- * @param {string} action.author author's name
- * @param {string} action.date activity date in UTC format
- * @param {string} action.boardId board id where activity occured
+ * @param {string} action.type type of action
+ * @param {Object} action.data data to make a message
+ * @param {string} action.data.boardId board id where activity occured
+ * @param {string} action.data.sourceId board id where activity occured
+ * @param {string} action.data.authorId author id
+ * @param {string} action.data.date activity date in UTC
  * @return {Object} object that contains activity, updatedBoard and error objects. In case error occured activity and updatedBoard equals null, otherwise error equals null
  */
 const addActivity = async (source, action) => {
@@ -57,14 +60,6 @@ const addActivity = async (source, action) => {
   } catch (error) {
     return { activity: null, updatedBoard: null, error };
   }
-};
-
-const removeActivity = async (board, sourceId) => {
-  const newActivities = board.activities.filter(activity => activity.sourceId.toHexString() !== cardToDelete._id.toHexString());
-  board.activities = newActivities;
-
-  const activitiesToDelete = await Activity.find({ sourceId });
-  activitiesToDelete.forEach(act => act.remove());
 };
 
 module.exports = addActivity;

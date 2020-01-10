@@ -208,7 +208,7 @@ BoardSchema.methods.getAllActivities = async function getAllActivities() {
       })));
   } catch (error) {
     console.log('Could not get all activities', error);
-    return [];
+    return Promise.reject(error);
   }
 };
 
