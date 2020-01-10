@@ -27,8 +27,6 @@ const getColumnMessage = (author, action) => {
   switch (action.type) {
     case 'create':
       return `${author} created the column ${action.data.name}`;
-    case 'delete':
-      return `${author} deleted the column ${action.data.name}`;
     case 'rename':
       return `${author} renamed the column ${action.data.prevName} as ${action.data.newName}`;
     default:
@@ -40,8 +38,6 @@ const getCardMessage = (author, action) => {
   switch (action.type) {
     case 'create':
       return `${author} created the card ${action.data.name}`;
-    case 'delete':
-      return `${author} deleted the card ${action.data.name}`;
     case 'rename':
       return `${author} renamed the card ${action.data.prevName} as ${action.data.newName}`;
     case 'moved':
