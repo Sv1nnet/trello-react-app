@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const { ColumnSchema } = require('./Column');
 const { CardSchema } = require('./Card');
-const { ActivitySchema } = require('./Activity');
+const { ActivitySchema, Activity } = require('./Activity');
 const { MarkSchema } = require('./Mark');
 
 const { Schema } = mongoose;
@@ -119,7 +119,7 @@ BoardSchema.methods.updateCard = function updateCard(cardId, dataToUpdate) {
   if (cardToUpdate) cardToUpdate.update(dataToUpdate);
 };
 
-BoardSchema.methods.deleteCard = function deleteCard(cardId) {
+BoardSchema.methods.deleteCard = async function deleteCard(cardId) {
   const board = this;
   const cardToDelete = board.cards.id(cardId);
   if (!cardToDelete) return;
@@ -150,16 +150,34 @@ BoardSchema.methods.deleteCard = function deleteCard(cardId) {
   }
 
   board.cards = newCards;
+  board.removeActivities(cardToDelete._id.toHexString());
 };
 
-BoardSchema.methods.addActivity = function addActivity(activity) {
+BoardSchema.methods.addActivity = async function addActivity(activity) {
   const board = this;
   board.activities.push(activity);
-  console.log('activity', activity);
-  console.log('board.activities', board.activities);
 };
 
-BoardSchema.methods.getActivities = async function getNumberOfActivities(number = 10, start = 0) {
+BoardSchema.methods.removeActivities = async function removeActivities(sourceId) {
+  const board = this;
+  try {
+    const newActivities = board.activities.filter(activity => activity.sourceId.toHexString() !== sourceId);
+    board.activities = newActivities;
+  
+    const activitiesToDelete = await Activity.find({ sourceId });
+    activitiesToDelete.forEach(act => act.remove());
+  } catch (error) {
+    console.log('Error in deleting activities', error);
+    Promise.reject(new Error('Error in deleting activities'));
+  }
+};
+
+/**
+ * @param {number} number number of activities to get
+ * @param {number} start position in array starting from which we want to get activities
+ * @return {Array} array of activities
+ */
+BoardSchema.methods.getActivities = async function getActivities(number = 10, start = 0) {
   const board = this;
   try {
     return await Promise.all(board.activities
@@ -173,7 +191,7 @@ BoardSchema.methods.getActivities = async function getNumberOfActivities(number 
       })));
   } catch (error) {
     console.log('Could not get number of activities', error);
-    return [];
+    return Promise.reject(error);
   }
 };
 
@@ -198,4 +216,5 @@ const Board = mongoose.model('boards', BoardSchema);
 
 module.exports = {
   Board,
+  BoardSchema,
 };

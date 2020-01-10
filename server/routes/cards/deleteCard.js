@@ -23,14 +23,14 @@ const deleteCard = (req, res) => {
       const isMember = isOwner || board.members.find(member => member._id.toHexString() === decoded._id);
 
       if (isOwner || (isMember && !board.isReadOnly)) {
-        board.deleteCard(cardId);
+        await board.deleteCard(cardId);
 
         await board.save().catch((err) => {
           console.log('Could not save board with a new card', err);
           return Promise.reject(new Error('Could not save the board with a new card'));
         });
 
-        return res.status(200).send({ cards: board.cards });
+        return res.status(200).send({ cards: board.cards, activities: await board.getActivities() });
       }
 
       res.status(400).send({ err: 'Only board owner can delete cards' });

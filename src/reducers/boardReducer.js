@@ -227,10 +227,10 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
       };
     case cardActionTypes.CARD_DELETED:
       data = { ...action.data };
-      cards = [...data.cards];
 
       return {
         ...state,
+        activities: data.activities,
         cards: data.cards,
       };
     case columnActionTypes.COLUMN_POSITIONS_UPDATE_FAILED:

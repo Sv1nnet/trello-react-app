@@ -44,8 +44,9 @@ const createCard = (req, res) => {
             type: 'create',
             data: {
               authorId: decoded._id,
+              sourceId: newCard._id.toHexString(),
               date: new Date().toString(),
-              boardId: board._id,
+              boardId: savedBoard._id,
               name: card.title,
             },
           },
@@ -54,7 +55,6 @@ const createCard = (req, res) => {
 
         const activities = await updatedBoard.getActivities();
 
-        console.log('activities', activities);
         return res.status(200).send({ card: _.pick(newCard, ['_id', 'title', 'position', 'column', 'marks', 'description', 'comments']), activities });
       }
 

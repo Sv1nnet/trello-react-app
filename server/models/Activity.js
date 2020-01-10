@@ -11,6 +11,12 @@ const ActivitySchema = new Schema({
     type: Schema.Types.ObjectId,
     required: true,
   },
+  // ID of object that invoke activity. We need it to find this activity and delete
+  // when user deletes card, column, comment, etc.
+  sourceId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
   sourceType: {
     type: String,
     required: true,
