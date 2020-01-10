@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 const { Activity } = require('../models/Activity');
 const { User } = require('../models/User');
 const { Board } = require('../models/Board');
@@ -49,7 +50,7 @@ const getCardMessage = (author, action) => {
     case 'rename':
       return `${author} renamed the card ${action.data.prevName} as ${action.data.newName}`;
     case 'moved':
-      return `${author} moved ${action.data.cardName} from ${action.data.prevName} column to ${action.data.newName} one`;
+      return `${author} moved the card ${action.data.cardName} from ${action.data.prevName} column to ${action.data.newName} one`;
     case 'desciption':
       return `${author} updated a description for the card ${action.data.name}`;
     case 'addComment':
@@ -75,36 +76,53 @@ const messages = {
  * @param {string} action.author author's name
  * @param {string} action.date activity date in UTC format
  * @param {string} action.boardId board id where activity occured
- * @return {Object} the activity object or an Error object
+ * @return {Object} object that contains activity, updatedBoard and error objects. In case error occured activity and updatedBoard equals null, otherwise error equals null
  */
 const addActivity = async (source, action) => {
   try {
-    const { authorId, date, boardId } = action.data;
+    const { authorId, date, boardId, ...actionData } = action.data;
 
     const author = await User.findById(authorId).catch((err) => {
       console.log('Could not find the user who made activity', err);
       return Promise.reject(new Error('Could not find the user who made activity'));
     });
 
-    const message = messages[source](`${author.firstName} ${author.lastName}`, action);
+    const activityData = {
+      authorId: author._id,
+      sourceType: source,
+      messageType: action.type,
+      actionData,
+      date,
+    };
 
-    const activity = await new Activity({ author: authorId, message, date }).save().catch((err) => {
-      console.log('Error in saving activity', err);
-      return Promise.reject(new Error('Could not save an activity'));
-    });
+    const activity = await new Activity(activityData)
+      .save()
+      .catch((err) => {
+        console.log('Error in saving activity', err);
+        return Promise.reject(new Error('Could not save an activity'));
+      });
 
     const board = await Board.findById(boardId);
-    board.addActivity({ author: author._id, _id: activity._id, message, date });
-
-    const savedBoard = await board.save().catch((err) => {
-      console.log('Error on saving board after activity was added', err);
-      return Promise.reject(new Error('Could not save a board after activity was added'));
+    board.addActivity({
+      ...activityData,
+      _id: activity._id,
     });
 
-    return { activity, error: null };
+    const savedBoard = await board
+      .save()
+      .catch((err) => {
+        console.log('Error on saving board after activity was added', err);
+        return Promise.reject(new Error('Could not save a board after activity was added'));
+      });
+
+    return { activity, updatedBoard: savedBoard, error: null };
   } catch (error) {
-    return { activity: null, error };
+    return { activity: null, updatedBoard: null, error };
   }
+};
+
+const removeActivity = async (boardId, activityId) => {
+
 };
 
 module.exports = addActivity;

@@ -222,6 +222,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
 
       return {
         ...state,
+        activities: [...data.activities],
         cards: [...state.cards, data.card],
       };
     case cardActionTypes.CARD_DELETED:

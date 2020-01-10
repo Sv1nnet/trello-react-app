@@ -33,15 +33,29 @@ const createCard = (req, res) => {
         });
         board.addCard(newCard);
 
-        await board.save().catch((err) => {
+        const savedBoard = await board.save().catch((err) => {
           console.log('Could not save board with a new card', err);
           return Promise.reject(new Error('Could not save the board with a new card'));
         });
 
-        const { activity, error } = await addActivity('card', { type: 'create', data: { authorId: decoded._id, date: 'test date', boardId: board._id, name: card.title } });
+        const { activity, updatedBoard, error } = await addActivity(
+          'card',
+          {
+            type: 'create',
+            data: {
+              authorId: decoded._id,
+              date: new Date().toString(),
+              boardId: board._id,
+              name: card.title,
+            },
+          },
+        );
         if (error) Promise.reject(error);
 
-        return res.status(200).send({ card: _.pick(newCard, ['_id', 'title', 'position', 'column', 'marks', 'description', 'comments', 'activities']) });
+        const activities = await updatedBoard.getAllActivities();
+
+        console.log('activities', activities);
+        return res.status(200).send({ card: _.pick(newCard, ['_id', 'title', 'position', 'column', 'marks', 'description', 'comments']), activities });
       }
 
       res.status(400).send({ err: 'Only board owner can add new cards' });

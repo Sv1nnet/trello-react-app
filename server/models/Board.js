@@ -159,6 +159,21 @@ BoardSchema.methods.addActivity = function addActivity(activity) {
   console.log('board.activities', board.activities);
 };
 
+BoardSchema.methods.getAllActivities = async function getAllActivities() {
+  const board = this;
+  try {
+    return await Promise.all(board.activities.map(async act => ({
+      _id: act._id.toHexString(),
+      author: await act.getAuthorName(),
+      message: await act.getMessage(),
+      date: act.date,
+    })));
+  } catch (error) {
+    console.log('Could not get all activities with error', error);
+    return [];
+  }
+};
+
 const Board = mongoose.model('boards', BoardSchema);
 
 module.exports = {
