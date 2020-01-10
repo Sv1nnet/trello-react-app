@@ -52,7 +52,7 @@ const createCard = (req, res) => {
         );
         if (error) Promise.reject(error);
 
-        const activities = await updatedBoard.getAllActivities();
+        const activities = await updatedBoard.getActivities();
 
         console.log('activities', activities);
         return res.status(200).send({ card: _.pick(newCard, ['_id', 'title', 'position', 'column', 'marks', 'description', 'comments']), activities });

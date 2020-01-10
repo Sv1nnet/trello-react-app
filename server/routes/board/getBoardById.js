@@ -13,14 +13,16 @@ const getBoardById = (req, res) => {
         }
 
         if (token) {
-          jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+          jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
             if (err) {
               res.status(400).send({ err: 'Invalid token' });
             } else {
               const isMember = !!board.members.find(member => member._id.toString() === decoded._id.toString());
 
               if (isMember) {
-                res.status(200).send(board);
+                const activities = await board.getActivities();
+
+                res.status(200).send({ ...board._doc, activities });
               } else {
                 res.status(403).send({ err: 'You have no access to this board' });
               }
