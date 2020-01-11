@@ -8,16 +8,12 @@ const getBoardMessage = (author, action) => {
       return `${author} added a ${action.data.name} to board members`;
     case 'removeMember':
       return `${author} removed a ${action.data.name} from board members`;
-    case 'rename':
-      return `${author} renamed the board as ${action.data.name}`;
-    case 'setReadonly':
-      return `${author} set the board Readonly`;
-    case 'setEditable':
-      return `${author} set the board Editable`;
-    case 'setPrivate':
-      return `${author} set the board Private`;
-    case 'setPublic':
-      return `${author} set the board Public`;
+    case 'title':
+      return `${author} renamed the board as ${action.data.title}`;
+    case 'isReadonly':
+      return `${author} set the board ${action.data.isReadonly ? 'Readonly' : 'Editable'}`;
+    case 'isPrivate':
+      return `${author} set the board ${action.data.isPrivate ? 'Private' : 'Public'}`;
     default:
       return null;
   }
@@ -38,7 +34,7 @@ const getCardMessage = (author, action) => {
   switch (action.type) {
     case 'create':
       return `${author} created the card ${action.data.name}`;
-    case 'rename':
+    case 'title':
       return `${author} renamed the card ${action.data.prevName} as ${action.data.newName}`;
     case 'moved':
       return `${author} moved the card ${action.data.cardName} from ${action.data.prevName} column to ${action.data.newName} one`;
