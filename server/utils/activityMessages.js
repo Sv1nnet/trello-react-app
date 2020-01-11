@@ -10,8 +10,8 @@ const getBoardMessage = (author, action) => {
       return `${author} removed a ${action.data.name} from board members`;
     case 'title':
       return `${author} renamed the board as ${action.data.title}`;
-    case 'isReadonly':
-      return `${author} set the board ${action.data.isReadonly ? 'Readonly' : 'Editable'}`;
+    case 'isReadOnly':
+      return `${author} set the board ${action.data.isReadOnly ? 'Readonly' : 'Editable'}`;
     case 'isPrivate':
       return `${author} set the board ${action.data.isPrivate ? 'Private' : 'Public'}`;
     default:

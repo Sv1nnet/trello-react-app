@@ -1,6 +1,8 @@
+/* eslint-disable no-underscore-dangle */
 const jwt = require('jsonwebtoken');
 const { Board } = require('../../models/Board');
 const { User } = require('../../models/User');
+const addActivity = require('../../utils/addActivity');
 
 const updateBoardSetting = (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
@@ -20,7 +22,7 @@ const updateBoardSetting = (req, res) => {
         } else {
           try {
             board.updateBoard(req.body);
-            const updatedBoard = await board.save();
+            let updatedBoard = await board.save();
 
             if (req.body.title) {
               const usersToUpdate = await Promise.all(updatedBoard.members.map(async (member) => {
@@ -35,7 +37,30 @@ const updateBoardSetting = (req, res) => {
 
               await Promise.all(udpatedUsers);
             }
-            res.status(200).send(updatedBoard);
+
+            const propToUpdate = Object.keys(req.body)[0];
+            const addActivityReult = await addActivity(
+              'board',
+              {
+                type: propToUpdate,
+                data: {
+                  authorId: decoded._id,
+                  sourceId: updatedBoard._id.toHexString(),
+                  boardId: updatedBoard._id.toHexString(),
+                  date: new Date().toString(),
+                  [propToUpdate]: req.body[propToUpdate],
+                },
+              },
+            );
+
+            const { activity, error } = addActivityReult;
+
+            if (error) Promise.reject(new Error('Could not save a new activity'));
+
+            const activities = await addActivityReult.updatedBoard.getActivities();
+            updatedBoard = { ...addActivityReult.updatedBoard._doc };
+
+            res.status(200).send({ ...updatedBoard, activities });
           } catch (e) {
             console.log(e);
             res.status(400).send({ err: 'Could not update board in updating' });
