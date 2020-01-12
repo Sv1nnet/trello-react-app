@@ -216,6 +216,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
       return {
         ...state,
         columns: [...state.columns, data.column],
+        activities: data.activities,
       };
     case cardActionTypes.CARD_CREATED:
       data = { ...action.data };

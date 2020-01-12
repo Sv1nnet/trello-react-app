@@ -49,7 +49,7 @@ const getCardMessage = (author, action) => {
 
 const messages = {
   board: getBoardMessage,
-  columns: getColumnMessage,
+  column: getColumnMessage,
   card: getCardMessage,
 };
 

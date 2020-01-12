@@ -32,7 +32,7 @@ const deleteColumn = (req, res) => {
         });
 
         // console.log(savedBoard.columns)
-        return res.status(200).send(savedBoard);
+        return res.status(200).send({ ...savedBoard._doc, activities: await savedBoard.getActivities() });
       }
 
       res.status(400).send({ err: 'Only board owner can remove new columns' });

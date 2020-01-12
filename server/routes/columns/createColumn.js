@@ -3,6 +3,8 @@ const _ = require('lodash');
 const { Board } = require('../../models/Board');
 const { Column } = require('../../models/Column');
 
+const addActivity = require('../../utils/addActivity');
+
 
 const createColumn = (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
@@ -31,12 +33,28 @@ const createColumn = (req, res) => {
         });
         board.addColumn(newColumn);
 
-        await board.save().catch((err) => {
+        const savedBoard = await board.save().catch((err) => {
           console.log('Could not save board with a new column', err);
           return Promise.reject(new Error('Could not save the board with a new column'));
         });
 
-        return res.status(200).send({ column: _.pick(newColumn, ['_id', 'title', 'position']) });
+        const { activity, updatedBoard, error } = await addActivity(
+          'column',
+          {
+            type: 'create',
+            data: {
+              authorId: decoded._id,
+              sourceId: newColumn._id.toHexString(),
+              boardId: savedBoard._id.toHexString(),
+              date: new Date().toString(),
+              name: newColumn.title,
+            },
+          },
+        );
+
+        const activities = await updatedBoard.getActivities();
+
+        return res.status(200).send({ column: _.pick(newColumn, ['_id', 'title', 'position']), activities });
       }
 
       res.status(400).send({ err: 'Only board owner can add new columns' });

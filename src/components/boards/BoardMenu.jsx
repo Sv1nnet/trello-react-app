@@ -62,9 +62,9 @@ const BoardMenu = (props) => {
       />
 
       <span className="d-block w-100 text-center">Activity</span>
-      <div className="activity-list-container">
-        {board.activities.map(activity => <li key={activity._id}>{activity.message || activity.date}</li>)}
-      </div>
+      <ul className="activity-list-container">
+        {board.activities.map(activity => <li key={activity._id}>{activity.message} at {activity.date}</li>)}
+      </ul>
 
       <div style={{ position: 'relative', height: '30px' }}>
         {

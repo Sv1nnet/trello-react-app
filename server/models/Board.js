@@ -91,7 +91,9 @@ BoardSchema.methods.updateColumn = async function addColumn(columnId, dataToUpda
 BoardSchema.methods.deleteColumn = function deleteColumn(columnId) {
   const board = this;
 
-  board.columns.id(columnId).remove();
+  const columnToDelete = board.columns.id(columnId);
+  columnToDelete.remove();
+
   board.columns = board.columns.sort((columnOne, columnTwo) => {
     if (columnOne.position < columnTwo.position) return -1;
     if (columnOne.position > columnTwo.position) return 1;
@@ -105,6 +107,7 @@ BoardSchema.methods.deleteColumn = function deleteColumn(columnId) {
   });
 
   board.cards = board.cards.filter(card => card.column.toHexString() !== columnId);
+  board.removeActivities(columnToDelete._id.toHexString());
 };
 
 BoardSchema.methods.addCard = function addCard(card) {
