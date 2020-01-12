@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const { Board } = require('../../models/Board');
 const { User } = require('../../models/User');
 
+const addActivity = require('../../utils/addActivity');
+
 const addMember = (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const { member } = req.body;
@@ -27,9 +29,23 @@ const addMember = (req, res) => {
           const savedBoard = await board.save();
           const savedUser = await user.save();
 
-          const activities = await board.getActivities();
+          const { activity, updatedBoard, error } = await addActivity(
+            'board',
+            {
+              type: 'addMember',
+              data: {
+                authorId: decoded._id,
+                sourceId: member,
+                boardId: savedBoard._id.toHexString(),
+                date: new Date().toString(),
+                name: `${user.firstName} ${user.lastName} (${user.nickname})`,
+              },
+            },
+          );
 
-          return res.status(200).send({ message: 'Member added', board: { ...savedBoard._doc, activities } });
+          const activities = await savedBoard.getActivities();
+
+          return res.status(200).send({ message: 'Member added', board: { ...updatedBoard._doc, activities } });
         }
         return res.status(200).send({ message: 'Member already added', board });
       }

@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const { Board } = require('../../models/Board');
 const { User } = require('../../models/User');
 
+const addActivity = require('../../utils/addActivity');
+
 const removeMember = (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const { member } = req.body;
@@ -21,16 +23,29 @@ const removeMember = (req, res) => {
         const user = await User.findById(member);
 
         if (!board.members.find(boardMember => boardMember._id === member)) {
-
           board.removeMember(user._id.toHexString());
           user.removeBoard({ _id: board.id });
 
           const savedBoard = await board.save();
           const savedUser = await user.save();
 
-          const activities = await board.getActivities();
+          const { activity, updatedBoard, error } = await addActivity(
+            'board',
+            {
+              type: 'removeMember',
+              data: {
+                authorId: decoded._id,
+                sourceId: member,
+                boardId: savedBoard._id.toHexString(),
+                date: new Date().toString(),
+                name: `${user.firstName} ${user.lastName} (${user.nickname})`,
+              },
+            },
+          );
 
-          return res.status(200).send({ message: 'Member removed', board: { ...savedBoard._doc, activities } });
+          const activities = await updatedBoard.getActivities();
+
+          return res.status(200).send({ message: 'Member removed', board: { ...updatedBoard._doc, activities } });
         }
         return res.status(200).send({ message: 'Member already removed', board });
       }
