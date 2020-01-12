@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 const jwt = require('jsonwebtoken');
 const { Board } = require('../../models/Board');
 const { Column } = require('../../models/Column');
@@ -9,7 +10,7 @@ const updateColumn = (req, res) => {
   const boardId = req.params.id;
   const { columnId } = req.params;
   const { dataToUpdate } = req.body;
-  console.log(req.body)
+  console.log(req.body);
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
@@ -36,8 +37,13 @@ const updateColumn = (req, res) => {
         });
 
         const propToUpdate = Object.keys(dataToUpdate)[0];
+
+        let activity = null;
+        let updatedBoard = null;
+        let error = null;
+
         if (propToUpdate === 'title') {
-          const { activity, updatedBoard, error } = await addActivity(
+          const newActivity = await addActivity(
             'column',
             {
               type: 'rename',
@@ -51,9 +57,13 @@ const updateColumn = (req, res) => {
               },
             },
           );
+
+          activity = newActivity.activity;
+          updatedBoard = newActivity.updatedBoard;
+          error = newActivity.error;
         }
 
-        const activities = await updatedBoard.getActivities();
+        const activities = updatedBoard ? await updatedBoard.getActivities() : await savedBoard.getActivities();
         return res.status(200).send({ ...updatedBoard._doc, activities });
       }
 
