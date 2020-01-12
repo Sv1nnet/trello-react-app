@@ -36,20 +36,22 @@ const updateColumn = (req, res) => {
         });
 
         const propToUpdate = Object.keys(dataToUpdate)[0];
-        const { activity, updatedBoard, error } = await addActivity(
-          'column',
-          {
-            type: 'rename',
-            data: {
-              authorId: decoded._id,
-              sourceId: columnId,
-              boardId: savedBoard._id.toHexString(),
-              date: new Date().toString(),
-              prevName: columnToUpdate.title,
-              newName: dataToUpdate[propToUpdate],
+        if (propToUpdate === 'title') {
+          const { activity, updatedBoard, error } = await addActivity(
+            'column',
+            {
+              type: 'rename',
+              data: {
+                authorId: decoded._id,
+                sourceId: columnId,
+                boardId: savedBoard._id.toHexString(),
+                date: new Date().toString(),
+                prevName: columnToUpdate.title,
+                newName: dataToUpdate[propToUpdate],
+              },
             },
-          },
-        );
+          );
+        }
 
         const activities = await updatedBoard.getActivities();
         return res.status(200).send({ ...updatedBoard._doc, activities });
