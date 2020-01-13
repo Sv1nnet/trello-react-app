@@ -42,7 +42,7 @@ const messagePropTypes = {
 const messageDefaultProps = {
   closeMessage: () => {},
   styles: {},
-  btn: false,
+  btn: true,
   loadingTextAnimation: false,
   clearInputs: false,
 };
