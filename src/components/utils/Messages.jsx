@@ -31,7 +31,7 @@ const messagePropTypes = {
   styles: PropTypes.object,
   btn: PropTypes.bool,
   loadingTextAnimation: PropTypes.bool,
-  clearInputs: PropTypes.func,
+  clearInputs: PropTypes.bool,
 };
 
 const ErrorMessage = (props) => {
