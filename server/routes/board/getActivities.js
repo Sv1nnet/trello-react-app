@@ -17,7 +17,7 @@ const getActivities = (req, res) => {
 
       return res.status(200).send({ message: 'Activities found', activities });
     } catch (e) {
-      res.status(400).send({ err: 'Could not find activities' });
+      return res.status(400).send({ err: 'Could not find activities' });
     }
   });
 };

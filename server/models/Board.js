@@ -183,12 +183,13 @@ BoardSchema.methods.removeActivities = async function removeActivities(sourceId)
  */
 BoardSchema.methods.getActivities = async function getActivities(start = 0, number = 10) {
   const board = this;
-  number = number || 10;
-  start = start || 0;
+  number = +number || 10;
+  start = +start || 0;
+
   try {
     return await Promise.all(board.activities
       .reverse()
-      .slice(start, start + number)
+      .slice(0, start + number)
       .map(async act => ({
         _id: act._id.toHexString(),
         author: await act.getAuthorName(),

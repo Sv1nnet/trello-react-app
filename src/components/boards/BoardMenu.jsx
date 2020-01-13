@@ -9,6 +9,7 @@ import boardActions from '../../actions/boardActions';
 
 
 const BoardMenu = ({ token, board, getActivities }) => {
+  const [activityCount, setActivityCount] = useState(10);
   const [status, setStatus] = useState({
     loading: false,
     success: { // for success resquest
@@ -57,6 +58,8 @@ const BoardMenu = ({ token, board, getActivities }) => {
             statusCode: null,
           },
         }));
+
+        setActivityCount(board.activities.length);
       })
       .catch((err) => {
         handleError(err);
@@ -86,7 +89,7 @@ const BoardMenu = ({ token, board, getActivities }) => {
 
       <span className="d-block w-100 text-center">Activity</span>
       <ul className="activity-list-container list-group">
-        {board.activities.map(activity => <li key={activity._id} className="list-group-item">{activity.message} at {activity.date}</li>)}
+        {board.activities.slice(0, activityCount).map(activity => <li key={activity._id} className="list-group-item">{activity.message} at {activity.date}</li>)}
       </ul>
 
       <div className="position-relative load-activities-btn-container mb-1">
