@@ -3,7 +3,7 @@
 /* eslint-disable no-restricted-syntax */
 const mongoose = require('mongoose');
 const { ColumnSchema } = require('./Column');
-const { CardSchema } = require('./Card');
+const { CardSchema, Card } = require('./Card');
 const { ActivitySchema, Activity } = require('./Activity');
 const { MarkSchema } = require('./Mark');
 
@@ -89,7 +89,7 @@ BoardSchema.methods.updateColumn = async function addColumn(columnId, dataToUpda
   columnToUpdate.update(dataToUpdate);
 };
 
-BoardSchema.methods.deleteColumn = function deleteColumn(columnId) {
+BoardSchema.methods.deleteColumn = async function deleteColumn(columnId) {
   const board = this;
 
   const columnToDelete = board.columns.id(columnId);
@@ -101,14 +101,15 @@ BoardSchema.methods.deleteColumn = function deleteColumn(columnId) {
     return 0;
   }).map((column, i) => { column.position = i; return column; });
 
-  board.cards.forEach((card, i) => {
+  board.cards.forEach(async (card, i) => {
     if (card.column.toHexString() === columnId) {
-      board.cards.id(card._id.toHexString()).remove();
+      await board.removeActivities(card._id.toHexString());
+      await Card.findByIdAndDelete(card._id.toHexString());
     }
   });
 
   board.cards = board.cards.filter(card => card.column.toHexString() !== columnId);
-  board.removeActivities(columnToDelete._id.toHexString());
+  await board.removeActivities(columnToDelete._id.toHexString());
 };
 
 BoardSchema.methods.addCard = function addCard(card) {
@@ -154,7 +155,7 @@ BoardSchema.methods.deleteCard = async function deleteCard(cardId) {
   }
 
   board.cards = newCards;
-  board.removeActivities(cardToDelete._id.toHexString());
+  await board.removeActivities(cardToDelete._id.toHexString());
 };
 
 BoardSchema.methods.addActivity = async function addActivity(activity) {
