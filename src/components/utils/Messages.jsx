@@ -4,8 +4,12 @@ import '../../styles/messages.sass';
 
 
 const messageContainerPropTypes = {
-  styles: PropTypes.object,
+  styles: PropTypes.shape({}),
   containerBorder: PropTypes.string.isRequired,
+};
+
+const messageContainerDefaultProps = {
+  styles: {},
 };
 
 const MessageContainer = (props) => {
@@ -23,15 +27,24 @@ const MessageContainer = (props) => {
 };
 
 MessageContainer.propTypes = messageContainerPropTypes;
+MessageContainer.defaultProps = messageContainerDefaultProps;
 
 
 const messagePropTypes = {
   message: PropTypes.string.isRequired,
   closeMessage: PropTypes.func,
-  styles: PropTypes.object,
+  styles: PropTypes.shape({}),
   btn: PropTypes.bool,
   loadingTextAnimation: PropTypes.bool,
   clearInputs: PropTypes.bool,
+};
+
+const messageDefaultProps = {
+  closeMessage: () => {},
+  styles: {},
+  btn: false,
+  loadingTextAnimation: false,
+  clearInputs: false,
 };
 
 const ErrorMessage = (props) => {
@@ -54,6 +67,7 @@ const ErrorMessage = (props) => {
 };
 
 ErrorMessage.propTypes = messagePropTypes;
+ErrorMessage.defaultProps = messageDefaultProps;
 
 
 const InfoMessage = (props) => {
@@ -76,6 +90,7 @@ const InfoMessage = (props) => {
 };
 
 InfoMessage.propTypes = messagePropTypes;
+InfoMessage.defaultProps = messageDefaultProps;
 
 
 const SuccessMessage = (props) => {
@@ -98,6 +113,7 @@ const SuccessMessage = (props) => {
 };
 
 SuccessMessage.propTypes = messagePropTypes;
+SuccessMessage.defaultProps = messageDefaultProps;
 
 
 export default { ErrorMessage, InfoMessage, SuccessMessage };

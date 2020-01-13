@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Loader from '../utils/Loader';
@@ -6,6 +6,23 @@ import Messages from '../utils/Messages';
 import '../../styles/boardMenu.sass';
 import BoardDescriptionForm from '../forms/boardForms/BoardDescriptionForm';
 import boardActions from '../../actions/boardActions';
+
+
+const propTypes = {
+  token: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  board: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    activities: PropTypes.arrayOf({
+      _id: PropTypes.string.isRequired,
+      author: PropTypes.string.isRequired,
+      message: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  getActivities: PropTypes.func.isRequired,
+};
 
 
 const BoardMenu = ({ token, board, getActivities }) => {
@@ -120,9 +137,7 @@ const mapDispatchToProps = dispatch => ({
   getActivities: (token, boardId, data) => dispatch(boardActions.getActivities(token, boardId, data)),
 });
 
-BoardMenu.propTypes = {
-
-};
+BoardMenu.propTypes = propTypes;
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(BoardMenu);
