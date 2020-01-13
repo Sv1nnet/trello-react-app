@@ -68,7 +68,7 @@ const getBoard = (token, id) => (dispatch) => {
 const updateBoard = (token, id, data) => (dispatch) => {
   return api.board.updateBoard(token, id, data)
     .then((res) => {
-      dispatch({ type: userActionTypes.BOARD_TITLE_UPDATED, data: res.data });
+      if (data.title) dispatch({ type: userActionTypes.BOARD_TITLE_UPDATED, data: res.data });
       dispatch({ type: boardActionTypes.BOARD_UPDATED, data: res.data });
       return res;
     })
@@ -82,10 +82,27 @@ const updateBoard = (token, id, data) => (dispatch) => {
     });
 };
 
+const getActivities = (token, id, data) => (dispatch) => {
+  return api.board.getActivities(token, id, data)
+    .then((res) => {
+      dispatch({ type: boardActionTypes.ACTIVITIES_LOADED, data: res.data });
+      return res;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: boardActionTypes.ACTIVITIES_LOADING_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
+
 export {
   createBoard,
   loadAllBoards,
   getBoard,
   updateBoard,
   clearBoardData,
+  getActivities,
 };

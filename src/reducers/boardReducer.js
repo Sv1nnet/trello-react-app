@@ -234,6 +234,14 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         activities: data.activities,
         cards: data.cards,
       };
+    case boardActionTypes.ACTIVITIES_LOADED:
+      data = { ...action.data };
+
+      return {
+        ...state,
+        activities: data.activities,
+      };
+    case boardActionTypes.ACTIVITIES_LOADING_FAILED:
     case columnActionTypes.COLUMN_POSITIONS_UPDATE_FAILED:
     case cardActionTypes.CARD_POSITIONS_UPDATE_FAILED:
     case boardActionTypes.BOARD_UPDATE_FAILED:

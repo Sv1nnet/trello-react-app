@@ -6,6 +6,7 @@ const getUserBoards = require('./board/getUserBoards');
 const getBoardById = require('./board/getBoardById');
 const updateBoardSetting = require('./board/updateBoardSetting');
 const createBoard = require('./board/createBoard');
+const getActivities = require('./board/getActivities');
 
 // Members
 const findUsers = require('./members/findUsers');
@@ -33,6 +34,7 @@ router.get('/all', getUserBoards);
 router.get('/:id', getBoardById);
 router.post('/:id', updateBoardSetting);
 router.post('/', createBoard);
+router.get('/:id/get_activities', getActivities);
 
 // Members routes
 router.get('/find_users/:email', findUsers);

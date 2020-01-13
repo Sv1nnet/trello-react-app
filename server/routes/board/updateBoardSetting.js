@@ -18,7 +18,7 @@ const updateBoardSetting = (req, res) => {
         const isOwner = board.owner.toHexString() === decoded._id;
 
         if (!isOwner) {
-          res.status(400).send({ err: 'Only board owner can change board settings and title ' });
+          res.status(400).send({ err: 'Only board owner can change board settings and content' });
         } else {
           try {
             board.updateBoard(req.body);

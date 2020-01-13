@@ -10,7 +10,6 @@ const updateColumn = (req, res) => {
   const boardId = req.params.id;
   const { columnId } = req.params;
   const { dataToUpdate } = req.body;
-  console.log(req.body);
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {

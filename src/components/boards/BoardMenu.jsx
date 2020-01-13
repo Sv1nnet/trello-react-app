@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import TextInput from '../utils/TextInput';
 import Loader from '../utils/Loader';
+import Messages from '../utils/Messages';
 import '../../styles/boardMenu.sass';
+import BoardDescriptionForm from '../forms/boardForms/BoardDescriptionForm';
+import boardActions from '../../actions/boardActions';
 
 
-const BoardMenu = (props) => {
-  const { board } = props;
-  const [boardDescription, setBoardDescription] = useState(board.description);
+const BoardMenu = ({ token, board, getActivities }) => {
   const [status, setStatus] = useState({
     loading: false,
     success: { // for success resquest
@@ -20,12 +20,20 @@ const BoardMenu = (props) => {
       statusCode: null,
     },
   });
-  const interval = useRef(null);
 
-  const onChange = (e) => {
-    const { target } = e;
-
-    setBoardDescription(target.value);
+  const handleError = (err) => {
+    setStatus(prevStatus => ({
+      ...prevStatus,
+      loading: false,
+      success: {
+        message: null,
+        statusCode: null,
+      },
+      err: {
+        message: err.message,
+        statusCode: err.status,
+      },
+    }));
   };
 
   const loadActivities = (e) => {
@@ -34,43 +42,66 @@ const BoardMenu = (props) => {
       loading: true,
     }));
 
-    interval.current = setTimeout(() => {
-      setStatus(prevStatus => ({
-        ...prevStatus,
-        loading: false,
-      }));
-    }, 3000);
+    const data = { start: board.activities.length };
+    return getActivities(token.token, board._id, data)
+      .then((res) => {
+        setStatus(prevStatus => ({
+          ...prevStatus,
+          loading: false,
+          success: {
+            message: res.data.message,
+            statusCode: res.status,
+          },
+          err: {
+            message: '',
+            statusCode: null,
+          },
+        }));
+      })
+      .catch((err) => {
+        handleError(err);
+      });
   };
 
-  useEffect(() => () => {
-    clearInterval(interval.current);
-  }, []);
+  const closeMessage = () => {
+    setStatus(prevStatus => ({
+      ...prevStatus,
+      loading: false,
+      success: {
+        message: null,
+        statusCode: null,
+      },
+      err: {
+        message: null,
+        statusCode: null,
+      },
+    }));
+  };
 
   return (
     <div className="w-100 overflow-hidden">
+      {status.err.message && <Messages.ErrorMessage message={status.err.message} closeMessage={closeMessage} btn />}
       <span className="popup-title">Menu</span>
-      <TextInput
-        hideSearchBtn
-        hideCrossBtn
-        inputType="textarea"
-        placeholder="Add a description to this board"
-        maxLength="250"
-        classList="text-input px-1"
-        name="board-description"
-        inputValue={boardDescription}
-        onChange={onChange}
-      />
+      <BoardDescriptionForm setStatus={setStatus} handleError={handleError} />
 
       <span className="d-block w-100 text-center">Activity</span>
-      <ul className="activity-list-container">
-        {board.activities.map(activity => <li key={activity._id}>{activity.message} at {activity.date}</li>)}
+      <ul className="activity-list-container list-group">
+        {board.activities.map(activity => <li key={activity._id} className="list-group-item">{activity.message} at {activity.date}</li>)}
       </ul>
 
-      <div style={{ position: 'relative', height: '30px' }}>
+      <div className="position-relative load-activities-btn-container mb-1">
         {
           status.loading
-            ? <Loader.FormLoader style={{ transform: 'scale(0.7)' }} />
-            : <button style={{ display: 'block', margin: '0 auto' }} type="button" onClick={loadActivities}>Load more activities</button>
+            ? <Loader.FormLoader />
+            : (
+              <button
+                className="load-activities-btn btn btn-outline-dark btn-sm d-block mx-auto"
+                type="button"
+                onClick={loadActivities}
+              >
+                Load more activities
+              </button>
+            )
         }
       </div>
     </div>
@@ -78,7 +109,12 @@ const BoardMenu = (props) => {
 };
 
 const mapStateToProps = state => ({
+  token: state.user.token,
   board: state.board,
+});
+
+const mapDispatchToProps = dispatch => ({
+  getActivities: (token, boardId, data) => dispatch(boardActions.getActivities(token, boardId, data)),
 });
 
 BoardMenu.propTypes = {
@@ -86,4 +122,4 @@ BoardMenu.propTypes = {
 };
 
 
-export default connect(mapStateToProps)(BoardMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(BoardMenu);

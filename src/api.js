@@ -94,6 +94,10 @@ const api = {
       setAuthHeaders(token);
       return axios.post(`${ip}/board/${boardId}/update_card_positions`, data);
     },
+    getActivities: (token, boardId, data) => {
+      setAuthHeaders(token);
+      return axios.get(`${ip}/board/${boardId}/get_activities?start=${data.start}`);
+    },
   },
 };
 

@@ -1,5 +1,14 @@
 
-.text-input
+@import '_vars.sass'
+  
+.activity-list-container
+  max-height: calc(100vh - 270px)
+  overflow: auto
+  .list-group-item
+    background-color: $popup-background-light
+    font-size: 0.9rem
+  
+.board-menu-text-input
   margin: 0.25rem 0.4rem
   width: calc(100% - (0.4rem * 2))
   background-color: transparent
@@ -8,3 +17,6 @@
   &:focus
     background-color: white
     border: 1px solid black
+.load-activities-btn-container
+  min-height: 31px
+  margin-top: 0.75rem

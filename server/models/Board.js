@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 const mongoose = require('mongoose');
@@ -180,8 +181,10 @@ BoardSchema.methods.removeActivities = async function removeActivities(sourceId)
  * @param {number} start position in array starting from which we want to get activities
  * @return {Array} array of activities
  */
-BoardSchema.methods.getActivities = async function getActivities(number = 10, start = 0) {
+BoardSchema.methods.getActivities = async function getActivities(start = 0, number = 10) {
   const board = this;
+  number = number || 10;
+  start = start || 0;
   try {
     return await Promise.all(board.activities
       .reverse()
