@@ -14,12 +14,12 @@ const propTypes = {
   }).isRequired,
   board: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    activities: PropTypes.arrayOf({
+    activities: PropTypes.arrayOf(PropTypes.shape({
       _id: PropTypes.string.isRequired,
       author: PropTypes.string.isRequired,
       message: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,
-    }).isRequired,
+    })).isRequired,
   }).isRequired,
   getActivities: PropTypes.func.isRequired,
 };
@@ -106,7 +106,13 @@ const BoardMenu = ({ token, board, getActivities }) => {
 
       <span className="d-block w-100 text-center">Activity</span>
       <ul className="activity-list-container list-group">
-        {board.activities.slice(0, activityCount).map(activity => <li key={activity._id} className="list-group-item">{activity.message} at {activity.date}</li>)}
+        {board.activities.slice(0, activityCount).map((activity) => {
+          const todayStr = new Date().toLocaleDateString();
+          const activityDate = new Date(activity.date);
+          const activityDateStr = activityDate.toLocaleDateString();
+
+          return <li key={activity._id} className="list-group-item">{activity.message} at {todayStr === activityDateStr ? activityDate.toLocaleTimeString() : activityDateStr}</li>;
+        })}
       </ul>
 
       <div className="position-relative load-activities-btn-container mb-1">

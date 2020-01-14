@@ -101,7 +101,7 @@ BoardSchema.methods.deleteColumn = async function deleteColumn(columnId) {
     return 0;
   }).map((column, i) => { column.position = i; return column; });
 
-  // Delete cards that were in deleted column and activities associated with them
+  // Delete cards and activities associated with them that were in deleted column
   board.cards.forEach(async (card, i) => {
     if (card.column.toHexString() === columnId) {
       await board.removeActivities(card._id.toHexString());
