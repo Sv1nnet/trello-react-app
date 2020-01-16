@@ -70,7 +70,6 @@ const updateCardPositions = (req, res) => {
             activityData[1],
           );
 
-          // eslint-disable-next-line prefer-destructuring
           savedBoard = result.updatedBoard;
         }
 

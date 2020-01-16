@@ -41,7 +41,7 @@ const BoardDescriptionForm = ({ token, board, updateBoard, handleError }) => {
   };
 
   const onBlur = (e) => {
-    onSubmit(e);
+    if (e.target.value !== board.description) onSubmit(e);
   };
 
   const onKeyPress = (e) => {
