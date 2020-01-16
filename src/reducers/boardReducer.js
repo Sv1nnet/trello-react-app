@@ -59,6 +59,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         isReadOnly: data.isReadOnly,
         columns,
         cashedColumns: columns,
+        timeOfLastChange: null,
       };
     case columnActionTypes.COLUMN_DELETED:
     case columnActionTypes.COLUMN_UPDATED:
@@ -150,12 +151,14 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
 
       return {
         ...state,
+        timeOfLastChange: data.timeOfChange,
         columns,
       };
     case cardActionTypes.CARD_POSITIONS_SWITCHED:
       cards = [...action.data.cards];
       return {
         ...state,
+        timeOfLastChange: data.timeOfChange,
         cards,
       };
     case boardActionTypes.BOARD_MEMBER_ADDED:
@@ -204,6 +207,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         isReadOnly: data.board.isReadOnly,
         columns,
         cashedColumns: columns,
+        timeOfLastChange: null,
       };
     case boardActionTypes.BOARD_MEMBERS_RECEIVED:
       data = { ...action.data };
@@ -240,6 +244,11 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
       return {
         ...state,
         activities: data.activities,
+      };
+    case boardActionTypes.CLEAN_ACTIVITIES:
+      return {
+        ...state,
+        activities: state.activities.slice(0, 10),
       };
     case boardActionTypes.ACTIVITIES_LOADING_FAILED:
     case columnActionTypes.COLUMN_POSITIONS_UPDATE_FAILED:

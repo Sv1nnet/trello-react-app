@@ -5,6 +5,7 @@ import {
   updateBoard,
   clearBoardData,
   getActivities,
+  cleanActivities,
 } from './board/boardActions';
 import {
   createColumn,
@@ -42,4 +43,5 @@ export default {
   switchCardPositions,
   clearBoardData,
   getActivities,
+  cleanActivities,
 };

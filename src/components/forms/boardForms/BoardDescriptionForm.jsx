@@ -58,7 +58,7 @@ const BoardDescriptionForm = ({ token, board, updateBoard, handleError }) => {
         hideCrossBtn
         inputType="textarea"
         placeholder="Add a description to this board"
-        maxLength="250"
+        maxLength="320"
         classList="board-menu-text-input px-1"
         name="board-description"
         inputValue={boardDescription}

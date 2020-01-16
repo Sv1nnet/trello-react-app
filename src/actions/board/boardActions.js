@@ -98,6 +98,8 @@ const getActivities = (token, id, data) => (dispatch) => {
     });
 };
 
+const cleanActivities = () => dispatch => dispatch({ type: boardActionTypes.CLEAN_ACTIVITIES, data: null });
+
 export {
   createBoard,
   loadAllBoards,
@@ -105,4 +107,5 @@ export {
   updateBoard,
   clearBoardData,
   getActivities,
+  cleanActivities,
 };

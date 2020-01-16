@@ -4,7 +4,7 @@ const { Board } = require('../../models/Board');
 const updateColumnPositions = (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const boardId = req.params.id;
-  const { columns } = req.body;
+  const { columns, timeOfChange } = req.body;
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
@@ -34,8 +34,9 @@ const updateColumnPositions = (req, res) => {
           console.log('Could not save board with a new column positions', err);
           return Promise.reject(new Error('Could not save the board with a new column positions'));
         });
+        const activities = await savedBoard.getActivities();
 
-        return res.status(200).send(savedBoard);
+        return res.status(200).send({ ...savedBoard._doc, timeOfLastChange: timeOfChange, activities });
       }
 
       res.status(400).send({ err: 'Only board owner can change column positions' });

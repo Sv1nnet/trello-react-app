@@ -38,7 +38,9 @@ const updateCardPositions = (req, res) => {
           return Promise.reject(new Error('Could not save the board with a new card positions'));
         });
 
-        return res.status(200).send({ ...savedBoard._doc, timeOfChange });
+        const activities = await savedBoard.getActivities();
+
+        return res.status(200).send({ ...savedBoard._doc, timeOfLastChange: timeOfChange, activities });
       }
 
       res.status(400).send({ err: 'Only board owner can change card positions' });

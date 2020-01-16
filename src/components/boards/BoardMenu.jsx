@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Loader from '../utils/Loader';
@@ -25,8 +25,8 @@ const propTypes = {
 };
 
 
-const BoardMenu = ({ token, board, getActivities }) => {
-  const [activityCount, setActivityCount] = useState(10);
+const BoardMenu = ({ token, board, getActivities, cleanActivities }) => {
+  const [activityCount, setActivityCount] = useState(10); // activityCount is a start index for requesting activities from activities array on the server
   const [status, setStatus] = useState({
     loading: false,
     success: { // for success resquest
@@ -76,7 +76,7 @@ const BoardMenu = ({ token, board, getActivities }) => {
           },
         }));
 
-        setActivityCount(board.activities.length);
+        setActivityCount(res.data.activities.length);
       })
       .catch((err) => {
         handleError(err);
@@ -98,26 +98,30 @@ const BoardMenu = ({ token, board, getActivities }) => {
     }));
   };
 
+  useEffect(() => () => {
+    cleanActivities();
+  }, []);
+
   return (
-    <div className="w-100 overflow-hidden">
+    <div className="w-100 overflow-hidden board-menu-container">
       {status.err.message && <Messages.ErrorMessage message={status.err.message} closeMessage={closeMessage} btn />}
       <span className="popup-title">Menu</span>
       <BoardDescriptionForm setStatus={setStatus} handleError={handleError} />
 
-      <span className="d-block w-100 text-center">Activity</span>
-      <ul className="activity-list-container list-group">
-        {board.activities.slice(0, activityCount).map((activity) => {
-          const todayStr = new Date().toLocaleDateString();
-          const activityDate = new Date(activity.date);
-          const activityDateStr = activityDate.toLocaleDateString();
+      <div className="activity-container">
+        <span className="d-block w-100 text-center pb-1">Activity</span>
+        <ul className="activity-list-container list-group">
+          {board.activities.slice(0, activityCount).map((activity) => {
+            const todayStr = new Date().toLocaleDateString();
+            const activityDate = new Date(activity.date);
+            const activityDateStr = activityDate.toLocaleDateString();
 
-          return <li key={activity._id} className="list-group-item">{activity.message} at {todayStr === activityDateStr ? activityDate.toLocaleTimeString() : activityDateStr}</li>;
-        })}
-      </ul>
+            return <li key={activity._id} className="list-group-item">{activity.message} at {todayStr === activityDateStr ? activityDate.toLocaleTimeString() : activityDateStr}</li>;
+          })}
+        </ul>
 
-      <div className="position-relative load-activities-btn-container mb-1">
-        {
-          status.loading
+        <div className="position-relative load-activities-btn-container mb-1">
+          {status.loading
             ? <Loader.FormLoader />
             : (
               <button
@@ -127,9 +131,10 @@ const BoardMenu = ({ token, board, getActivities }) => {
               >
                 Load more activities
               </button>
-            )
-        }
+            )}
+        </div>
       </div>
+
     </div>
   );
 };
@@ -141,6 +146,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getActivities: (token, boardId, data) => dispatch(boardActions.getActivities(token, boardId, data)),
+  cleanActivities: () => dispatch(boardActions.cleanActivities()),
 });
 
 BoardMenu.propTypes = propTypes;
