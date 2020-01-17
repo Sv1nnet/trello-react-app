@@ -17,6 +17,7 @@ import '../../styles/popupContainer.sass';
 const propTypes = {
   classesToNotClosePopup: PropTypes.arrayOf(PropTypes.string),
   extraClasses: PropTypes.arrayOf(PropTypes.string),
+  style: PropTypes.shape({}),
   popupToClose: PropTypes.string,
   closeBtn: PropTypes.bool,
 };
@@ -80,12 +81,12 @@ class PopupContainer extends Component {
 
   render() {
     const { state, props, containerElement } = this;
-    const { children, extraClasses, closeBtn } = props;
+    const { children, extraClasses, closeBtn, style } = props;
 
     if (state.shouldCloseItself) return null;
 
     return (
-      <div ref={containerElement} className={`dropdown-menu ${extraClasses ? extraClasses.join(' ') : ''} active`}>
+      <div ref={containerElement} style={{ ...style }} className={`dropdown-menu ${extraClasses ? extraClasses.join(' ') : ''} active`}>
         <div className="container-fluid">
 
           {closeBtn && <FontAwesomeIcon onClick={this.closeSelf} className="popup-close-btn" icon={faTimes} />}
