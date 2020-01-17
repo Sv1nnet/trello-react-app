@@ -1,84 +1,70 @@
-import React, { useRef } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
 import PropTypes from 'prop-types';
-import Draggable from '../utils/dragdrop/Draggable';
-import boardActions from '../../actions/boardActions';
-import '../../styles/cardItem.sass';
 
 
 const propTypes = {
-  index: PropTypes.number.isRequired,
-  token: PropTypes.shape({
-    token: PropTypes.string.isRequired,
-  }).isRequired,
-  board: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-  }).isRequired,
-  cardData: PropTypes.shape({
-    cardId: PropTypes.string.isRequired,
-    cardTitle: PropTypes.string.isRequired,
-  }).isRequired,
-  columnId: PropTypes.string.isRequired,
+  dragProvided: PropTypes.shape({
+    dragHandleProps: PropTypes.shape({
+      ref: PropTypes.shape({
+        current: PropTypes.instanceOf(Element),
+      }).isRequired,
+      onMouseDown: PropTypes.func.isRequired,
+    }).isRequired,
+    draggableProps: PropTypes.shape({
+      onMouseEnter: PropTypes.func.isRequired,
+      key: PropTypes.string.isRequired,
+      'data-draggable-id': PropTypes.string.isRequired,
+      'data-draggable-index': PropTypes.number.isRequired,
+      'data-draggable-direction': PropTypes.string.isRequired,
+      'data-draggable-type': PropTypes.string,
+    }).isRequired,
+    innerRef: PropTypes.shape({
+      current: PropTypes.instanceOf(Element),
+    }).isRequired,
+  }),
+  deleteCard: PropTypes.func,
+  editingTargetRef: PropTypes.shape({
+    current: PropTypes.instanceOf(Element),
+  }),
+  cardTitle: PropTypes.string.isRequired,
+};
+
+const defaultProps = {
+  dragProvided: null,
+  deleteCard: null,
+  editingTargetRef: null,
 };
 
 
-const Card = (props) => {
-  const {
-    index,
-    token,
-    board,
-    cardData,
-    columnId,
-  } = props;
-
-  const { cardId, cardTitle } = cardData;
-
-  const editingTargetRef = useRef(null);
-
-  const deleteCard = (e) => {
-    if (e.nativeEvent.shiftKey) {
-      props.deleteCard(token.token, board._id, cardId)
-        .then(() => {
-
-        });
-    }
-  };
-
-  return (
-    <Draggable containerId={columnId} draggableId={cardId} index={index} direction="vertical" type="card">
-      {dragProvided => (
-        <div {...dragProvided.draggableProps} ref={dragProvided.innerRef} className="card-drag-area drag-target">
-          <div tabIndex="0" role="button" onKeyPress={deleteCard} onClick={deleteCard} {...dragProvided.dragHandleProps} className="card-item d-flex px-2 flex-wrap align-items-center drag-source">
-            <div ref={editingTargetRef} className="h-100 w-100">
-              <div className="title w-100">
-                <span>{cardTitle}</span>
-              </div>
-            </div>
-          </div>
+// We need ot separate card's body and its container because in search popup we shows cards withour draggable functionality
+const Card = ({ dragProvided, deleteCard, editingTargetRef, cardTitle }) => {
+  const dragHandleProps = dragProvided ? dragProvided.dragHandleProps : {};
+  const cardBody = (
+    <div tabIndex="0" role="button" onKeyPress={deleteCard} onClick={deleteCard} {...dragHandleProps} className="card-item d-flex px-2 flex-wrap align-items-center drag-source">
+      <div ref={editingTargetRef} className="h-100 w-100">
+        <div className="title w-100">
+          <span>{cardTitle}</span>
         </div>
-      )}
-    </Draggable>
+      </div>
+    </div>
   );
+
+  return dragProvided
+    ? (
+      <div {...dragProvided.draggableProps} ref={dragProvided.innerRef} className="card-drag-area drag-target">
+        {cardBody}
+      </div>
+    )
+    : (
+      <div className="card-drag-area">
+        {cardBody}
+      </div>
+    );
 };
 
 
 Card.propTypes = propTypes;
+Card.defaultProps = defaultProps;
 
 
-const mapDispatchToProps = dispatch => ({
-  deleteCard: (token, boardId, cardId) => dispatch(boardActions.deleteCard(token, boardId, cardId)),
-});
-
-const mapStateToProps = state => ({
-  token: state.user.token,
-  board: state.board,
-});
-
-export default React.memo(connect(mapStateToProps, mapDispatchToProps)(Card), (prevProps, nextProps) => {
-  const result = prevProps.columnId === nextProps.columnId
-    && prevProps.cardTitle === nextProps.cardTitle
-    && prevProps.cardData.cardPosition === nextProps.cardData.cardPosition
-    && prevProps.cardData.cardTitle === nextProps.cardData.cardTitle
-    && prevProps.index === nextProps.index;
-  return result;
-});
+export default Card;
