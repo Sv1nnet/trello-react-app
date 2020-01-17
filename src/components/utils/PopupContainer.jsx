@@ -22,6 +22,14 @@ const propTypes = {
   closeBtn: PropTypes.bool,
 };
 
+const defaultProps = {
+  classesToNotClosePopup: null,
+  extraClasses: null,
+  style: {},
+  popupToClose: null,
+  closeBtn: false,
+};
+
 
 class PopupContainer extends Component {
   constructor(props) {
@@ -103,6 +111,7 @@ class PopupContainer extends Component {
 
 
 PopupContainer.propTypes = propTypes;
+PopupContainer.defaultProps = defaultProps;
 
 
 export default PopupContainer;
