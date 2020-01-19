@@ -84,7 +84,7 @@ const CardDetails = (props) => {
             message: null,
           },
           success: {
-            statusCode: 200,
+            statusCode: res.status,
             message: res.data.message,
             data: res.data,
           },

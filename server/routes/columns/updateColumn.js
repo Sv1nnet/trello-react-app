@@ -51,8 +51,8 @@ const updateColumn = (req, res) => {
                 sourceId: columnId,
                 boardId: savedBoard._id.toHexString(),
                 date: new Date().toString(),
-                prevName: columnToUpdate.title,
-                newName: dataToUpdate[propToUpdate],
+                prevTitle: columnToUpdate.title,
+                newTitle: dataToUpdate[propToUpdate],
               },
             },
           );

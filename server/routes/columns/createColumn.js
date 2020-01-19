@@ -47,7 +47,7 @@ const createColumn = (req, res) => {
               sourceId: newColumn._id.toHexString(),
               boardId: savedBoard._id.toHexString(),
               date: new Date().toString(),
-              name: newColumn.title,
+              title: newColumn.title,
             },
           },
         );

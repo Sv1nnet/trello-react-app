@@ -22,9 +22,9 @@ const getBoardMessage = (author, action) => {
 const getColumnMessage = (author, action) => {
   switch (action.type) {
     case 'create':
-      return `${author} created the column ${action.data.name}`;
+      return `${author} created the column ${action.data.title}`;
     case 'rename':
-      return `${author} renamed the column ${action.data.prevName} as ${action.data.newName}`;
+      return `${author} renamed the column ${action.data.prevTitle} as ${action.data.newTitle}`;
     default:
       return null;
   }
