@@ -55,7 +55,7 @@ const createCard = (req, res) => {
 
         const activities = await updatedBoard.getActivities();
 
-        return res.status(200).send({ card: _.pick(newCard, ['_id', 'title', 'position', 'column', 'marks', 'description', 'comments']), activities });
+        return res.status(200).send({ card: _.pick(newCard, ['_id', 'title', 'position', 'column', 'labels', 'description', 'comments']), activities });
       }
 
       res.status(400).send({ err: 'Only board owner can add new cards' });

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const MarkSchema = new Schema({
+const LabelSchema = new Schema({
   color: {
     type: String,
     required: true,
@@ -12,9 +12,9 @@ const MarkSchema = new Schema({
   },
 });
 
-const Mark = mongoose.model('marks', MarkSchema);
+const Label = mongoose.model('labels', LabelSchema);
 
 module.exports = {
-  MarkSchema,
-  Mark,
+  LabelSchema,
+  Label,
 };

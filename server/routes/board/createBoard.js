@@ -47,7 +47,7 @@ const createBoard = (req, res) => {
                 }],
                 isPrivate: board.isPrivate,
                 isReadOnly: board.isReadOnly,
-                marks: board.marks,
+                labels: board.labels,
                 boards: board.boards,
                 columns: board.columns,
                 cards: board.cards,

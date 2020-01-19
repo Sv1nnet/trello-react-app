@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 const mongoose = require('mongoose');
-const { MarkSchema } = require('./Mark');
+const { LabelSchema } = require('./Label');
 const { CardCommentSchema } = require('./CardComment');
 
 const { Schema } = mongoose;
@@ -19,7 +19,7 @@ const CardSchema = new Schema({
     type: Number,
     required: true,
   },
-  marks: [MarkSchema],
+  labels: [LabelSchema],
   description: {
     type: String,
   },

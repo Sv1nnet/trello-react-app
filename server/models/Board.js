@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const { ColumnSchema } = require('./Column');
 const { CardSchema, Card } = require('./Card');
 const { ActivitySchema, Activity } = require('./Activity');
-const { MarkSchema } = require('./Mark');
+const { LabelSchema } = require('./Label');
 
 const { Schema } = mongoose;
 
@@ -27,7 +27,7 @@ const BoardSchema = new Schema({
     required: true,
   },
   cards: [CardSchema],
-  marks: [MarkSchema],
+  labels: [LabelSchema],
   chat: {
     type: Schema.Types.ObjectId,
     // required: true,
