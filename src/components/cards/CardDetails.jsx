@@ -8,6 +8,8 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import TextInput from '../utils/TextInput';
 import PopupContainer from '../utils/PopupContainer';
 import boardAction from '../../actions/boardActions';
+import Messages from '../utils/Messages';
+import isEnterPressed from '../../utlis/isEnterPressed';
 
 
 const CardDetails = (props) => {
@@ -62,6 +64,8 @@ const CardDetails = (props) => {
   };
 
   const onBlur = (e) => {
+    if (title === cardTitle) return;
+
     const dataToUpdate = {
       title: cardTitle,
     };
@@ -106,7 +110,7 @@ const CardDetails = (props) => {
     const { target } = e;
 
     // Prevent from adding new line in card title
-    if (target.value[target.value.length - 1] && target.value[target.value.length - 1].charCodeAt(0) === 10) {
+    if (isEnterPressed(e)) {
       e.preventDefault();
       return;
     }
@@ -114,9 +118,27 @@ const CardDetails = (props) => {
     setCardTitle(target.value);
   };
 
+  const closeMessage = () => {
+    setStatus({
+      loading: false,
+      err: {
+        statusCode: null,
+        message: null,
+      },
+      success: {
+        statusCode: null,
+        message: null,
+        data: null,
+      },
+    });
+  };
+
   return (
     <>
       <div className="card-details-bg" role="button" tabIndex="0" onKeyPress={closeDetails} onClick={closeDetails} />
+
+      {status.err.message && <Messages.ErrorMessage closeMessage={closeMessage} message={status.err.message} />}
+
       <div className="card-details-container p-3">
         <FontAwesomeIcon onClick={closeDetails} className="popup-close-btn m-1" icon={faTimes} />
         <div className="card-title-container w-100">

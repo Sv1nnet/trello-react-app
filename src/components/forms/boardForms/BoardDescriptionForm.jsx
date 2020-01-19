@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import boardActions from '../../../actions/boardActions';
 import TextInput from '../../utils/TextInput';
+import isEnterPressed from '../../../utlis/isEnterPressed';
 
 
 const propTypes = {
@@ -45,7 +46,7 @@ const BoardDescriptionForm = ({ token, board, updateBoard, handleError }) => {
   };
 
   const onKeyPress = (e) => {
-    if (e.nativeEvent.shiftKey && (e.nativeEvent.charCode === 13 || e.nativeEvent.key === 'Enter')) {
+    if (e.nativeEvent.shiftKey && isEnterPressed(e)) {
       e.preventDefault();
       e.target.blur();
     }

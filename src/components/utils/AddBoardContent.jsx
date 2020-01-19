@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import hasParent from '../../utlis/hasParent';
 import TextInput from './TextInput';
+import isEnterPressed from '../../utlis/isEnterPressed';
 
 
 const proptTypes = {
@@ -93,7 +94,7 @@ const AddBoardContent = (props) => {
     const { target } = e;
 
     // Prevent from adding new line in card title
-    if (target.value[target.value.length - 1] && target.value[target.value.length - 1].charCodeAt(0) === 10) {
+    if (isEnterPressed(e)) {
       e.preventDefault();
       return;
     }
@@ -112,7 +113,7 @@ const AddBoardContent = (props) => {
   };
 
   const onKeyUp = (e) => {
-    if (e.nativeEvent.charCode === 13 || e.nativeEvent.key === 'Enter') {
+    if (isEnterPressed(e)) {
       addContent(e, addContentState.contentTitle)
         .then(() => {
           closeAddContentInput(null, true);
