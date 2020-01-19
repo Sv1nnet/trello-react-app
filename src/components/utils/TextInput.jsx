@@ -49,11 +49,11 @@ class TextInput extends Component {
 
   componentDidMount() {
     const { props, inputElement } = this;
-    const { inputType, focusAfterActivated, selectOnMounted } = props;
+    const { inputType, focusAfterActivated, selectOnMounted, verticalPadding } = props;
 
     // set new size of textarea to fit its content
     if (inputType === 'textarea') {
-      resizeTextarea(inputElement);
+      resizeTextarea(inputElement, verticalPadding);
     }
 
     if (focusAfterActivated) this.inputElement.current.focus();
@@ -61,12 +61,12 @@ class TextInput extends Component {
   }
 
   componentDidUpdate() {
-    const { inputType } = this.props;
+    const { inputType, verticalPadding } = this.props;
     const { inputElement } = this;
 
     // set new size of textarea to fit its content
     if (inputType === 'textarea') {
-      resizeTextarea(inputElement);
+      resizeTextarea(inputElement, verticalPadding);
     }
   }
 

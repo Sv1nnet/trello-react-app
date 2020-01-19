@@ -69,8 +69,31 @@ const switchCardPositions = (token, boardId, newCards) => (dispatch, getState) =
   return updateCardPositions(token, boardId, { cards, timeOfChange })(dispatch);
 };
 
+const updateCard = (token, boardId, cardId, dataToUpdate) => (dispatch, getState) => {
+  const data = {
+    dataToUpdate,
+  };
+
+  if (dataToUpdate.title === '') return Promise.reject(new Error('Title can not be blank'));
+
+  return api.board.updateCard(token, boardId, cardId, data)
+    .then((res) => {
+      dispatch({ type: cardActionTypes.CARD_UPDATED, data: res.data });
+      return res;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: cardActionTypes.CARD_UPDATE_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
+
 export {
   createCard,
   deleteCard,
   switchCardPositions,
+  updateCard,
 };

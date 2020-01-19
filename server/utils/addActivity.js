@@ -7,7 +7,7 @@ const { Board } = require('../models/Board');
  * These are data you need to pass with data in action:
  * 1) for board actions: addMember, removeMember - "name" is a name of the member; title, isPrivate, isReadonly - new properies of the board;
  * 2) for column actions: create - "name" is a name of the column; title - "prevName" is previous a name of the column and "newName" is a new name of the column;
- * 3) for card actions: create, description - "name" is a name of the card; title - "prevName" and "newName" are card names; moved - "cardName" is a card name, "prevName" is the source column's name, "newName" is the target column's name; addComment - "comment" comment's body, "name" - card name;
+ * 3) for card actions: create, description - "title" is a title of the card; title - "prevTitle" and "newTitle" are card titles; moved - "cardTitle" is a card title, "prevTitle" is the source column's title, "newTitle" is the target column's name; addComment - "comment" comment's body, "title" - card title;
  * @param {string} source where action accured: board, column, card
  * @param {Object} action action with type of activity and its data
  * @param {string} action.type type of action

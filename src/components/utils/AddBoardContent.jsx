@@ -89,7 +89,7 @@ const AddBoardContent = (props) => {
     });
   };
 
-  const handleChange = (e) => {
+  const onChange = (e) => {
     const { target } = e;
 
     // Prevent from adding new line in card title
@@ -104,14 +104,14 @@ const AddBoardContent = (props) => {
     });
   };
 
-  const handleAddContent = (e) => {
+  const onAddContent = (e) => {
     addContent(e, addContentState.contentTitle)
       .then(() => {
         closeAddContentInput(null, true);
       });
   };
 
-  const handleKeyUp = (e) => {
+  const onKeyUp = (e) => {
     if (e.nativeEvent.charCode === 13 || e.nativeEvent.key === 'Enter') {
       addContent(e, addContentState.contentTitle)
         .then(() => {
@@ -134,12 +134,13 @@ const AddBoardContent = (props) => {
                 type="text"
                 inputType={textInputType || 'input'}
                 maxLength="128"
+                verticalPadding={2}
                 name={textInputName}
                 id={textInputId}
                 classList={`w-100 ${textInputClass}`}
                 placeholder={textInputPlaceholder}
-                onChange={handleChange}
-                onKeyUp={handleKeyUp}
+                onChange={onChange}
+                onKeyUp={onKeyUp}
                 onCrossBtnClick={clearInput}
                 inputValue={addContentState.contentTitle}
                 focusAfterActivated
@@ -149,7 +150,7 @@ const AddBoardContent = (props) => {
               />
 
               <div className="buttons-container">
-                <button onClick={handleAddContent} type="button" className={`bg-success text-white ${addBtnClass}`}>{addBtnTitle}</button>
+                <button onClick={onAddContent} type="button" className={`bg-success text-white ${addBtnClass}`}>{addBtnTitle}</button>
                 <button onClick={(e) => { closeAddContentInput(e, true); }} type="button" className="close-input-btn">
                   <FontAwesomeIcon className="add-icon" icon={faTimes} />
                 </button>

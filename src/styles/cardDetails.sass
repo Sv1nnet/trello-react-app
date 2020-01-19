@@ -1,0 +1,42 @@
+@import './vars.sass'
+  
+.card-details-bg
+  position: absolute
+  height: 100%
+  width: 100%
+  background-color: rgba(0, 0, 0, .5)
+  top: 0
+  left: 0
+
+.card-details-container
+  position: absolute
+  width: 768px
+  background-color: $popup-background-light
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+
+  .card-details-title-input
+    width: calc(100% - 30px)
+    background-color: transparent
+    border: transparent 1px solid
+    resize: none
+    padding:
+      left: 4px
+      right: 5px
+      top: 3px
+      bottom: 3px
+    line-height: 20px
+    &:focus
+      border: black 1px solid
+      background-color: white
+  .column-title
+    padding-left: 5px
+    a
+      position: relative
+      color: black
+      text-decoration: underline
+  .card-details-move-card-popup
+    width: 300px
+    &.active
+      display: block

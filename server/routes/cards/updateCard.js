@@ -1,14 +1,15 @@
-/* eslint-disable no-underscore-dangle */
 const jwt = require('jsonwebtoken');
 
 const { Board } = require('../../models/Board');
+const { Card } = require('../../models/Card');
 
 const addActivity = require('../../utils/addActivity');
 
-const updateCardPositions = (req, res) => {
+const updateCard = (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const boardId = req.params.id;
-  const { cards, timeOfChange } = req.body;
+  const { cardId } = req.params;
+  const { dataToUpdate } = req.body;
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
@@ -27,37 +28,47 @@ const updateCardPositions = (req, res) => {
       const isMember = isOwner || board.members.find(member => member._id.toHexString() === decoded._id);
 
       if (isOwner || (isMember && !board.isReadOnly)) {
-        cards.forEach(async (card) => {
-          const dataToUpdate = {
-            position: card.position,
-            column: card.column,
-          };
+        const cardToUpdate = await Card.findById(cardId);
 
-          const currentCard = board.cards.find(cardOnBoard => cardOnBoard._id.toHexString() === card._id);
-
-          if (currentCard.column.toHexString() !== card.column) {
-            const prevColumn = board.columns.find(column => column._id.toHexString() === currentCard.column.toHexString());
-            const newColumn = board.columns.find(column => column._id.toHexString() === card.column);
-
-            activityData = [
-              'card',
-              {
-                type: 'moved',
-                data: {
-                  boardId,
-                  sourceId: card._id,
-                  authorId: decoded._id,
-                  date: new Date(),
-                  cardTitle: card.title,
-                  prevTitle: prevColumn.title,
-                  newTitle: newColumn.title,
+        for (const prop in dataToUpdate) {
+          switch (prop) {
+            case 'title':
+              activityData = [
+                'card',
+                {
+                  type: 'title',
+                  data: {
+                    boardId,
+                    sourceId: cardId,
+                    authorId: decoded._id,
+                    date: new Date(),
+                    prevTitle: cardToUpdate.title,
+                    newTitle: dataToUpdate[prop],
+                  },
                 },
-              },
-            ];
+              ];
+              break;
+            case 'description':
+              activityData = [
+                'card',
+                {
+                  type: 'description',
+                  data: {
+                    boardId,
+                    sourceId: cardId,
+                    authorId: decoded._id,
+                    date: new Date(),
+                    title: cardToUpdate.title,
+                  },
+                },
+              ];
+              break;
+            default:
+              break;
           }
 
-          board.updateCard(card._id, dataToUpdate);
-        });
+          board.updateCard(cardId, dataToUpdate);
+        }
 
         let savedBoard = await board.save().catch((err) => {
           console.log('Could not save board with a new card positions', err);
@@ -75,7 +86,7 @@ const updateCardPositions = (req, res) => {
 
         const activities = await savedBoard.getActivities();
 
-        return res.status(200).send({ ...savedBoard._doc, timeOfLastChange: timeOfChange, activities });
+        return res.status(200).send({ ...savedBoard._doc, activities });
       }
 
       res.status(400).send({ err: 'Only board owner can change card positions' });
@@ -86,4 +97,4 @@ const updateCardPositions = (req, res) => {
   });
 };
 
-module.exports = updateCardPositions;
+module.exports = updateCard;

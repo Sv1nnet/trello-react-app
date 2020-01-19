@@ -17,6 +17,7 @@ import {
   createCard,
   deleteCard,
   switchCardPositions,
+  updateCard,
 } from './board/cardActions';
 import {
   getMembers,
@@ -40,6 +41,7 @@ export default {
   switchColumnPositions,
   createCard,
   deleteCard,
+  updateCard,
   switchCardPositions,
   clearBoardData,
   getActivities,

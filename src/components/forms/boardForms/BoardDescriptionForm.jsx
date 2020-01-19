@@ -59,6 +59,7 @@ const BoardDescriptionForm = ({ token, board, updateBoard, handleError }) => {
         inputType="textarea"
         placeholder="Add a description to this board"
         maxLength="320"
+        varticalPadding={2}
         classList="board-menu-text-input px-1"
         name="board-description"
         inputValue={boardDescription}

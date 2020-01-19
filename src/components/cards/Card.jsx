@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 
@@ -39,15 +39,25 @@ const defaultProps = {
 // We need ot separate card's body and its container because in search popup we shows cards withour draggable functionality
 const Card = ({ dragProvided, deleteCard, editingTargetRef, cardTitle }) => {
   const dragHandleProps = dragProvided ? dragProvided.dragHandleProps : {};
+  const titleRef = useRef(null);
   const cardBody = (
     <div tabIndex="0" role="button" onKeyPress={deleteCard} onClick={deleteCard} {...dragHandleProps} className="card-item d-flex px-2 flex-wrap align-items-center drag-source">
       <div ref={editingTargetRef} className="h-100 w-100">
-        <div className="title w-100">
+        <div ref={titleRef} className="title">
           <span>{cardTitle}</span>
         </div>
       </div>
     </div>
   );
+
+  useEffect(() => {
+    // In Safari, for some reason, cards don't fill column width. But if we change width by class or inline style it fits correctly
+    // We need to use setTimeout, cuz changes apllying just in useEffect don't work out.
+    // TODO: find out why that daesn't work withour setTimeout
+    if (window.navigator.vendor.indexOf('Apple') !== -1) {
+      setTimeout(() => titleRef.current.classList.add('w-100'), 0);
+    }
+  }, []);
 
   return dragProvided
     ? (

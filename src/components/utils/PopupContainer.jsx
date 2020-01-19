@@ -89,7 +89,7 @@ class PopupContainer extends Component {
 
   render() {
     const { state, props, containerElement } = this;
-    const { children, extraClasses, closeBtn, style } = props;
+    const { children, extraClasses, closeBtnExtraClasses, closeBtn, style } = props;
 
     if (state.shouldCloseItself) return null;
 
@@ -97,7 +97,7 @@ class PopupContainer extends Component {
       <div ref={containerElement} style={{ ...style }} className={`dropdown-menu ${extraClasses ? extraClasses.join(' ') : ''} active`}>
         <div className="container-fluid">
 
-          {closeBtn && <FontAwesomeIcon onClick={this.closeSelf} className="popup-close-btn" icon={faTimes} />}
+          {closeBtn && <FontAwesomeIcon onClick={this.closeSelf} className={`popup-close-btn ${closeBtnExtraClasses ? closeBtnExtraClasses.join(' ') : ''}`} icon={faTimes} />}
 
           <div className="row">
             {children}

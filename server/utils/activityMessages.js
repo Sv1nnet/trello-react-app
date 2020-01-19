@@ -33,15 +33,15 @@ const getColumnMessage = (author, action) => {
 const getCardMessage = (author, action) => {
   switch (action.type) {
     case 'create':
-      return `${author} created the card ${action.data.name}`;
+      return `${author} created the card ${action.data.title}`;
     case 'title':
-      return `${author} renamed the card ${action.data.prevName} as ${action.data.newName}`;
+      return `${author} renamed the card ${action.data.prevTitle} as ${action.data.newTitle}`;
     case 'moved':
-      return `${author} moved the card ${action.data.cardName} from ${action.data.prevName} column to ${action.data.newName} one`;
+      return `${author} moved the card ${action.data.cardTitle} from ${action.data.prevTitle} column to ${action.data.newTitle} one`;
     case 'desciption':
-      return `${author} updated a description for the card ${action.data.name}`;
+      return `${author} updated a description for the card ${action.data.title}`;
     case 'addComment':
-      return `${author} added a comment ${action.data.comment} for the card ${action.data.name}`;
+      return `${author} added a comment ${action.data.comment} for the card ${action.data.title}`;
     default:
       return null;
   }

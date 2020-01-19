@@ -47,7 +47,7 @@ const createCard = (req, res) => {
               sourceId: newCard._id.toHexString(),
               boardId: savedBoard._id.toHexString(),
               date: new Date().toString(),
-              name: card.title,
+              title: card.title,
             },
           },
         );

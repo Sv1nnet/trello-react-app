@@ -23,6 +23,7 @@ const updateColumnPositions = require('./columns/updateColumnPositions');
 // Cards
 const createCard = require('./cards/createCard');
 const deleteCard = require('./cards/deleteCard');
+const updateCard = require('./cards/updateCard');
 const updateCardPositions = require('./cards/updateCardPositions');
 
 const { parseError } = require('../utils/parseError');
@@ -51,6 +52,7 @@ router.post('/:id/update_column_positions', updateColumnPositions);
 // Card routes
 router.post('/:id/create_card', createCard);
 router.post('/:id/delete_card/:cardId', deleteCard);
+router.post('/:id/update_card/:cardId', updateCard);
 router.post('/:id/update_card_positions', updateCardPositions);
 
 module.exports = {
