@@ -36,7 +36,8 @@ const messagePropTypes = {
   styles: PropTypes.shape({}),
   btn: PropTypes.bool,
   loadingTextAnimation: PropTypes.bool,
-  clearInputs: PropTypes.bool,
+  // eslint-disable-next-line react/forbid-prop-types
+  dataForClosingMessage: PropTypes.any,
 };
 
 const messageDefaultProps = {
@@ -44,7 +45,7 @@ const messageDefaultProps = {
   styles: {},
   btn: true,
   loadingTextAnimation: false,
-  clearInputs: false,
+  dataForClosingMessage: undefined,
 };
 
 const ErrorMessage = (props) => {
@@ -54,14 +55,14 @@ const ErrorMessage = (props) => {
     styles,
     btn,
     loadingTextAnimation,
-    clearInputs,
+    dataForClosingMessage,
   } = props;
   const animationClassName = loadingTextAnimation ? 'loading-text' : '';
   return (
     <MessageContainer style={styles} containerBorder="message-error">
       <h4 className="bg-danger">Error</h4>
       <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
-      {btn !== false && <button onClick={() => closeMessage(clearInputs)} onKeyPress={() => closeMessage(clearInputs)} type="button" className="btn btn-danger bg-danger my-3">OK</button>}
+      {btn !== false && <button onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-danger bg-danger my-3">OK</button>}
     </MessageContainer>
   );
 };
@@ -77,14 +78,14 @@ const InfoMessage = (props) => {
     styles,
     btn,
     loadingTextAnimation,
-    clearInputs,
+    dataForClosingMessage,
   } = props;
   const animationClassName = loadingTextAnimation ? 'loading-text' : '';
   return (
     <MessageContainer style={styles} containerBorder="message-info">
       <h4 className="bg-primary">Info</h4>
       <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
-      {btn !== false && <button onClick={() => closeMessage(clearInputs)} onKeyPress={() => closeMessage(clearInputs)} type="button" className="btn btn-primary bg-primary my-3">OK</button>}
+      {btn !== false && <button onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-primary bg-primary my-3">OK</button>}
     </MessageContainer>
   );
 };
@@ -100,14 +101,14 @@ const SuccessMessage = (props) => {
     styles,
     btn,
     loadingTextAnimation,
-    clearInputs,
+    dataForClosingMessage,
   } = props;
   const animationClassName = loadingTextAnimation ? 'loading-text' : '';
   return (
     <MessageContainer style={styles} containerBorder="message-success">
       <h4 className="bg-success">Success</h4>
       <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
-      {btn !== false && <button onClick={() => closeMessage(clearInputs)} onKeyPress={() => closeMessage(clearInputs)} type="button" className="btn btn-success bg-success my-3">OK</button>}
+      {btn !== false && <button onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-success bg-success my-3">OK</button>}
     </MessageContainer>
   );
 };
