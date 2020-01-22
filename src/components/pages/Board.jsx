@@ -197,68 +197,65 @@ class Board extends Component {
     if (state.status.err.message) return <Messages.ErrorMessage message={state.status.err.message} closeMessage={closeMessage} />;
 
     return (
-      <>
-        <div className="board-container position-relative">
-          <div className="board-controls-container d-flex flex-wrap align-items-center">
+      <div className="board-container position-relative">
+        <div className="board-controls-container d-flex flex-wrap align-items-center">
 
-            <div className="board-control-item board-control-item-title">
-              <button onClick={handlePopupBtnClick} data-popup-type="isRenamePopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-title ${state.popup.isRenamePopupActive ? 'active' : ''}`}>{title}</button>
-            </div>
-
-            <div className="d-flex flex-wrap align-items-center board-control-item board-control-item-title board-control-access-item">
-              <span className="board-control-item-divider" />
-              <button onClick={handlePopupBtnClick} data-popup-type="isReadonlyPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isReadonlyPopupActive ? 'active' : ''}`}>{isReadOnly ? 'Readonly' : 'Editable'}</button>
-              <span className="board-control-item-divider" />
-              <button onClick={handlePopupBtnClick} data-popup-type="isPrivatePopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access  ${state.popup.isPrivatePopupActive ? 'active' : ''}`}>{isPrivate ? 'Private' : 'Public'}</button>
-              <span className="board-control-item-divider" />
-            </div>
-
-            <div className="d-flex flex-wrap align-items-center board-control-item board-control-item-title">
-              <button onClick={handlePopupBtnClick} data-popup-type="isMembersPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isMembersPopupActive ? 'active' : ''}`}>Members</button>
-            </div>
-
-            <div className="d-flex flex-wrap align-items-center ml-auto board-control-item board-control-item-title">
-              <button onClick={handlePopupBtnClick} data-popup-type="isMenuPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isMenuPopupActive ? 'active' : ''}`}>Menu</button>
-            </div>
-
-
-            {state.popup.isRenamePopupActive && (
-              <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown']}>
-                <RenameBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isRenamePopupActive'); }} boardTitle={title} />
-              </PopupContainer>
-            )}
-
-            {state.popup.isReadonlyPopupActive && (
-              <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-readonly']}>
-                <ReadonlyAccessBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isReadonlyPopupActive'); }} isReadOnly={isReadOnly} />
-              </PopupContainer>
-            )}
-
-            {state.popup.isPrivatePopupActive && (
-              <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-private']}>
-                <PublicAccessBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isPrivatePopupActive'); }} isPrivate={isPrivate} />
-              </PopupContainer>
-            )}
-
-            {state.popup.isMembersPopupActive && (
-              <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
-                <MembersForm updateMembers={this.updateMembers} members={members} boardId={_id} ownerId={owner} />
-              </PopupContainer>
-            )}
-
-            {state.popup.isMenuPopupActive && (
-              <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-board-menu']}>
-                <BoardMenu closePopup={(e) => { handlePopupBtnClick(e, 'isMenuPopupActive'); }} />
-              </PopupContainer>
-            )}
+          <div className="board-control-item board-control-item-title">
+            <button onClick={handlePopupBtnClick} data-popup-type="isRenamePopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-title ${state.popup.isRenamePopupActive ? 'active' : ''}`}>{title}</button>
           </div>
 
-          <ColumnListContextProvider>
-            <ColumnList />
-          </ColumnListContextProvider>
+          <div className="d-flex flex-wrap align-items-center board-control-item board-control-item-title board-control-access-item">
+            <span className="board-control-item-divider" />
+            <button onClick={handlePopupBtnClick} data-popup-type="isReadonlyPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isReadonlyPopupActive ? 'active' : ''}`}>{isReadOnly ? 'Readonly' : 'Editable'}</button>
+            <span className="board-control-item-divider" />
+            <button onClick={handlePopupBtnClick} data-popup-type="isPrivatePopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access  ${state.popup.isPrivatePopupActive ? 'active' : ''}`}>{isPrivate ? 'Private' : 'Public'}</button>
+            <span className="board-control-item-divider" />
+          </div>
+
+          <div className="d-flex flex-wrap align-items-center board-control-item board-control-item-title">
+            <button onClick={handlePopupBtnClick} data-popup-type="isMembersPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isMembersPopupActive ? 'active' : ''}`}>Members</button>
+          </div>
+
+          <div className="d-flex flex-wrap align-items-center ml-auto board-control-item board-control-item-title">
+            <button onClick={handlePopupBtnClick} data-popup-type="isMenuPopupActive" type="button" className={`board-control-button bg-transparent text-white border-0 nav-button board-access ${state.popup.isMenuPopupActive ? 'active' : ''}`}>Menu</button>
+          </div>
+
+
+          {state.popup.isRenamePopupActive && (
+            <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown']}>
+              <RenameBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isRenamePopupActive'); }} boardTitle={title} />
+            </PopupContainer>
+          )}
+
+          {state.popup.isReadonlyPopupActive && (
+            <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-readonly']}>
+              <ReadonlyAccessBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isReadonlyPopupActive'); }} isReadOnly={isReadOnly} />
+            </PopupContainer>
+          )}
+
+          {state.popup.isPrivatePopupActive && (
+            <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-private']}>
+              <PublicAccessBoardForm closePopup={(e) => { handlePopupBtnClick(e, 'isPrivatePopupActive'); }} isPrivate={isPrivate} />
+            </PopupContainer>
+          )}
+
+          {state.popup.isMembersPopupActive && (
+            <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-members']}>
+              <MembersForm updateMembers={this.updateMembers} members={members} boardId={_id} ownerId={owner} />
+            </PopupContainer>
+          )}
+
+          {state.popup.isMenuPopupActive && (
+            <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-board-menu']}>
+              <BoardMenu closePopup={(e) => { handlePopupBtnClick(e, 'isMenuPopupActive'); }} />
+            </PopupContainer>
+          )}
         </div>
-        {state.status.err.message && <Messages.ErrorMessage message={state.status.err.message} closeMessage={closeMessage} />}
-      </>
+
+        <ColumnListContextProvider>
+          <ColumnList />
+        </ColumnListContextProvider>
+      </div>
     );
   }
 }
