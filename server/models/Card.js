@@ -22,6 +22,7 @@ const CardSchema = new Schema({
   labels: [LabelSchema],
   description: {
     type: String,
+    default: '',
   },
   comments: [CardCommentSchema],
 });
