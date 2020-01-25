@@ -8,7 +8,7 @@ const initialState = {
   history: [],
   description: '',
   private: undefined,
-  marks: [],
+  labels: [],
   chat: '',
   cards: [],
   members: [],

@@ -98,6 +98,12 @@ class TextInput extends Component {
     if (onKeyPress) onKeyPress(e);
   }
 
+  onKeyDown = (e) => {
+    const { onKeyDown } = this.props;
+
+    if (onKeyDown) onKeyDown(e);
+  }
+
   onKeyUp = (e) => {
     const { onKeyUp } = this.props;
 
@@ -138,6 +144,7 @@ class TextInput extends Component {
       onBlur,
       onKeyUp,
       onKeyPress,
+      onKeyDown,
     } = this;
 
     const inputProps = {
@@ -145,6 +152,7 @@ class TextInput extends Component {
       onFocus,
       onBlur,
       onKeyPress,
+      onKeyDown,
       onKeyUp,
       ref: inputElement,
       style: { color: textColor },

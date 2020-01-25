@@ -26,7 +26,7 @@ const propTypes = {
   editingTargetRef: PropTypes.shape({
     current: PropTypes.instanceOf(Element),
   }),
-  cardTitle: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -37,14 +37,14 @@ const defaultProps = {
 
 
 // We need ot separate card's body and its container because in search popup we shows cards withour draggable functionality
-const Card = ({ dragProvided, deleteCard, editingTargetRef, cardTitle }) => {
+const Card = ({ dragProvided, deleteCard, editingTargetRef, title }) => {
   const dragHandleProps = dragProvided ? dragProvided.dragHandleProps : {};
   const titleRef = useRef(null);
   const cardBody = (
     <div tabIndex="0" role="button" onKeyPress={deleteCard} onClick={deleteCard} {...dragHandleProps} className="card-item d-flex px-2 flex-wrap align-items-center drag-source">
       <div ref={editingTargetRef} className="h-100 w-100">
         <div ref={titleRef} className="title">
-          <span>{cardTitle}</span>
+          <span>{title}</span>
         </div>
       </div>
     </div>

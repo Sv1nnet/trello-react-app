@@ -325,8 +325,8 @@ class AuthFormHolder extends Component {
         {/* If user did not managed to login because he did confirm his email show info message */}
         {/* If operation seccessed (err have to not have a statusCode) show success message */}
         {err.message && <Messages.ErrorMessage message={err.message} closeMessage={closeMessage} />}
-        {err.statusCode === 200 && <Messages.InfoMessage message={success.message} closeMessage={closeMessage} clearInputs />}
-        {success.statusCode === 200 && !err.statusCode && <Messages.SuccessMessage message={success.message} closeMessage={closeMessage} clearInputs />}
+        {err.statusCode === 200 && <Messages.InfoMessage message={success.message} closeMessage={closeMessage} dataForClosingMessage />}
+        {success.statusCode === 200 && !err.statusCode && <Messages.SuccessMessage message={success.message} closeMessage={closeMessage} dataForClosingMessage />}
 
         {loading && <Loader.FormLoader bg />}
       </>

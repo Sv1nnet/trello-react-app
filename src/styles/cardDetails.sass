@@ -1,22 +1,20 @@
 @import './vars.sass'
   
-.card-details-bg
+.card-details-wrap
   position: absolute
-  height: 100%
-  width: 100%
+  overflow: scroll
   background-color: rgba(0, 0, 0, .5)
   top: 0
   left: 0
 
 .card-details-container
-  position: absolute
+  position: relative
+  z-index: 1001
+  margin: 50px auto
   width: 768px
   background-color: $popup-background-light
-  top: 50%
-  left: 50%
-  transform: translate(-50%, -50%)
 
-  .card-details-title-input
+  .card-details__title-input
     width: calc(100% - 30px)
     background-color: transparent
     border: transparent 1px solid
@@ -36,7 +34,44 @@
       position: relative
       color: black
       text-decoration: underline
-  .card-details-move-card-popup
+  .card-details__move-card-popup
     width: 300px
+    &.active
+      display: block
+.card-details__labels-wrap
+  margin-top: 15px
+  padding-left: 5px
+  .card-details__labels-container
+    display: flex
+    flex-wrap: wrap
+    .add-label-btn-icon
+      display: flex
+      align-items: center
+      justify-content: center
+      height: 35px
+      width: 35px
+      line-height: 1
+      align-self: baseline
+      &:hover
+        background-color: lightgrey
+        color: inherit
+.card-details__description-wrap
+  margin-top: 15px
+  padding-left: 5px
+  .card-details__description-input-container
+    .card-details__description-input
+      border: none
+      background-color: darken($popup-background-light, 10)
+      line-height: 1.2
+      padding:
+        left: 0.7rem
+        right: 0.7rem
+      &:focus
+        background-color: white
+
+  .card-details__description-buttons-container
+    display: none
+    padding:
+      top: .5em
     &.active
       display: block

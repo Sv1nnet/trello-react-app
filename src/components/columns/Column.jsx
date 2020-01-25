@@ -27,7 +27,7 @@ const propTypes = {
       _id: PropTypes.string.isRequired,
       column: PropTypes.string.isRequired,
       comments: PropTypes.array.isRequired,
-      marks: PropTypes.array.isRequired,
+      labels: PropTypes.array.isRequired,
       position: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
     })),
@@ -188,9 +188,12 @@ const Column = (props) => {
                 key={card._id}
                 index={index}
                 cardData={{
-                  cardId: card._id,
-                  cardPosition: card.position,
-                  cardTitle: card.title,
+                  id: card._id,
+                  position: card.position,
+                  title: card.title,
+                  description: card.description,
+                  labels: card.labels,
+                  comments: card.comments,
                 }}
                 columnId={card.column}
                 columnTitle={listTitle}
