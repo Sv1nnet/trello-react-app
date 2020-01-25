@@ -38,7 +38,7 @@ const getCardMessage = (author, action) => {
       return `${author} renamed the card ${action.data.prevTitle} as ${action.data.newTitle}`;
     case 'moved':
       return `${author} moved the card ${action.data.cardTitle} from ${action.data.prevTitle} column to ${action.data.newTitle} one`;
-    case 'desciption':
+    case 'description':
       return `${author} updated a description for the card ${action.data.title}`;
     case 'addComment':
       return `${author} added a comment ${action.data.comment} for the card ${action.data.title}`;
