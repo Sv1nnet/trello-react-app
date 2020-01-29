@@ -54,6 +54,7 @@ const CardTitle = (props) => {
         onKeyDown={discardChangesOnEscapePressed(setCardTitle, title)}
         onKeyPress={blurOnShiftAndEnterPressed}
         onBlur={onTitleBlur}
+        verticalPadding={2}
         classList="card-details__title-input font-weight-bold"
       />
       <div className="column-title">

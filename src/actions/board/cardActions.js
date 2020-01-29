@@ -2,6 +2,7 @@
 import { cardActionTypes } from '../../types';
 import api from '../../api';
 import createErrorResponseObject from '../../utlis/createErrorResponseObject';
+import Axios from 'axios';
 
 const createCard = (token, boardId, card) => (dispatch) => {
   const cardData = {
@@ -91,9 +92,67 @@ const updateCard = (token, boardId, cardId, dataToUpdate) => (dispatch, getState
     });
 };
 
+const addCardComment = (token, cardId, comment) => (dispatch) => {
+  const data = {
+    comment,
+  };
+
+  return api.board.addCardComment(token, cardId, data)
+    .then((res) => {
+      dispatch({ type: cardActionTypes.CARD_COMMENT_ADDED, data: res.data });
+      return res;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: cardActionTypes.CARD_COMMENT_ADD_FALIED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
+
+const updateCardComment = (token, cardId, commentId, dataToUpdate) => (dispatch) => {
+  const data = {
+    dataToUpdate,
+  };
+
+  return api.board.updateCardComment(token, cardId, commentId, data)
+    .then((res) => {
+      dispatch({ type: cardActionTypes.CARD_COMMENT_UPDATED, data: res.data });
+      return res;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: cardActionTypes.CARD_UPDATE_FAILED,
+          data: createErrorResponseObject(err),
+        }),
+      );
+    });
+};
+const deleteCardComment = (token, cardId, commentId) => (dispatch) => {
+  return api.board.deleteCardComment(token, cardId, commentId)
+    .then((res) => {
+      dispatch({ type: cardActionTypes.CARD_COMMENT_DELETED, data: res.data });
+      return res;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: cardActionTypes.CARD_COMMENT_DELETE_FALIED,
+          data: createErrorResponseObject(err),
+        }),
+      );
+    });
+};
+
 export {
   createCard,
   deleteCard,
   switchCardPositions,
   updateCard,
+  addCardComment,
+  updateCardComment,
+  deleteCardComment,
 };

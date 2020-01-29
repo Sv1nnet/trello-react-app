@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import '../../styles/label.sass';
+import '../../../../styles/label.sass';
 
 
 const propTypes = {

@@ -44,7 +44,7 @@
   .card-details__labels-container
     display: flex
     flex-wrap: wrap
-    .add-label-btn-icon
+    .add-label-btn
       display: flex
       align-items: center
       justify-content: center
@@ -52,8 +52,12 @@
       width: 35px
       line-height: 1
       align-self: baseline
+      border: none
+      background: lightgrey
+      &:focus
+        box-shadow: none
       &:hover
-        background-color: lightgrey
+        background-color: lighten(grey, 25)
         color: inherit
 .card-details__description-wrap
   margin-top: 15px
@@ -75,3 +79,26 @@
       top: .5em
     &.active
       display: block
+    > button
+      padding: 0.17em 0.5em
+      border: none
+      &.close-input-btn
+        background-color: $popup-background-light
+        margin-left: 12px
+        .close-icon
+          transform: scale(1.2)
+
+.card-details__comments-wrap
+  margin-top: 15px
+  padding-left: 5px
+  .card-details__comment-input
+    padding: 0.5rem 0.7rem
+  .card-details__comment-button-container
+    display: none
+    padding:
+      top: .5em
+    &.active
+      display: block
+    > button
+      padding: 0.17em 0.5em
+      border: none

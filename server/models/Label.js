@@ -12,6 +12,14 @@ const LabelSchema = new Schema({
   },
 });
 
+LabelSchema.methods.update = function update(data) {
+  const label = this;
+
+  for (const key in data) {
+    label[key] = data[key];
+  }
+};
+
 const Label = mongoose.model('labels', LabelSchema);
 
 module.exports = {

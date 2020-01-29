@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -7,8 +7,13 @@ import TextInput from '../../../utils/TextInput';
 
 const CardDescription = ({ description, handleUpdateRequest, discardChangesOnEscapePressed, blurOnShiftAndEnterPressed }) => {
   const [cardDescription, setCardDescription] = useState(description);
+  const [buttonsActive, setButtonsActive] = useState(false);
+
+  const inputRef = useRef(null);
 
   const onDescriptionBlur = (e) => {
+    setButtonsActive(false);
+
     if (description === e.target.value) return;
 
     const dataToUpdate = {
@@ -23,6 +28,18 @@ const CardDescription = ({ description, handleUpdateRequest, discardChangesOnEsc
     setCardDescription(target.value);
   };
 
+  const onFocus = () => {
+    setButtonsActive(true);
+  };
+
+  const discardDescriptionChanges = (e) => {
+    e.preventDefault();
+
+    setCardDescription(description);
+    inputRef.current.value = description;
+    inputRef.current.blur();
+  };
+
   return (
     <div className="card-details__description-wrap">
       <span className="font-weight-bold">DESCRIPTION</span>
@@ -33,7 +50,9 @@ const CardDescription = ({ description, handleUpdateRequest, discardChangesOnEsc
           hideCrossBtn
           inputType="textarea"
           name="card-description"
+          innerRef={inputRef}
           inputValue={cardDescription}
+          onFocus={onFocus}
           onChange={onDescriptionChange}
           onKeyDown={discardChangesOnEscapePressed(setCardDescription, description)}
           onKeyPress={blurOnShiftAndEnterPressed}
@@ -41,10 +60,10 @@ const CardDescription = ({ description, handleUpdateRequest, discardChangesOnEsc
           classList="w-100 py-2 card-details__description-input"
           placeholder="Add a more detailed description..."
         />
-        <div className="card-details__description-buttons-container active">
-          <button onClick={() => { }} type="button" className="bg-success text-white">Add</button>
-          <button onClick={() => { }} type="button" className="close-input-btn">
-            <FontAwesomeIcon className="add-icon" icon={faTimes} />
+        <div className={`card-details__description-buttons-container ${buttonsActive ? 'active' : ''}`}>
+          <button onClick={() => { inputRef.current.blur(); }} type="button" className="bg-success text-white">Add</button>
+          <button onMouseDown={discardDescriptionChanges} type="button" className="close-input-btn">
+            <FontAwesomeIcon className="close-icon" icon={faTimes} />
           </button>
         </div>
       </div>

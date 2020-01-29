@@ -35,6 +35,18 @@ CardSchema.methods.update = function update(data) {
   }
 };
 
+CardSchema.methods.addComment = function addComment(comment) {
+  const card = this;
+
+  card.comments.push(comment);
+};
+
+CardSchema.methods.deleteComment = function deleteComment(commentId) {
+  const card = this;
+
+  card.comments.id(commentId).remove();
+};
+
 const Card = mongoose.model('cards', CardSchema);
 
 module.exports = {

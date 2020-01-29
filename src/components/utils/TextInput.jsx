@@ -18,8 +18,15 @@ const propTypes = {
   id: PropTypes.string,
   name: PropTypes.string,
   classList: PropTypes.string,
+  containerClassList: PropTypes.string,
+  verticalPadding: PropTypes.number,
   focusAfterCleared: PropTypes.bool,
   focusAfterActivated: PropTypes.bool,
+  onSearchBtnClick: PropTypes.func,
+  selectOnMounted: PropTypes.bool,
+  innerRef: PropTypes.shape({
+    current: PropTypes.instanceOf(Element),
+  }),
 };
 
 const defaultProps = {
@@ -32,8 +39,13 @@ const defaultProps = {
   id: '',
   name: '',
   classList: '', // list of extra classes
+  containerClassList: '',
+  verticalPadding: 0,
   focusAfterCleared: false, // whether input should be in focus after it was cleaned by cross button
   focusAfterActivated: false, // whether input should be in focus after it was mounted
+  onSearchBtnClick: null,
+  selectOnMounted: false,
+  innerRef: null,
 };
 
 // Input component to input text for search or create a card, column, etc.
@@ -137,6 +149,7 @@ class TextInput extends Component {
       name,
       classList,
       maxLength,
+      innerRef,
     } = props;
 
     const {
@@ -154,7 +167,10 @@ class TextInput extends Component {
       onKeyPress,
       onKeyDown,
       onKeyUp,
-      ref: inputElement,
+      ref: (ref) => {
+        inputElement.current = ref;
+        if (innerRef) innerRef.current = ref;
+      },
       style: { color: textColor },
       type: 'text',
       className: `nav-link ${classList}`,
@@ -181,6 +197,7 @@ class TextInput extends Component {
       hideSearchBtn,
       hideCrossBtn,
       inputValue = emptyValue,
+      containerClassList,
     } = props;
 
     const {
@@ -194,7 +211,7 @@ class TextInput extends Component {
     const input = getInput();
 
     return (
-      <div className="search-input-container position-relative">
+      <div className={`search-input-container position-relative ${containerClassList}`}>
         {input}
 
         <div ref={this.crossBtn} className={`icon-container ${crossBtnActive}`}>

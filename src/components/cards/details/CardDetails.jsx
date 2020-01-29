@@ -9,11 +9,10 @@ import TextInput from '../../utils/TextInput';
 import PopupContainer from '../../utils/PopupContainer';
 import boardAction from '../../../actions/boardActions';
 import Messages from '../../utils/Messages';
-import isEnterPressed from '../../../utlis/isEnterPressed';
-import Label from '../../labels/Label';
 import CardDescription from './detailsComponents/CardDescription';
 import CardTitle from './detailsComponents/CardTitle';
 import CardLabels from './detailsComponents/CardLabels';
+import CardComments from './detailsComponents/CardComments';
 
 
 const CardDetails = (props) => {
@@ -46,6 +45,36 @@ const CardDetails = (props) => {
     },
   });
 
+  const handleSuccess = (res) => {
+    setStatus({
+      loading: false,
+      err: {
+        statusCode: null,
+        message: null,
+      },
+      success: {
+        statusCode: res.status,
+        message: res.data.message,
+        data: res.data,
+      },
+    });
+  };
+
+  const handleError = (err) => {
+    setStatus({
+      loading: false,
+      err: {
+        statusCode: err.status,
+        message: err.message,
+      },
+      success: {
+        statusCode: null,
+        message: null,
+        data: null,
+      },
+    });
+  };
+
   const handleUpdateRequest = (dataToUpdate) => {
     setStatus(prevStatus => ({
       ...prevStatus,
@@ -53,34 +82,8 @@ const CardDetails = (props) => {
     }));
 
     updateCard(token.token, board._id, id, dataToUpdate)
-      .then((res) => {
-        setStatus({
-          loading: false,
-          err: {
-            statusCode: null,
-            message: null,
-          },
-          success: {
-            statusCode: res.status,
-            message: res.data.message,
-            data: res.data,
-          },
-        });
-      })
-      .catch((err) => {
-        setStatus({
-          loading: false,
-          err: {
-            statusCode: err.status,
-            message: err.message,
-          },
-          success: {
-            statusCode: null,
-            message: null,
-            data: null,
-          },
-        });
-      });
+      .then(handleSuccess)
+      .catch(handleError);
   };
 
   const setMoveCardPopupState = (e) => {
@@ -170,6 +173,13 @@ const CardDetails = (props) => {
           description={description}
           handleUpdateRequest={handleUpdateRequest}
           discardChangesOnEscapePressed={discardChangesOnEscapePressed}
+          blurOnShiftAndEnterPressed={blurOnShiftAndEnterPressed}
+          handleSuccess={handleSuccess}
+          handleError={handleError}
+        />
+
+        <CardComments
+          comments={comments}
           blurOnShiftAndEnterPressed={blurOnShiftAndEnterPressed}
         />
       </div>

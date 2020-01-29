@@ -1,0 +1,62 @@
+@import './_vars'
+
+.card-comment-container
+  list-style: none
+  position: relative
+  margin-left: 5px
+  margin-top: 15px
+  margin-bottom: 15px
+
+.card-comment__creator
+  position: absolute
+  left: -45px
+  top: 5px
+  height: 40px
+  width: 40px
+  line-height: 40px
+  background-color: darken($popup-background-light, 15)
+  border-radius: 50%
+.comment-creator__board-owner
+  position: absolute
+  top: -22px
+  width: 100%
+  text-align: center
+  padding-left: 0
+  svg
+    path
+      fill: $owner-crown-color
+
+.card-comment__content
+  .comment-content__author, .comment-content__date
+    display: inline-block
+  .comment-content__author
+    font-weight: bold
+  .comment-content__date
+    margin-left: 10px
+    font-size: 14px
+  
+  .comment-content__comment-container
+    position: relative
+    .comment-content__current-comment, .comment-content__edit-comment
+      background-color: white
+      display: inline-block
+      border: 1px darken($popup-background-light, 20) solid
+      margin-bottom: 0px
+    .comment-content__edit-comment-container
+      top: 0
+    .comment-content__edit-comment
+      width: 100%
+    .comment-content__edit-comment.active
+      display: inline-block
+  .comment-content__edit-buttons-container
+    button
+      font-size: 12px
+      border: none
+      background-color: transparent
+      text-decoration: underline
+      line-height: 0.7
+      padding:
+        left: 0
+        right: 0
+      &:first-child
+        margin-right: 10px
