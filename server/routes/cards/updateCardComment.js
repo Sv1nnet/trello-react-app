@@ -5,7 +5,7 @@ const { Card } = require('../../models/Card');
 
 const addActivity = require('../../utils/addActivity');
 
-const updateCard = (req, res) => {
+const updateCardComment = (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const boardId = req.params.id;
   const { cardId } = req.params;
@@ -28,11 +28,7 @@ const updateCard = (req, res) => {
       const isMember = isOwner || board.members.find(member => member._id.toHexString() === decoded._id);
 
       if (isOwner || (isMember && !board.isReadOnly)) {
-        const cardToUpdate = board.cards.find(card => card._id.toHexString() === cardId)
-        // const cardToUpdate = await Card.findById(cardId);
-        // const cardToUpdate = {
-        //   title: 'test schema',
-        // };
+        const cardToUpdate = await Card.findById(cardId);
 
         for (const prop in dataToUpdate) {
           switch (prop) {
@@ -101,4 +97,4 @@ const updateCard = (req, res) => {
   });
 };
 
-module.exports = updateCard;
+module.exports = updateCardComment;

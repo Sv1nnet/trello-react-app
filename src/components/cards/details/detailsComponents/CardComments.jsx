@@ -7,9 +7,51 @@ import isEnterPressed from '../../../../utlis/isEnterPressed';
 import Comment from './Comment';
 
 
-const CardComments = ({ comments, handleSuccess, handleError, board, token, addComment }) => {
+const CardComments = ({ comments, userData, board, token, cardId, addComment }) => {
   const [cardComment, setCardComment] = useState('');
   const [buttonsActive, setButtonsActive] = useState(false);
+  const [status, setStatus] = useState({
+    loading: false,
+    err: {
+      statusCode: null,
+      message: null,
+    },
+    success: {
+      statusCode: null,
+      message: null,
+      data: null,
+    },
+  });
+
+  const handleSuccess = (res) => {
+    setStatus({
+      loading: false,
+      err: {
+        statusCode: null,
+        message: null,
+      },
+      success: {
+        statusCode: res.status,
+        message: res.data.message,
+        data: res.data,
+      },
+    });
+  };
+
+  const handleError = (err) => {
+    setStatus({
+      loading: false,
+      err: {
+        statusCode: err.status,
+        message: err.message,
+      },
+      success: {
+        statusCode: null,
+        message: null,
+        data: null,
+      },
+    });
+  };
 
   const inputRef = useRef(null);
 
@@ -22,12 +64,24 @@ const CardComments = ({ comments, handleSuccess, handleError, board, token, addC
     setCardComment(target.value);
   };
 
-  const onSubmit = (e) => {
+  const sendComment = (e) => {
     e.preventDefault();
 
-    addComment(token.token, board._id, cardComment)
+    const data = {
+      authorId: userData._id,
+      date: new Date().toUTCString(),
+      text: cardComment,
+    };
+
+    setStatus(prevStatus => ({ ...prevStatus, loading: true }));
+
+    addComment(token.token, board._id, cardId, data)
       .then(handleSuccess)
-      .then(handleError);
+      .then(() => {
+        setButtonsActive(false);
+        setCardComment('');
+      })
+      .catch(handleError);
   };
 
   const onBlur = (e) => {
@@ -39,33 +93,9 @@ const CardComments = ({ comments, handleSuccess, handleError, board, token, addC
       e.preventDefault();
       e.target.blur();
 
-      onSubmit(e);
+      sendComment(e);
     }
   };
-
-  comments = [
-    {
-      text: 'first comment',
-      author: 'Leonid Tsukanov',
-      authorId: '5e1cae04b631d54bfc0c65dc',
-      date: new Date(),
-      _id: 0,
-    },
-    {
-      text: 'second comment',
-      author: 'Evan Bash',
-      authorId: '5e1cae04b631d54bfc0c65de',
-      date: new Date('12/12/2019'),
-      _id: 1,
-    },
-    {
-      text: 'third comment',
-      author: 'Just Name',
-      authorId: '5e1cae04b631d54bfc0c65dd',
-      date: new Date('10/01/2019'),
-      _id: 2,
-    },
-  ];
 
   return (
     <div className="card-details__comments-wrap">
@@ -88,7 +118,7 @@ const CardComments = ({ comments, handleSuccess, handleError, board, token, addC
         />
 
         <div className={`card-details__comment-button-container ${buttonsActive ? 'active' : ''}`}>
-          <button onClick={onSubmit} type="button" className="bg-success text-white">Add</button>
+          <button onClick={sendComment} type="button" disabled={!cardComment.match(/\S/) || status.loading} className="bg-success text-white">Add</button>
         </div>
       </div>
 
@@ -97,7 +127,7 @@ const CardComments = ({ comments, handleSuccess, handleError, board, token, addC
           <Comment
             key={comment._id}
             text={comment.text}
-            author={comment.author}
+            author={comment.authorName}
             date={comment.date}
             isOwner={comment.authorId === board.owner}
           />
@@ -108,12 +138,13 @@ const CardComments = ({ comments, handleSuccess, handleError, board, token, addC
 };
 
 const mapStateToProps = state => ({
+  userData: state.user.userData,
   token: state.user.token,
   board: state.board,
 });
 
 const mapDispatchToProps = dispatch => ({
-  addComment: (token, boardId, comment) => dispatch(boardActions.addCardComment(token, boardId, comment)),
+  addComment: (token, boardId, cardId, comment) => dispatch(boardActions.addCardComment(token, boardId, cardId, comment)),
 });
 
 

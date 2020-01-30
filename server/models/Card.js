@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 const mongoose = require('mongoose');
 const { LabelSchema } = require('./Label');
-const { CardCommentSchema } = require('./CardComment');
+const { CardCommentSchema, CardComment } = require('./CardComment');
 
 const { Schema } = mongoose;
 
@@ -37,8 +37,14 @@ CardSchema.methods.update = function update(data) {
 
 CardSchema.methods.addComment = function addComment(comment) {
   const card = this;
+  const newComment = new CardComment({
+    authorId: mongoose.Types.ObjectId(comment.authorId),
+    text: comment.text,
+    date: comment.date,
+    authorName: comment.authorName,
+  });
 
-  card.comments.push(comment);
+  card.comments.unshift(newComment);
 };
 
 CardSchema.methods.deleteComment = function deleteComment(commentId) {

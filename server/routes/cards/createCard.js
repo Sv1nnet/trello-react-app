@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const mongoose = require('mongoose');
 
-const { Card } = require('../../models/Card');
+const { Card, CardSchema } = require('../../models/Card');
 const { Board } = require('../../models/Board');
 
 const addActivity = require('../../utils/addActivity');
@@ -27,10 +28,12 @@ const createCard = (req, res) => {
       const isMember = isOwner || board.members.find(member => member._id.toHexString() === decoded._id);
 
       if (isOwner || (isMember && !board.isReadOnly)) {
+        // const newCard = new Card({ ...card });
         const newCard = await new Card({ ...card }).save().catch((err) => {
           console.log('Could not save card', err);
           return Promise.reject(new Error('Could not create a new card'));
         });
+
         board.addCard(newCard);
 
         const savedBoard = await board.save().catch((err) => {

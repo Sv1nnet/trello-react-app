@@ -82,11 +82,12 @@
     > button
       padding: 0.17em 0.5em
       border: none
-      &.close-input-btn
-        background-color: $popup-background-light
-        margin-left: 12px
-        .close-icon
-          transform: scale(1.2)
+
+.discard-btn
+  background-color: $popup-background-light
+  margin-left: 12px
+  .close-icon
+    transform: scale(1.2)
 
 .card-details__comments-wrap
   margin-top: 15px
@@ -102,3 +103,5 @@
     > button
       padding: 0.17em 0.5em
       border: none
+      &:disabled
+        opacity: 0.4

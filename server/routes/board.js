@@ -25,6 +25,7 @@ const createCard = require('./cards/createCard');
 const deleteCard = require('./cards/deleteCard');
 const updateCard = require('./cards/updateCard');
 const updateCardPositions = require('./cards/updateCardPositions');
+const addCardComment = require('./cards/addCardComment');
 
 const { parseError } = require('../utils/parseError');
 
@@ -54,6 +55,7 @@ router.post('/:id/create_card', createCard);
 router.post('/:id/delete_card/:cardId', deleteCard);
 router.post('/:id/update_card/:cardId', updateCard);
 router.post('/:id/update_card_positions', updateCardPositions);
+router.post('/:id/add_comment/:cardId', addCardComment);
 
 module.exports = {
   boardRouter: router,

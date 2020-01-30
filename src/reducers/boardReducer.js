@@ -40,6 +40,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
   let cards = [];
   let columns = [];
   let data = {};
+  let cardIndex = 0;
 
   switch (action.type) {
     case boardActionTypes.CREATED:
@@ -228,8 +229,22 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
 
       return {
         ...state,
-        activities: [...data.activities],
+        activities: data.activities,
         cards: [...state.cards, data.card],
+      };
+    case cardActionTypes.CARD_COMMENT_ADDED:
+    case cardActionTypes.CARD_COMMENT_UPDATED:
+    case cardActionTypes.CARD_COMMENT_DELETED:
+      data = { ...action.data };
+      cards = [...state.cards];
+
+      cardIndex = cards.findIndex(card => card._id === data.card._id);
+      cards.splice(cardIndex, 1, data.card);
+
+      return {
+        ...state,
+        activities: [...data.activities],
+        cards,
       };
     case cardActionTypes.CARD_DELETED:
       data = { ...action.data };
@@ -256,6 +271,9 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
     case cardActionTypes.CARD_POSITIONS_UPDATE_FAILED:
     case boardActionTypes.BOARD_UPDATE_FAILED:
     case cardActionTypes.CARD_DELETE_FAILED:
+    case cardActionTypes.CARD_COMMENT_ADD_FALIED:
+    case cardActionTypes.CARD_COMMENT_UPDATE_FALIED:
+    case cardActionTypes.CARD_COMMENT_DELETE_FALIED:
     case columnActionTypes.COLUMN_CREATE_FAILED:
     case columnActionTypes.COLUMN_DELETE_FAILED:
       return {

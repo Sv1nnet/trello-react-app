@@ -32,12 +32,8 @@ const CardDescription = ({ description, handleUpdateRequest, discardChangesOnEsc
     setButtonsActive(true);
   };
 
-  const discardDescriptionChanges = (e) => {
-    e.preventDefault();
-
+  const discardDescriptionChanges = () => {
     setCardDescription(description);
-    inputRef.current.value = description;
-    inputRef.current.blur();
   };
 
   return (
@@ -62,7 +58,7 @@ const CardDescription = ({ description, handleUpdateRequest, discardChangesOnEsc
         />
         <div className={`card-details__description-buttons-container ${buttonsActive ? 'active' : ''}`}>
           <button onClick={() => { inputRef.current.blur(); }} type="button" className="bg-success text-white">Add</button>
-          <button onMouseDown={discardDescriptionChanges} type="button" className="close-input-btn">
+          <button onMouseDown={discardDescriptionChanges} type="button" className="discard-btn">
             <FontAwesomeIcon className="close-icon" icon={faTimes} />
           </button>
         </div>

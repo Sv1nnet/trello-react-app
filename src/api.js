@@ -98,17 +98,17 @@ const api = {
       setAuthHeaders(token);
       return axios.post(`${ip}/board/${boardId}/update_card/${cardId}`, data);
     },
-    addCardComment: (token, cardId, data) => {
+    addCardComment: (token, boardId, cardId, data) => {
       setAuthHeaders(token);
-      return axios.post(`${ip}/${cardId}/add_comment`, data);
+      return axios.post(`${ip}/board/${boardId}/add_comment/${cardId}`, data);
     },
-    updateCardComment: (token, cardId, commentId, data) => {
+    updateCardComment: (token, boardId, cardId, commentId, data) => {
       setAuthHeaders(token);
-      return axios.post(`${ip}/${cardId}/update_comment/${commentId}`, data);
+      return axios.post(`${ip}/board/${boardId}/${cardId}/update_comment/${commentId}`, data);
     },
-    deleteCardComment: (token, cardId, commentId) => {
+    deleteCardComment: (token, boardId, cardId, commentId) => {
       setAuthHeaders(token);
-      return axios.post(`${ip}/${cardId}/delete_comment/${commentId}`);
+      return axios.post(`${ip}/board/${boardId}/${cardId}/delete_comment/${commentId}`);
     },
     getActivities: (token, boardId, data) => {
       setAuthHeaders(token);

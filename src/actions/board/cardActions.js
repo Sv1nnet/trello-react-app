@@ -92,12 +92,8 @@ const updateCard = (token, boardId, cardId, dataToUpdate) => (dispatch, getState
     });
 };
 
-const addCardComment = (token, cardId, comment) => (dispatch) => {
-  const data = {
-    comment,
-  };
-
-  return api.board.addCardComment(token, cardId, data)
+const addCardComment = (token, boardId, cardId, data) => (dispatch) => {
+  return api.board.addCardComment(token, boardId, cardId, data)
     .then((res) => {
       dispatch({ type: cardActionTypes.CARD_COMMENT_ADDED, data: res.data });
       return res;
@@ -112,12 +108,12 @@ const addCardComment = (token, cardId, comment) => (dispatch) => {
     });
 };
 
-const updateCardComment = (token, cardId, commentId, dataToUpdate) => (dispatch) => {
+const updateCardComment = (token, boardId, cardId, commentId, dataToUpdate) => (dispatch) => {
   const data = {
     dataToUpdate,
   };
 
-  return api.board.updateCardComment(token, cardId, commentId, data)
+  return api.board.updateCardComment(token, boardId, cardId, commentId, data)
     .then((res) => {
       dispatch({ type: cardActionTypes.CARD_COMMENT_UPDATED, data: res.data });
       return res;
@@ -131,7 +127,7 @@ const updateCardComment = (token, cardId, commentId, dataToUpdate) => (dispatch)
       );
     });
 };
-const deleteCardComment = (token, cardId, commentId) => (dispatch) => {
+const deleteCardComment = (token, boardId, cardId, commentId) => (dispatch) => {
   return api.board.deleteCardComment(token, cardId, commentId)
     .then((res) => {
       dispatch({ type: cardActionTypes.CARD_COMMENT_DELETED, data: res.data });

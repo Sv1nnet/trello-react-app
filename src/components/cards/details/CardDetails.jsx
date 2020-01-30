@@ -179,6 +179,7 @@ const CardDetails = (props) => {
         />
 
         <CardComments
+          cardId={id}
           comments={comments}
           blurOnShiftAndEnterPressed={blurOnShiftAndEnterPressed}
         />

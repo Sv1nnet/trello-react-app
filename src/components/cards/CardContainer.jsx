@@ -104,12 +104,4 @@ const mapStateToProps = state => ({
   board: state.board,
 });
 
-export default React.memo(connect(mapStateToProps, mapDispatchToProps)(CardContainer), (prevProps, nextProps) => {
-  const result = prevProps.columnId === nextProps.columnId
-    && prevProps.title === nextProps.title
-    && prevProps.cardData.description === nextProps.cardData.description
-    && prevProps.cardData.cardPosition === nextProps.cardData.cardPosition
-    && prevProps.cardData.title === nextProps.cardData.title
-    && prevProps.index === nextProps.index;
-  return result;
-});
+export default React.memo(connect(mapStateToProps, mapDispatchToProps)(CardContainer));

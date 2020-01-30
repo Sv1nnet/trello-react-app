@@ -7,12 +7,16 @@ const CardCommentSchema = new Schema({
     type: String,
     required: true,
   },
-  author: {
+  authorId: {
     type: Schema.Types.ObjectId,
     required: true,
   },
+  authorName: {
+    type: String,
+    required: true,
+  },
   date: {
-    type: Number,
+    type: String,
     required: true,
   },
   edited: {
