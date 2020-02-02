@@ -17,11 +17,10 @@ const addCardComment = (req, res) => {
     }
 
     try {
-      let activityData;
       const board = await Board.findById(boardId)
         .catch((err) => {
           console.log('Could not find a board', err);
-          return Promise.reject(new Error('Could not change card positions'));
+          return Promise.reject(new Error('Could not add a comment'));
         });
 
       const isOwner = decoded._id === board.owner.toHexString();
@@ -32,37 +31,29 @@ const addCardComment = (req, res) => {
         const author = await User.findById(decoded._id);
         const authorName = `${author.firstName} ${author.lastName}`;
 
-        cardToUpdate.addComment({ text, date, authorId, authorName });
+        const newComment = cardToUpdate.addComment({ text, date, authorId, authorName });
 
-        activityData = [
+        let savedBoard = await board.save().catch((err) => {
+          console.log('Could not save board with a new comment', err);
+          return Promise.reject(new Error('Could not save board with a new comment'));
+        });
+
+        const result = await addActivity(
           'card',
           {
             type: 'addComment',
             data: {
               boardId,
-              sourceId: cardId,
+              sourceId: newComment._id.toHexString(),
               authorId: decoded._id,
               date: new Date(date),
               comment: text,
               title: cardToUpdate.title,
             },
           },
-        ];
+        );
 
-
-        let savedBoard = await board.save().catch((err) => {
-          console.log('Could not save board with a new coment', err);
-          return Promise.reject(new Error('Could not save board with a new coment'));
-        });
-
-        if (activityData) {
-          const result = await addActivity(
-            activityData[0],
-            activityData[1],
-          );
-
-          savedBoard = result.updatedBoard;
-        }
+        savedBoard = result.updatedBoard;
 
         const activities = await savedBoard.getActivities();
 

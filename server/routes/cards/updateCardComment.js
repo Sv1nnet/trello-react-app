@@ -1,15 +1,12 @@
 const jwt = require('jsonwebtoken');
 
 const { Board } = require('../../models/Board');
-const { Card } = require('../../models/Card');
-
-const addActivity = require('../../utils/addActivity');
 
 const updateCardComment = (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const boardId = req.params.id;
-  const { cardId } = req.params;
-  const { dataToUpdate } = req.body;
+  const { cardId, commentId } = req.params;
+  const { text } = req.body;
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
@@ -17,79 +14,31 @@ const updateCardComment = (req, res) => {
     }
 
     try {
-      let activityData;
       const board = await Board.findById(boardId)
         .catch((err) => {
           console.log('Could not find a board', err);
-          return Promise.reject(new Error('Could not change card positions'));
+          return Promise.reject(new Error('Could not update a comment'));
         });
 
       const isOwner = decoded._id === board.owner.toHexString();
       const isMember = isOwner || board.members.find(member => member._id.toHexString() === decoded._id);
 
       if (isOwner || (isMember && !board.isReadOnly)) {
-        const cardToUpdate = await Card.findById(cardId);
+        const cardToUpdate = board.cards.find(card => card._id.toHexString() === cardId);
 
-        for (const prop in dataToUpdate) {
-          switch (prop) {
-            case 'title':
-              activityData = [
-                'card',
-                {
-                  type: 'title',
-                  data: {
-                    boardId,
-                    sourceId: cardId,
-                    authorId: decoded._id,
-                    date: new Date(),
-                    prevTitle: cardToUpdate.title,
-                    newTitle: dataToUpdate[prop],
-                  },
-                },
-              ];
-              break;
-            case 'description':
-              activityData = [
-                'card',
-                {
-                  type: 'description',
-                  data: {
-                    boardId,
-                    sourceId: cardId,
-                    authorId: decoded._id,
-                    date: new Date(),
-                    title: cardToUpdate.title,
-                  },
-                },
-              ];
-              break;
-            default:
-              break;
-          }
+        cardToUpdate.updateComment({ commentId, text });
 
-          board.updateCard(cardId, dataToUpdate);
-        }
-
-        let savedBoard = await board.save().catch((err) => {
-          console.log('Could not save board with a new card positions', err);
-          return Promise.reject(new Error('Could not save the board with a new card positions'));
+        const savedBoard = await board.save().catch((err) => {
+          console.log('Could not save board with an updated comment', err);
+          return Promise.reject(new Error('Could not save board with a updated comment'));
         });
-
-        if (activityData) {
-          const result = await addActivity(
-            activityData[0],
-            activityData[1],
-          );
-
-          savedBoard = result.updatedBoard;
-        }
 
         const activities = await savedBoard.getActivities();
 
-        return res.status(200).send({ ...savedBoard._doc, activities });
+        return res.status(200).send({ card: cardToUpdate, activities });
       }
 
-      res.status(400).send({ err: 'Only board owner can change card positions' });
+      res.status(400).send({ err: 'Only board owner can edit comments' });
     } catch (e) {
       console.log('Send error response', e);
       res.status(400).send({ err: e.message });

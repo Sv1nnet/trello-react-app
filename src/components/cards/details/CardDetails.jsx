@@ -4,15 +4,14 @@ import '../../../styles/popupContainer.sass';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
-import TextInput from '../../utils/TextInput';
-import PopupContainer from '../../utils/PopupContainer';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import boardAction from '../../../actions/boardActions';
 import Messages from '../../utils/Messages';
 import CardDescription from './detailsComponents/CardDescription';
 import CardTitle from './detailsComponents/CardTitle';
 import CardLabels from './detailsComponents/CardLabels';
 import CardComments from './detailsComponents/CardComments';
+import useStatus from '../../../utlis/hooks/useStatus';
 
 
 const CardDetails = (props) => {
@@ -24,6 +23,8 @@ const CardDetails = (props) => {
     id,
     columnTitle,
     closeDetails,
+    position,
+    columnId,
     board,
     token,
     updateCard,
@@ -32,54 +33,16 @@ const CardDetails = (props) => {
   const detailsContainer = useRef(null);
 
   const [moveCardPopupIsActive, setMoveCardPopupIsActive] = useState(false);
-  const [status, setStatus] = useState({
-    loading: false,
-    err: {
-      statusCode: null,
-      message: null,
-    },
-    success: {
-      statusCode: null,
-      message: null,
-      data: null,
-    },
-  });
-
-  const handleSuccess = (res) => {
-    setStatus({
-      loading: false,
-      err: {
-        statusCode: null,
-        message: null,
-      },
-      success: {
-        statusCode: res.status,
-        message: res.data.message,
-        data: res.data,
-      },
-    });
-  };
-
-  const handleError = (err) => {
-    setStatus({
-      loading: false,
-      err: {
-        statusCode: err.status,
-        message: err.message,
-      },
-      success: {
-        statusCode: null,
-        message: null,
-        data: null,
-      },
-    });
-  };
+  const {
+    status,
+    setStatusLoading,
+    resetStatus,
+    handleSuccess,
+    handleError,
+  } = useStatus();
 
   const handleUpdateRequest = (dataToUpdate) => {
-    setStatus(prevStatus => ({
-      ...prevStatus,
-      loading: true,
-    }));
+    setStatusLoading();
 
     updateCard(token.token, board._id, id, dataToUpdate)
       .then(handleSuccess)
@@ -120,21 +83,6 @@ const CardDetails = (props) => {
     }
   };
 
-  const closeMessage = () => {
-    setStatus({
-      loading: false,
-      err: {
-        statusCode: null,
-        message: null,
-      },
-      success: {
-        statusCode: null,
-        message: null,
-        data: null,
-      },
-    });
-  };
-
   const onBgClick = (e) => {
     if (e.target === detailsContainer.current) closeDetails(e);
   };
@@ -149,14 +97,16 @@ const CardDetails = (props) => {
       onKeyPress={onBgClick}
     >
 
-      {status.err.message && <Messages.ErrorMessage closeMessage={closeMessage} message={status.err.message} />}
+      {status.err.message && <Messages.ErrorMessage closeMessage={resetStatus} message={status.err.message} />}
 
       <div className="card-details-container p-3">
         <FontAwesomeIcon onClick={closeDetails} className="popup-close-btn m-1" icon={faTimes} />
 
         <CardTitle
           title={title}
+          position={position}
           columnTitle={columnTitle}
+          columnId={columnId}
           handleUpdateRequest={handleUpdateRequest}
           discardChangesOnEscapePressed={discardChangesOnEscapePressed}
           blurOnShiftAndEnterPressed={blurOnShiftAndEnterPressed}

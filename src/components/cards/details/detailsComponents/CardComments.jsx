@@ -5,53 +5,18 @@ import TextInput from '../../../utils/TextInput';
 import boardActions from '../../../../actions/boardActions';
 import isEnterPressed from '../../../../utlis/isEnterPressed';
 import Comment from './Comment';
+import useStatus from '../../../../utlis/hooks/useStatus';
 
 
 const CardComments = ({ comments, userData, board, token, cardId, addComment }) => {
   const [cardComment, setCardComment] = useState('');
   const [buttonsActive, setButtonsActive] = useState(false);
-  const [status, setStatus] = useState({
-    loading: false,
-    err: {
-      statusCode: null,
-      message: null,
-    },
-    success: {
-      statusCode: null,
-      message: null,
-      data: null,
-    },
-  });
-
-  const handleSuccess = (res) => {
-    setStatus({
-      loading: false,
-      err: {
-        statusCode: null,
-        message: null,
-      },
-      success: {
-        statusCode: res.status,
-        message: res.data.message,
-        data: res.data,
-      },
-    });
-  };
-
-  const handleError = (err) => {
-    setStatus({
-      loading: false,
-      err: {
-        statusCode: err.status,
-        message: err.message,
-      },
-      success: {
-        statusCode: null,
-        message: null,
-        data: null,
-      },
-    });
-  };
+  const {
+    status,
+    setStatusLoading,
+    handleSuccess,
+    handleError,
+  } = useStatus();
 
   const inputRef = useRef(null);
 
@@ -73,7 +38,7 @@ const CardComments = ({ comments, userData, board, token, cardId, addComment }) 
       text: cardComment,
     };
 
-    setStatus(prevStatus => ({ ...prevStatus, loading: true }));
+    setStatusLoading();
 
     addComment(token.token, board._id, cardId, data)
       .then(handleSuccess)
@@ -126,8 +91,12 @@ const CardComments = ({ comments, userData, board, token, cardId, addComment }) 
         {comments.map(comment => (
           <Comment
             key={comment._id}
+            id={comment._id}
             text={comment.text}
+            cardId={cardId}
             author={comment.authorName}
+            authorId={comment.authorId}
+            edited={comment.edited}
             date={comment.date}
             isOwner={comment.authorId === board.owner}
           />

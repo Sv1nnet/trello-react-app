@@ -38,13 +38,22 @@ CardSchema.methods.update = function update(data) {
 CardSchema.methods.addComment = function addComment(comment) {
   const card = this;
   const newComment = new CardComment({
+    ...comment,
     authorId: mongoose.Types.ObjectId(comment.authorId),
-    text: comment.text,
-    date: comment.date,
-    authorName: comment.authorName,
   });
 
   card.comments.unshift(newComment);
+
+  return newComment;
+};
+
+CardSchema.methods.updateComment = function addComment({ commentId, text }) {
+  const card = this;
+  const commentToUpdated = card.comments.id(commentId);
+
+  commentToUpdated.update({ text });
+
+  return commentToUpdated;
 };
 
 CardSchema.methods.deleteComment = function deleteComment(commentId) {

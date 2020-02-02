@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShareSquare } from '@fortawesome/free-solid-svg-icons';
+import { DragDropContext } from '../../../utils/dragdrop/DragDropContext';
 import TextInput from '../../../utils/TextInput';
 import PopupContainer from '../../../utils/PopupContainer';
 import isEnterPressed from '../../../../utlis/isEnterPressed';
+import MoveCardForm from './MoveCardForm';
 
 
 const CardTitle = (props) => {
   const {
     title,
     columnTitle,
+    columnId,
+    position,
     handleUpdateRequest,
     discardChangesOnEscapePressed,
     blurOnShiftAndEnterPressed,
@@ -18,13 +24,15 @@ const CardTitle = (props) => {
   } = props;
 
   const [cardTitle, setCardTitle] = useState(title);
+  // const { switchCards } = useContext(DragDropContext);
 
   const onTitleChange = (e) => {
     const { target } = e;
 
-    // Prevent from adding new line in card title
+    // Send send change request if user pressed Enter
     if (isEnterPressed(e)) {
       e.preventDefault();
+      target.blur();
       return;
     }
 
@@ -39,6 +47,17 @@ const CardTitle = (props) => {
     };
 
     handleUpdateRequest(dataToUpdate);
+  };
+
+  const moveCard = (target) => {
+    const source = {
+      containerId: columnId,
+      index: position,
+    };
+
+    // switchCards(source, target)
+    //   .then((res) => { console.log('res', res); })
+    //   .catch((err) => { console.log('err', err); });
   };
 
   return (
@@ -61,6 +80,7 @@ const CardTitle = (props) => {
         in list {(
           <a href="/" onClick={setMoveCardPopupState}>
             {columnTitle}
+            <FontAwesomeIcon className="ml-2 move-card-icon" icon={faShareSquare} />
           </a>
         )}
 
@@ -71,7 +91,11 @@ const CardTitle = (props) => {
             extraClasses={['card-details__move-card-popup']}
             style={getPopupContainerPosition(document.querySelector('.column-title > a'), { paddingTop: 17 })}
           >
-            <span className="popup-title">Move Card</span>
+            <MoveCardForm
+              sourceColumnId={columnId}
+              sourcePosition={position}
+              moveCard={moveCard}
+            />
           </PopupContainer>
         )}
       </div>

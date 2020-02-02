@@ -300,6 +300,16 @@ class DragDropContextProvider extends Component {
     }), () => { if (props.onDragEnd) props.onDragEnd(state); });
   };
 
+  /**
+   * Put a column on a new position
+   * @param {Object} source - contains information about a column we move
+   * @param {string} source.id - id of a column we move
+   * @param {number} source.index - source's index in the list of columns
+   * @param {Object} target - contains information about a target column that we move a source one on
+   * @param {string} target.id - container's id of a target column
+   * @param {number} target.index - target's index in the list of columns
+   * @return {Promise} promise that contains a result of request to the server for putting a column on a new position
+   */
   switchColumns = (source, target) => {
     const { context, props } = this;
     const { columnsWithCards } = context;
@@ -336,6 +346,16 @@ class DragDropContextProvider extends Component {
     return props.switchColumns(token.token, board._id, newColumns);
   }
 
+  /**
+   * Put a card on the new position inside initial column or into another one
+   * @param {Object} source - contains information about a card we move
+   * @param {string} source.containerId - container's id of a card we move
+   * @param {number} source.index - source's index in the list of cards
+   * @param {Object} target - contains information about a target card that we move a source one on
+   * @param {string} target.containerId - container's id of a target card
+   * @param {number} target.index - target's index in the list of cards
+   * @return {Promise} promise that contains a result of request to the server for putting a card on a new position
+   */
   switchCards = (source, target) => {
     const { context, props } = this;
     const { columnsWithCards } = context;
@@ -392,6 +412,8 @@ class DragDropContextProvider extends Component {
       dragStart,
       dragEnd,
       dragUpdate,
+      switchCards,
+      switchColumns,
     } = this;
     const { dragState } = state;
 
@@ -402,6 +424,8 @@ class DragDropContextProvider extends Component {
           dragStart,
           dragEnd,
           dragUpdate,
+          switchCards,
+          switchColumns,
         }}
       >
         {props.children}

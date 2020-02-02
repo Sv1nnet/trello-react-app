@@ -1,10 +1,12 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 import React, { useState, useEffect, createContext } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Messages from '../utils/Messages';
 import boardActions from '../../actions/boardActions';
+import CardDetails from '../cards/details/CardDetails';
 
 
 const propTypes = {
@@ -27,6 +29,8 @@ const ColumnListContextProvider = (props) => {
 
   const { columns, cards } = board;
 
+  // const [detailsOpened, setDetailsOpened] = useState(false);
+  const [cardIdDetails, setCardIdDetails] = useState(null);
   const [updatePositionsState, setUpdatePositionsState] = useState({
     message: '',
     statusCode: undefined,
@@ -64,6 +68,30 @@ const ColumnListContextProvider = (props) => {
     });
   };
 
+  const closeDetails = () => {
+    setCardIdDetails(null);
+  };
+
+  const openDetails = (cardId) => {
+    setCardIdDetails(cardId);
+    // const { title, labels, comments, position, description, cardId, columnTitle, columnId } = propsForDetails;
+    // setPropsForCardDetails(propsForDetails);
+    // const cardForDetails = columnsWithCards[columnId].cards.find(card => card._id === cardId);
+    // setCardDetails(
+    //   <CardDetails
+    //     title={cardForDetails.title}
+    //     labels={cardForDetails.labels}
+    //     comments={cardForDetails.comments}
+    //     position={cardForDetails.position}
+    //     description={cardForDetails.description}
+    //     closeDetails={closeDetails}
+    //     id={cardId}
+    //     columnTitle={columnsWithCards[columnId].title}
+    //     columnId={columnId}
+    //   />,
+    // );
+  };
+
   useEffect(() => {
     const newColumnsWithCards = {};
 
@@ -87,15 +115,48 @@ const ColumnListContextProvider = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  let cardForDetails = null;
+
+  if (cardIdDetails) {
+    for (const column in columnsWithCards) {
+      cardForDetails = columnsWithCards[column].cards.find(card => card._id === cardIdDetails);
+
+      if (cardForDetails) {
+        cardForDetails = {
+          ...cardForDetails,
+          columnId: column,
+          columnTitle: columnsWithCards[column].title,
+        };
+        break;
+      }
+    }
+  }
+
   return (
     <ColumnListContext.Provider
       value={{
         columnsWithCards,
         handleError,
+        openDetails,
+        closeDetails,
       }}
     >
       {updatePositionsState.message && <Messages.ErrorMessage message={updatePositionsState.message} closeMessage={closeMessage} />}
       {children}
+      {cardForDetails && ReactDOM.createPortal(
+        <CardDetails
+          title={cardForDetails.title}
+          labels={cardForDetails.labels}
+          comments={cardForDetails.comments}
+          position={cardForDetails.position}
+          description={cardForDetails.description}
+          closeDetails={closeDetails}
+          id={cardForDetails._id}
+          columnTitle={cardForDetails.columnTitle}
+          columnId={cardForDetails.columnId}
+        />,
+        document.querySelector('.App'),
+      )}
     </ColumnListContext.Provider>
   );
 };

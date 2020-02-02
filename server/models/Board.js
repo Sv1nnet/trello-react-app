@@ -132,6 +132,10 @@ BoardSchema.methods.deleteCard = async function deleteCard(cardId) {
 
   cardToDelete.remove();
 
+  cardToDelete.comments.forEach(async (comment) => {
+    await board.removeActivities(comment._id.toHexString());
+  });
+
   const columns = {};
   const newCards = [];
 

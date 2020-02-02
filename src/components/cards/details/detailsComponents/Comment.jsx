@@ -6,16 +6,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrown, faTimes } from '@fortawesome/free-solid-svg-icons';
 import TextInput from '../../../utils/TextInput';
 import boardActions from '../../../../actions/boardActions';
+import useStatus from '../../../../utlis/hooks/useStatus';
 
 
 const Comment = (props) => {
   const {
     text,
     author,
+    authorId,
+    edited,
     date,
     isOwner,
     id,
     cardId,
+    userData,
     token,
     board,
     updateCardComment,
@@ -25,6 +29,12 @@ const Comment = (props) => {
   const [comment, setComment] = useState(text);
   const [isInputActive, setInputActive] = useState(false);
   const [buttonsActive, setButtonsActive] = useState(false);
+  const {
+    status,
+    setStatusLoading,
+    handleSuccess,
+    handleError,
+  } = useStatus();
 
   const inputRef = useRef(null);
 
@@ -56,18 +66,18 @@ const Comment = (props) => {
   };
 
   const updateComment = (e) => {
-    updateCardComment(token.token, board._id, cardId, id, comment)
+    setStatusLoading();
+
+    updateCardComment(token.token, board._id, cardId, id, { text: comment })
+      .then(handleSuccess)
       .then((res) => {
         setInputActive(prevState => !prevState);
       })
-      .catch((err) => {
-        console.log('could not update a comment', err);
-      });
+      .catch(handleError);
   };
 
   const deleteComment = (e) => {
     deleteCardComment(token.token, board._id, cardId, id)
-      .then((res) => { console.log('comment deleted', res); })
       .catch((err) => {
         console.log('could not delete a comment', err);
       });
@@ -92,7 +102,7 @@ const Comment = (props) => {
         </div>
 
         <div className="comment-content__date">
-          <span>{todayStr === activityDateStr ? activityDate.toLocaleTimeString() : activityDateStr}</span>
+          <span>{todayStr === activityDateStr ? activityDate.toLocaleTimeString() : activityDateStr}{edited ? ' (edited)' : ''}</span>
         </div>
 
         <div className="comment-content__comment-container">
@@ -115,11 +125,12 @@ const Comment = (props) => {
                 <div className="card-details__comment-input-container">
 
                   <div className={`card-details__comment-button-container pt-0 ${buttonsActive ? 'active' : ''}`}>
-                    <button onClick={updateComment} type="button" disabled={!comment.match(/\S/)} className="bg-success text-white">Save</button>
+                    <button onClick={updateComment} type="button" disabled={!comment.match(/\S/) || status.loading || comment === text} className="bg-success text-white">Save</button>
                     <button onMouseDown={discardCommentChanges} type="button" className="discard-btn">
                       <FontAwesomeIcon className="close-icon" icon={faTimes} />
                     </button>
                   </div>
+
                 </div>
               </>
             )
@@ -130,7 +141,7 @@ const Comment = (props) => {
             )}
         </div>
 
-        {!isInputActive && (
+        {!isInputActive && (authorId === userData._id || userData._id === board.owner) && (
           <div className="comment-content__edit-buttons-container">
             <button type="button" className="buttons-container__edit-btn" onClick={switchInputState}>Edit</button>
             <button type="button" className="buttons-container__delete-btn" onClick={deleteComment}>Delete</button>
@@ -142,13 +153,14 @@ const Comment = (props) => {
 };
 
 const mapStateToProps = state => ({
+  userData: state.user.userData,
   token: state.user.token,
   board: state.board,
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateComment: (token, boardId, cardId, commentId, data) => dispatch(boardActions.updateCardComment(token, boardId, cardId, commentId, data)),
-  deleteComment: (token, boardId, cardId, commentId) => dispatch(boardActions.deleteCardComment(token, boardId, cardId, commentId)),
+  updateCardComment: (token, boardId, cardId, commentId, data) => dispatch(boardActions.updateCardComment(token, boardId, cardId, commentId, data)),
+  deleteCardComment: (token, boardId, cardId, commentId) => dispatch(boardActions.deleteCardComment(token, boardId, cardId, commentId)),
 });
 
 

@@ -31,6 +31,7 @@ CardCommentSchema.methods.update = function update(data) {
   for (const key in data) {
     comment[key] = data[key];
   }
+  comment.edited = true;
 };
 
 const CardComment = mongoose.model('cardComment', CardCommentSchema);

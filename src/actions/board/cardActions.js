@@ -109,11 +109,7 @@ const addCardComment = (token, boardId, cardId, data) => (dispatch) => {
 };
 
 const updateCardComment = (token, boardId, cardId, commentId, dataToUpdate) => (dispatch) => {
-  const data = {
-    dataToUpdate,
-  };
-
-  return api.board.updateCardComment(token, boardId, cardId, commentId, data)
+  return api.board.updateCardComment(token, boardId, cardId, commentId, dataToUpdate)
     .then((res) => {
       dispatch({ type: cardActionTypes.CARD_COMMENT_UPDATED, data: res.data });
       return res;
@@ -128,7 +124,7 @@ const updateCardComment = (token, boardId, cardId, commentId, dataToUpdate) => (
     });
 };
 const deleteCardComment = (token, boardId, cardId, commentId) => (dispatch) => {
-  return api.board.deleteCardComment(token, cardId, commentId)
+  return api.board.deleteCardComment(token, boardId, cardId, commentId)
     .then((res) => {
       dispatch({ type: cardActionTypes.CARD_COMMENT_DELETED, data: res.data });
       return res;
