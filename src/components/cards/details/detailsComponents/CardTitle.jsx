@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShareSquare } from '@fortawesome/free-solid-svg-icons';
@@ -7,6 +8,8 @@ import PopupContainer from '../../../utils/PopupContainer';
 import isEnterPressed from '../../../../utlis/isEnterPressed';
 import MoveCardForm from './MoveCardForm';
 import { ColumnListContext } from '../../../context/ColumnListContext';
+import useStatus from '../../../../utlis/hooks/useStatus';
+import Messages from '../../../utils/Messages';
 
 
 const CardTitle = (props) => {
@@ -24,6 +27,14 @@ const CardTitle = (props) => {
   } = props;
 
   const [cardTitle, setCardTitle] = useState(title);
+  const {
+    status,
+    setStatusLoading,
+    resetStatus,
+    handleSuccess,
+    handleError,
+  } = useStatus();
+
   const { switchCards } = useContext(ColumnListContext);
 
   const onTitleChange = (e) => {
@@ -55,9 +66,11 @@ const CardTitle = (props) => {
       index: position,
     };
 
+    setStatusLoading();
+
     switchCards(source, target)
-      .then((res) => { console.log('res', res); })
-      .catch((err) => { console.log('err', err); });
+      .then(handleSuccess)
+      .catch(handleError);
   };
 
   return (
@@ -99,6 +112,10 @@ const CardTitle = (props) => {
           </PopupContainer>
         )}
       </div>
+      {status.err.message && ReactDOM.createPortal(
+        <Messages.ErrorMessage message={status.err.message} closeBtn closeMessage={resetStatus} />,
+        document.querySelector('.App'),
+      )}
     </div>
   );
 };
