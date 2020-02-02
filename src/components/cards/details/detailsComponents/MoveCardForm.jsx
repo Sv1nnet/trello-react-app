@@ -59,6 +59,13 @@ const MoveCardForm = ({ sourceColumnId, sourcePosition, moveCard }) => {
     }
   }, [columnToMove, sourceColumnId, sourcePosition]);
 
+  useEffect(() => {
+    setColumnToMove({
+      ...columnsWithCards[sourceColumnId],
+      id: sourceColumnId,
+    });
+  }, [columnsWithCards, sourceColumnId]);
+
   return (
     <div className="move-card-popup__container">
       <span className="popup-title">Move Card</span>
@@ -77,8 +84,8 @@ const MoveCardForm = ({ sourceColumnId, sourcePosition, moveCard }) => {
         <label htmlFor="select-position">Position
           <br />
           <select value={position} onChange={onPositionSelected} name="select-position" id="select-position" className="move-card-form__select-position">
-            {columnToMove.cards.map(card => (
-              <option value={card.position} key={card._id}>{card.position + 1}</option>
+            {columnToMove.cards.map((card, index) => (
+              <option value={index} key={card._id}>{index + 1}</option>
             ))}
             {columnToMove.id !== sourceColumnId && (
               <option value={columnToMove.cards.length}>{columnToMove.cards.length + 1}</option>
