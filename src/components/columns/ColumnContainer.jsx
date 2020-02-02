@@ -30,7 +30,7 @@ const ColumnContainer = (props) => {
     handleError,
   } = props;
 
-  const { columnsWithCards } = useContext(ColumnListContext);
+  const { columnsWithCards, switchColumns } = useContext(ColumnListContext);
   const { cards } = columnsWithCards[columnId];
 
   const mouseState = {
@@ -70,7 +70,7 @@ const ColumnContainer = (props) => {
   };
 
   return (
-    <Draggable dragHandlers={{ onDragEnd: () => console.log('column drag end') }} containerId={boardId} draggableId={columnId} index={index} direction="horizontal" type="column">
+    <Draggable dragHandlers={{ onDragEnd: switchColumns }} containerId={boardId} draggableId={columnId} index={index} direction="horizontal" type="column">
       {(dragProvided, snapshot) => (
         <div {...dragProvided.draggableProps} ref={dragProvided.innerRef} className="column-drag-area drag-target">
           <Column

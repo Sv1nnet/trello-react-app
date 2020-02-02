@@ -44,7 +44,7 @@ const CardContainer = (props) => {
     description,
   } = cardData;
 
-  const { openDetails } = useContext(ColumnListContext);
+  const { openDetails, switchCards } = useContext(ColumnListContext);
 
   // const [detailsOpened, setDetailsOpened] = useState(false);
   const editingTargetRef = useRef(null);
@@ -70,7 +70,7 @@ const CardContainer = (props) => {
 
   return (
     <>
-      <Draggable containerId={columnId} draggableId={id} index={index} direction="vertical" type="card">
+      <Draggable dragHandlers={{ onDragEnd: switchCards }} containerId={columnId} draggableId={id} index={index} direction="vertical" type="card">
         {dragProvided => (
           <Card
             openDetails={openDetails}

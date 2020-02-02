@@ -251,30 +251,18 @@ class DragDropContextProvider extends Component {
     const {
       state,
       props,
-      switchCards,
-      switchColumns,
     } = this;
 
-    const { source, target, type } = state.dragState;
+    const { source, target } = state.dragState;
     let switchResultPromise;
 
     if (source.containerId !== target.containerId || source.index !== target.index) {
-      if (type === 'card') {
-        switchResultPromise = switchCards(source, target);
-      } else {
-        switchResultPromise = switchColumns(source, target);
-      }
+      switchResultPromise = handler ? handler(source, target) : null;
 
       if (switchResultPromise) {
         switchResultPromise
-          .then((data) => {
-            if (handler) return handler(data);
-
-            return data;
-          })
           .catch((err) => {
             props.handleError(err);
-            if (handler) return Promise.reject(handler(err));
 
             return Promise.reject(err);
           });
@@ -299,111 +287,6 @@ class DragDropContextProvider extends Component {
       },
     }), () => { if (props.onDragEnd) props.onDragEnd(state); });
   };
-
-  /**
-   * Put a column on a new position
-   * @param {Object} source - contains information about a column we move
-   * @param {string} source.id - id of a column we move
-   * @param {number} source.index - source's index in the list of columns
-   * @param {Object} target - contains information about a target column that we move a source one on
-   * @param {string} target.id - container's id of a target column
-   * @param {number} target.index - target's index in the list of columns
-   * @return {Promise} promise that contains a result of request to the server for putting a column on a new position
-   */
-  switchColumns = (source, target) => {
-    const { context, props } = this;
-    const { columnsWithCards } = context;
-
-    const { token } = props.user;
-    const { board } = props;
-
-    const newColumns = [];
-
-    for (const column in columnsWithCards) {
-      const newColumn = {
-        _id: column,
-        title: columnsWithCards[column].title,
-        position: columnsWithCards[column].position,
-      };
-
-      if (source.index < target.index) {
-        if (columnsWithCards[column].id !== newColumn._id && columnsWithCards[column].position <= target.index && columnsWithCards[column].position > source.index) {
-          newColumn.position -= 1;
-        }
-      } else if (source.index > target.index) {
-        if (columnsWithCards[column].id !== newColumn._id && columnsWithCards[column].position >= target.index && columnsWithCards[column].position < source.index) {
-          newColumn.position += 1;
-        }
-      }
-
-      if (newColumn._id === source.id) {
-        newColumn.position = target.index;
-      }
-
-      newColumns.push(newColumn);
-    }
-
-    return props.switchColumns(token.token, board._id, newColumns);
-  }
-
-  /**
-   * Put a card on the new position inside initial column or into another one
-   * @param {Object} source - contains information about a card we move
-   * @param {string} source.containerId - container's id of a card we move
-   * @param {number} source.index - source's index in the list of cards
-   * @param {Object} target - contains information about a target card that we move a source one on
-   * @param {string} target.containerId - container's id of a target card
-   * @param {number} target.index - target's index in the list of cards
-   * @return {Promise} promise that contains a result of request to the server for putting a card on a new position
-   */
-  switchCards = (source, target) => {
-    const { context, props } = this;
-    const { columnsWithCards } = context;
-
-    const { token } = props.user;
-    const { board } = props;
-
-    const newCards = [];
-    if (source.containerId === target.containerId) {
-      for (const column in columnsWithCards) {
-        if (column !== target.containerId) {
-          columnsWithCards[column].cards.forEach(card => newCards.push(card));
-        } else {
-          const sourceCard = { ...columnsWithCards[column].cards[source.index] };
-
-          const tempCards = [...columnsWithCards[column].cards];
-
-          tempCards.splice(source.index, 1);
-          tempCards.splice(target.index, 0, sourceCard);
-          tempCards.forEach((card, i) => { card.position = i; });
-
-          tempCards.forEach(card => newCards.push(card));
-        }
-      }
-    } else {
-      const sourceCard = { ...columnsWithCards[source.containerId].cards[source.index] };
-      sourceCard.column = target.containerId;
-
-      for (const column in columnsWithCards) {
-        if (column !== target.containerId && column !== source.containerId) {
-          columnsWithCards[column].cards.forEach(card => newCards.push(card));
-        } else {
-          const tempCards = [...columnsWithCards[column].cards];
-
-          if (column === source.containerId) {
-            tempCards.splice(source.index, 1);
-          } else {
-            tempCards.splice(target.index, 0, sourceCard);
-          }
-
-          tempCards.forEach((card, i) => { card.position = i; });
-          tempCards.forEach(card => newCards.push(card));
-        }
-      }
-    }
-
-    return props.switchCards(token.token, board._id, newCards);
-  }
 
   render() {
     const {

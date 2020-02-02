@@ -2,11 +2,11 @@ import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShareSquare } from '@fortawesome/free-solid-svg-icons';
-import { DragDropContext } from '../../../utils/dragdrop/DragDropContext';
 import TextInput from '../../../utils/TextInput';
 import PopupContainer from '../../../utils/PopupContainer';
 import isEnterPressed from '../../../../utlis/isEnterPressed';
 import MoveCardForm from './MoveCardForm';
+import { ColumnListContext } from '../../../context/ColumnListContext';
 
 
 const CardTitle = (props) => {
@@ -24,7 +24,7 @@ const CardTitle = (props) => {
   } = props;
 
   const [cardTitle, setCardTitle] = useState(title);
-  // const { switchCards } = useContext(DragDropContext);
+  const { switchCards } = useContext(ColumnListContext);
 
   const onTitleChange = (e) => {
     const { target } = e;
@@ -55,9 +55,9 @@ const CardTitle = (props) => {
       index: position,
     };
 
-    // switchCards(source, target)
-    //   .then((res) => { console.log('res', res); })
-    //   .catch((err) => { console.log('err', err); });
+    switchCards(source, target)
+      .then((res) => { console.log('res', res); })
+      .catch((err) => { console.log('err', err); });
   };
 
   return (

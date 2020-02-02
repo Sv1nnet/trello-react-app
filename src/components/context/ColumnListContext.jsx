@@ -29,7 +29,6 @@ const ColumnListContextProvider = (props) => {
 
   const { columns, cards } = board;
 
-  // const [detailsOpened, setDetailsOpened] = useState(false);
   const [cardIdDetails, setCardIdDetails] = useState(null);
   const [updatePositionsState, setUpdatePositionsState] = useState({
     message: '',
@@ -61,6 +60,103 @@ const ColumnListContextProvider = (props) => {
     return result;
   });
 
+  /**
+   * Put a column on a new position
+   * @param {Object} source - contains information about a column we move
+   * @param {string} source.id - id of a column we move
+   * @param {number} source.index - source's index in the list of columns
+   * @param {Object} target - contains information about a target column that we move a source one on
+   * @param {string} target.id - container's id of a target column
+   * @param {number} target.index - target's index in the list of columns
+   * @return {Promise} promise that contains a result of request to the server for putting a column on a new position
+   */
+  const switchColumns = (source, target) => {
+    const { token } = props.user;
+
+    const newColumns = [];
+
+    for (const column in columnsWithCards) {
+      const newColumn = {
+        _id: column,
+        title: columnsWithCards[column].title,
+        position: columnsWithCards[column].position,
+      };
+
+      if (source.index < target.index) {
+        if (columnsWithCards[column].id !== newColumn._id && columnsWithCards[column].position <= target.index && columnsWithCards[column].position > source.index) {
+          newColumn.position -= 1;
+        }
+      } else if (source.index > target.index) {
+        if (columnsWithCards[column].id !== newColumn._id && columnsWithCards[column].position >= target.index && columnsWithCards[column].position < source.index) {
+          newColumn.position += 1;
+        }
+      }
+
+      if (newColumn._id === source.id) {
+        newColumn.position = target.index;
+      }
+
+      newColumns.push(newColumn);
+    }
+
+    return props.switchColumns(token.token, board._id, newColumns);
+  };
+
+  /**
+   * Put a card on the new position inside initial column or into another one
+   * @param {Object} source - contains information about a card we move
+   * @param {string} source.containerId - container's id of a card we move
+   * @param {number} source.index - source's index in the list of cards
+   * @param {Object} target - contains information about a target card that we move a source one on
+   * @param {string} target.containerId - container's id of a target card
+   * @param {number} target.index - target's index in the list of cards
+   * @return {Promise} promise that contains a result of request to the server for putting a card on a new position
+   */
+  const switchCards = (source, target) => {
+    const { token } = props.user;
+
+    const newCards = [];
+    if (source.containerId === target.containerId) {
+      for (const column in columnsWithCards) {
+        if (column !== target.containerId) {
+          columnsWithCards[column].cards.forEach(card => newCards.push(card));
+        } else {
+          const sourceCard = { ...columnsWithCards[column].cards[source.index] };
+
+          const tempCards = [...columnsWithCards[column].cards];
+
+          tempCards.splice(source.index, 1);
+          tempCards.splice(target.index, 0, sourceCard);
+          tempCards.forEach((card, i) => { card.position = i; });
+
+          tempCards.forEach(card => newCards.push(card));
+        }
+      }
+    } else {
+      const sourceCard = { ...columnsWithCards[source.containerId].cards[source.index] };
+      sourceCard.column = target.containerId;
+
+      for (const column in columnsWithCards) {
+        if (column !== target.containerId && column !== source.containerId) {
+          columnsWithCards[column].cards.forEach(card => newCards.push(card));
+        } else {
+          const tempCards = [...columnsWithCards[column].cards];
+
+          if (column === source.containerId) {
+            tempCards.splice(source.index, 1);
+          } else {
+            tempCards.splice(target.index, 0, sourceCard);
+          }
+
+          tempCards.forEach((card, i) => { card.position = i; });
+          tempCards.forEach(card => newCards.push(card));
+        }
+      }
+    }
+
+    return props.switchCards(token.token, board._id, newCards);
+  };
+
   const closeMessage = () => {
     setUpdatePositionsState({
       message: '',
@@ -74,22 +170,6 @@ const ColumnListContextProvider = (props) => {
 
   const openDetails = (cardId) => {
     setCardIdDetails(cardId);
-    // const { title, labels, comments, position, description, cardId, columnTitle, columnId } = propsForDetails;
-    // setPropsForCardDetails(propsForDetails);
-    // const cardForDetails = columnsWithCards[columnId].cards.find(card => card._id === cardId);
-    // setCardDetails(
-    //   <CardDetails
-    //     title={cardForDetails.title}
-    //     labels={cardForDetails.labels}
-    //     comments={cardForDetails.comments}
-    //     position={cardForDetails.position}
-    //     description={cardForDetails.description}
-    //     closeDetails={closeDetails}
-    //     id={cardId}
-    //     columnTitle={columnsWithCards[columnId].title}
-    //     columnId={columnId}
-    //   />,
-    // );
   };
 
   useEffect(() => {
@@ -137,6 +217,8 @@ const ColumnListContextProvider = (props) => {
       value={{
         columnsWithCards,
         handleError,
+        switchColumns,
+        switchCards,
         openDetails,
         closeDetails,
       }}
@@ -162,6 +244,7 @@ const ColumnListContextProvider = (props) => {
 };
 
 const mapStateToProps = state => ({
+  user: state.user,
   board: state.board,
 });
 
@@ -169,6 +252,8 @@ const mapDispatchToProps = dispatch => ({
   // Clear board data after transition to another page.
   // We need it to prevent from showing wrong baord data.
   clearBoardData: () => dispatch(boardActions.clearBoardData()),
+  switchCards: (token, boardId, data) => dispatch(boardActions.switchCardPositions(token, boardId, data)),
+  switchColumns: (token, boardId, data) => dispatch(boardActions.switchColumnPositions(token, boardId, data)),
 });
 
 
