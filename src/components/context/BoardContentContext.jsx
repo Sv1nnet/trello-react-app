@@ -10,11 +10,19 @@ import CardDetails from '../cards/details/CardDetails';
 
 
 const propTypes = {
+  user: PropTypes.shape({
+    token: PropTypes.shape({
+      token: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
   board: PropTypes.shape({
     columns: PropTypes.array.isRequired,
     cards: PropTypes.array.isRequired,
+    _id: PropTypes.string.isRequired,
   }).isRequired,
   clearBoardData: PropTypes.func.isRequired,
+  switchCards: PropTypes.func.isRequired,
+  switchColumns: PropTypes.func.isRequired,
 };
 
 

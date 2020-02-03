@@ -1,28 +1,16 @@
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable no-param-reassign */
 import React, { Component, createContext } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { BoardContentContext } from '../../context/BoardContentContext';
-import boardActions from '../../../actions/boardActions';
 import scrollElements from '../../../utlis/scrollElements';
 
 
 const propTypes = {
-  user: PropTypes.shape({
-    token: PropTypes.shape({
-      token: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-  board: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-  }).isRequired,
   handleError: PropTypes.func.isRequired,
   onDragStart: PropTypes.func,
   onDragUpdate: PropTypes.func,
   onDragEnd: PropTypes.func,
-  switchCards: PropTypes.func.isRequired,
-  switchColumns: PropTypes.func.isRequired,
 };
 
 
@@ -322,14 +310,4 @@ DragDropContextProvider.propTypes = propTypes;
 DragDropContextProvider.defaultProps = defaultProps;
 
 
-const mapStateToProps = state => ({
-  user: state.user,
-  board: state.board,
-});
-
-const mapDispatchToProps = dispatch => ({
-  switchCards: (token, boardId, data) => dispatch(boardActions.switchCardPositions(token, boardId, data)),
-  switchColumns: (token, boardId, data) => dispatch(boardActions.switchColumnPositions(token, boardId, data)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(DragDropContextProvider);
+export default DragDropContextProvider;
