@@ -7,7 +7,7 @@ import TextInput from '../../../utils/TextInput';
 import PopupContainer from '../../../utils/PopupContainer';
 import isEnterPressed from '../../../../utlis/isEnterPressed';
 import MoveCardForm from './MoveCardForm';
-import { ColumnListContext } from '../../../context/ColumnListContext';
+import { BoardContentContext } from '../../../context/BoardContentContext';
 import useStatus from '../../../../utlis/hooks/useStatus';
 import Messages from '../../../utils/Messages';
 
@@ -35,7 +35,7 @@ const CardTitle = (props) => {
     handleError,
   } = useStatus();
 
-  const { switchCards } = useContext(ColumnListContext);
+  const { switchCards } = useContext(BoardContentContext);
 
   const onTitleChange = (e) => {
     const { target } = e;

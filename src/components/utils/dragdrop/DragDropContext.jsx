@@ -3,7 +3,7 @@
 import React, { Component, createContext } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { ColumnListContext } from '../../context/ColumnListContext';
+import { BoardContentContext } from '../../context/BoardContentContext';
 import boardActions from '../../../actions/boardActions';
 import scrollElements from '../../../utlis/scrollElements';
 
@@ -36,7 +36,7 @@ const defaultProps = {
 export const DragDropContext = createContext();
 
 class DragDropContextProvider extends Component {
-  static contextType = ColumnListContext;
+  static contextType = BoardContentContext;
 
   constructor(props) {
     super(props);

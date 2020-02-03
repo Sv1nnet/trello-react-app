@@ -4,7 +4,7 @@ import Draggable from '../utils/dragdrop/Draggable';
 import isMouseMoved from '../../utlis/isMouseMoved';
 import Column from './Column';
 import '../../styles/cardsList.sass';
-import { ColumnListContext } from '../context/ColumnListContext';
+import { BoardContentContext } from '../context/BoardContentContext';
 
 
 const propTypes = {
@@ -30,7 +30,7 @@ const ColumnContainer = (props) => {
     handleError,
   } = props;
 
-  const { columnsWithCards, switchColumns } = useContext(ColumnListContext);
+  const { columnsWithCards, switchColumns } = useContext(BoardContentContext);
   const { cards } = columnsWithCards[columnId];
 
   const mouseState = {

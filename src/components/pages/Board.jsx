@@ -17,7 +17,7 @@ import BoardMenu from '../boards/BoardMenu';
 import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
 import ColumnList from '../lists/ColumnList';
-import ColumnListContextProvider from '../context/ColumnListContext';
+import BoardContentContextProvider from '../context/BoardContentContext';
 
 
 const propTypes = {
@@ -252,9 +252,9 @@ class Board extends Component {
           )}
         </div>
 
-        <ColumnListContextProvider>
+        <BoardContentContextProvider>
           <ColumnList />
-        </ColumnListContextProvider>
+        </BoardContentContextProvider>
       </div>
     );
   }

@@ -18,9 +18,9 @@ const propTypes = {
 };
 
 
-export const ColumnListContext = createContext();
+export const BoardContentContext = createContext();
 
-const ColumnListContextProvider = (props) => {
+const BoardContentContextProvider = (props) => {
   const {
     children,
     board,
@@ -213,7 +213,7 @@ const ColumnListContextProvider = (props) => {
   }
 
   return (
-    <ColumnListContext.Provider
+    <BoardContentContext.Provider
       value={{
         columnsWithCards,
         handleError,
@@ -239,7 +239,7 @@ const ColumnListContextProvider = (props) => {
         />,
         document.querySelector('.App'),
       )}
-    </ColumnListContext.Provider>
+    </BoardContentContext.Provider>
   );
 };
 
@@ -257,7 +257,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 
-ColumnListContextProvider.propTypes = propTypes;
+BoardContentContextProvider.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ColumnListContextProvider);
+export default connect(mapStateToProps, mapDispatchToProps)(BoardContentContextProvider);

@@ -6,7 +6,7 @@ import Card from './Card';
 import CardDetails from './details/CardDetails';
 import boardActions from '../../actions/boardActions';
 import '../../styles/cardItem.sass';
-import { ColumnListContext } from '../context/ColumnListContext';
+import { BoardContentContext } from '../context/BoardContentContext';
 
 
 const propTypes = {
@@ -44,7 +44,7 @@ const CardContainer = (props) => {
     description,
   } = cardData;
 
-  const { openDetails, switchCards } = useContext(ColumnListContext);
+  const { openDetails, switchCards } = useContext(BoardContentContext);
 
   // const [detailsOpened, setDetailsOpened] = useState(false);
   const editingTargetRef = useRef(null);

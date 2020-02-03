@@ -1,11 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { ColumnListContext } from '../../../context/ColumnListContext';
+import { BoardContentContext } from '../../../context/BoardContentContext';
 import '../../../../styles/moveCardForm.sass';
 
 
 const MoveCardForm = ({ sourceColumnId, sourcePosition, moveCard }) => {
-  const { columnsWithCards } = useContext(ColumnListContext);
+  const { columnsWithCards } = useContext(BoardContentContext);
   const [position, setPosition] = useState(sourcePosition);
   const [columnToMove, setColumnToMove] = useState({
     ...columnsWithCards[sourceColumnId],
@@ -72,7 +72,7 @@ const MoveCardForm = ({ sourceColumnId, sourcePosition, moveCard }) => {
       <form action="" onSubmit={onSubmit}>
         <span className="destination-popup-title">SELECT DESTINATION</span>
 
-        <label htmlFor="select-column">Column
+        <label className="move-card-popup__label-select-column" htmlFor="select-column">Column
           <br />
           <select defaultValue={columnToMove.id} onChange={onColumnSelected} name="select-column" id="select-column" className="move-card-form__select-column">
             {columns.map(column => (
@@ -81,7 +81,7 @@ const MoveCardForm = ({ sourceColumnId, sourcePosition, moveCard }) => {
           </select>
         </label>
 
-        <label htmlFor="select-position">Position
+        <label className="move-card-popup__label-select-position" htmlFor="select-position">Position
           <br />
           <select value={position} onChange={onPositionSelected} name="select-position" id="select-position" className="move-card-form__select-position">
             {columnToMove.cards.map((card, index) => (
