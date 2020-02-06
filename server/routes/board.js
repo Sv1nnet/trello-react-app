@@ -6,6 +6,7 @@ const getUserBoards = require('./board/getUserBoards');
 const getBoardById = require('./board/getBoardById');
 const updateBoardSetting = require('./board/updateBoardSetting');
 const createBoard = require('./board/createBoard');
+const updateLabel = require('./board/updateLabel');
 const getActivities = require('./board/getActivities');
 
 // Members
@@ -28,6 +29,8 @@ const updateCardPositions = require('./cards/updateCardPositions');
 const addCardComment = require('./cards/addCardComment');
 const deleteCardComment = require('./cards/deleteCardComment');
 const updateCardComment = require('./cards/updateCardComment');
+const attachLabel = require('./cards/attachLabel');
+const removeLabel = require('./cards/removeLabel');
 
 const { parseError } = require('../utils/parseError');
 
@@ -38,6 +41,7 @@ router.get('/all', getUserBoards);
 router.get('/:id', getBoardById);
 router.post('/:id', updateBoardSetting);
 router.post('/', createBoard);
+router.post('/update_label/:labelId', updateLabel);
 router.get('/:id/get_activities', getActivities);
 
 // Members routes
@@ -60,6 +64,8 @@ router.post('/:id/update_card_positions', updateCardPositions);
 router.post('/:id/add_comment/:cardId', addCardComment);
 router.post('/:id/:cardId/delete_comment/:commentId', deleteCardComment);
 router.post('/:id/:cardId/update_comment/:commentId', updateCardComment);
+router.post('/:id/:cardId/attach_label/:labelId', attachLabel);
+router.post('/:id/:cardId/remove_label/:labelId', removeLabel);
 
 module.exports = {
   boardRouter: router,

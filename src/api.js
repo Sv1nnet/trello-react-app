@@ -1,7 +1,7 @@
 import axios from 'axios';
 import setAuthHeaders from './utlis/setAuthHeaders';
 
-const ip = 'http://192.168.0.10:3111';
+const ip = 'http://192.168.0.11:3111';
 const api = {
   auth: {
     signup: (data) => {
@@ -109,6 +109,18 @@ const api = {
     deleteCardComment: (token, boardId, cardId, commentId) => {
       setAuthHeaders(token);
       return axios.post(`${ip}/board/${boardId}/${cardId}/delete_comment/${commentId}`);
+    },
+    attachLabel: (token, boardId, cardId, labelId) => {
+      setAuthHeaders(token);
+      return axios.post(`${ip}/board/${boardId}/${cardId}/attach_label/${labelId}`);
+    },
+    removeLabel: (token, boardId, cardId, labelId) => {
+      setAuthHeaders(token);
+      return axios.post(`${ip}/board/${boardId}/${cardId}/remove_label/${labelId}`);
+    },
+    updateLabel: (token, boardId, labelId, data) => {
+      setAuthHeaders(token);
+      return axios.post(`${ip}/board/${boardId}/update_label/${labelId}`, data);
     },
     getActivities: (token, boardId, data) => {
       setAuthHeaders(token);

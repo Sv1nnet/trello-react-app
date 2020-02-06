@@ -206,15 +206,31 @@ const BoardContentContextProvider = (props) => {
   let cardForDetails = null;
 
   if (cardIdDetails) {
+    const boardLabels = {};
+    board.labels.forEach((label) => {
+      boardLabels[label._id] = {
+        title: label.title,
+        color: label.color,
+        colorName: label.colorName,
+      };
+    });
+
     for (const column in columnsWithCards) {
       cardForDetails = columnsWithCards[column].cards.find(card => card._id === cardIdDetails);
 
       if (cardForDetails) {
+        const cardLabels = [];
+        cardForDetails.labels.forEach((label) => {
+          if (boardLabels[label]) cardLabels.push({ id: label, ...boardLabels[label] });
+        });
+
         cardForDetails = {
           ...cardForDetails,
+          labels: cardLabels,
           columnId: column,
           columnTitle: columnsWithCards[column].title,
         };
+
         break;
       }
     }

@@ -5,9 +5,25 @@ const mongoose = require('mongoose');
 const { ColumnSchema } = require('./Column');
 const { CardSchema, Card } = require('./Card');
 const { ActivitySchema, Activity } = require('./Activity');
-const { LabelSchema } = require('./Label');
+const { LabelSchema, Label } = require('./Label');
 
 const { Schema } = mongoose;
+
+
+const labelColors = {
+  green: 'green',
+  red: 'red',
+  purple: 'purple',
+  skyblue: 'skyblue',
+  yellow: 'rgb(242, 214, 0)',
+};
+
+const labelColorsArray = [];
+
+for (const color in labelColors) {
+  labelColorsArray.push({ colorName: color, color: labelColors[color] });
+}
+
 
 const BoardSchema = new Schema({
   owner: {
@@ -27,7 +43,10 @@ const BoardSchema = new Schema({
     required: true,
   },
   cards: [CardSchema],
-  labels: [LabelSchema],
+  labels: {
+    type: [LabelSchema],
+    default: labelColorsArray.map(color => new Label({ color: color.color, colorName: color.colorName })),
+  },
   chat: {
     type: Schema.Types.ObjectId,
     // required: true,
@@ -54,6 +73,7 @@ const BoardSchema = new Schema({
   },
   columns: [ColumnSchema],
 });
+
 
 BoardSchema.methods.addMember = function addMember(member) {
   const board = this;
@@ -173,7 +193,7 @@ BoardSchema.methods.removeActivities = async function removeActivities(sourceId)
   try {
     const newActivities = board.activities.filter(activity => activity.sourceId.toHexString() !== sourceId);
     board.activities = newActivities;
-  
+
     const activitiesToDelete = await Activity.find({ sourceId });
     activitiesToDelete.forEach(act => act.remove());
   } catch (error) {
@@ -223,6 +243,12 @@ BoardSchema.methods.getAllActivities = async function getAllActivities() {
     console.log('Could not get all activities', error);
     return Promise.reject(error);
   }
+};
+
+BoardSchema.methods.updateLabel = function updateLabel(labelId, data) {
+  const board = this;
+
+  board.labels.id(labelId).update(data);
 };
 
 const Board = mongoose.model('boards', BoardSchema);

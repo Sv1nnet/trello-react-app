@@ -101,7 +101,7 @@ const CardTitle = (props) => {
           <PopupContainer
             removeElement={setMoveCardPopupState}
             closeBtn
-            extraClasses={['card-details__move-card-popup']}
+            extraClasses={['card-details__popup']}
             style={getPopupContainerPosition(document.querySelector('.column-title > a'), { paddingTop: 17 })}
           >
             <MoveCardForm

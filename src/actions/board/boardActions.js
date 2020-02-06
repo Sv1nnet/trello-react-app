@@ -49,8 +49,8 @@ const loadAllBoards = token => (dispatch, getState) => {
     });
 };
 
-const getBoard = (token, id) => (dispatch) => {
-  return api.board.getBoard(token, id)
+const getBoard = (token, boardId) => (dispatch) => {
+  return api.board.getBoard(token, boardId)
     .then((res) => {
       dispatch({ type: boardActionTypes.BOARD_DOWNLOADED, data: res.data });
       return res;
@@ -65,8 +65,8 @@ const getBoard = (token, id) => (dispatch) => {
     });
 };
 
-const updateBoard = (token, id, data) => (dispatch) => {
-  return api.board.updateBoard(token, id, data)
+const updateBoard = (token, boardId, data) => (dispatch) => {
+  return api.board.updateBoard(token, boardId, data)
     .then((res) => {
       if (data.title) dispatch({ type: userActionTypes.BOARD_TITLE_UPDATED, data: res.data });
       dispatch({ type: boardActionTypes.BOARD_UPDATED, data: res.data });
@@ -82,8 +82,8 @@ const updateBoard = (token, id, data) => (dispatch) => {
     });
 };
 
-const getActivities = (token, id, data) => (dispatch) => {
-  return api.board.getActivities(token, id, data)
+const getActivities = (token, boardId, data) => (dispatch) => {
+  return api.board.getActivities(token, boardId, data)
     .then((res) => {
       dispatch({ type: boardActionTypes.ACTIVITIES_LOADED, data: res.data });
       return res;
@@ -100,6 +100,22 @@ const getActivities = (token, id, data) => (dispatch) => {
 
 const cleanActivities = () => dispatch => dispatch({ type: boardActionTypes.CLEAN_ACTIVITIES, data: null });
 
+const updateLabel = (token, boardId, labelId, data) => (dispatch) => {
+  return api.board.updateLabel(token, boardId, labelId, data)
+    .then((res) => {
+      dispatch({ type: boardActionTypes.LABEL_UPDATED, data: res.data });
+      return res;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: boardActionTypes.LABEL_UPDATE_FAILED,
+          data: createErrorResponseObject(err),
+        }),
+      );
+    });
+};
+
 export {
   createBoard,
   loadAllBoards,
@@ -108,4 +124,5 @@ export {
   clearBoardData,
   getActivities,
   cleanActivities,
+  updateLabel,
 };

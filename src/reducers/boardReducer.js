@@ -65,7 +65,10 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
     case columnActionTypes.COLUMN_DELETED:
     case columnActionTypes.COLUMN_UPDATED:
     case cardActionTypes.CARD_UPDATED:
+    case cardActionTypes.LABEL_ATTACHED:
+    case cardActionTypes.LABEL_REMOVED:
     case boardActionTypes.BOARD_UPDATED:
+    case boardActionTypes.LABEL_UPDATED:
     case boardActionTypes.BOARD_DOWNLOADED:
       data = { ...action.data };
       columns = data.columns.sort((columnOne, columnTwo) => {
@@ -270,10 +273,13 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
     case columnActionTypes.COLUMN_POSITIONS_UPDATE_FAILED:
     case cardActionTypes.CARD_POSITIONS_UPDATE_FAILED:
     case boardActionTypes.BOARD_UPDATE_FAILED:
+    case boardActionTypes.LABEL_UPDATE_FAILED:
     case cardActionTypes.CARD_DELETE_FAILED:
     case cardActionTypes.CARD_COMMENT_ADD_FALIED:
     case cardActionTypes.CARD_COMMENT_UPDATE_FALIED:
     case cardActionTypes.CARD_COMMENT_DELETE_FALIED:
+    case cardActionTypes.LABEL_ATTACH_FAILED:
+    case cardActionTypes.LABEL_REMOVE_FAILED:
     case columnActionTypes.COLUMN_CREATE_FAILED:
     case columnActionTypes.COLUMN_DELETE_FAILED:
       return {

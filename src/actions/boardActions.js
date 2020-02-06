@@ -6,6 +6,7 @@ import {
   clearBoardData,
   getActivities,
   cleanActivities,
+  updateLabel,
 } from './board/boardActions';
 import {
   createColumn,
@@ -21,6 +22,8 @@ import {
   addCardComment,
   deleteCardComment,
   updateCardComment,
+  attachLabel,
+  removeLabel,
 } from './board/cardActions';
 import {
   getMembers,
@@ -52,4 +55,7 @@ export default {
   clearBoardData,
   getActivities,
   cleanActivities,
+  updateLabel,
+  attachLabel,
+  removeLabel,
 };

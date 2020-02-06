@@ -139,6 +139,39 @@ const deleteCardComment = (token, boardId, cardId, commentId) => (dispatch) => {
     });
 };
 
+const attachLabel = (token, boardId, cardId, labelId) => (dispatch) => {
+  return api.board.attachLabel(token, boardId, cardId, labelId)
+    .then((res) => {
+      dispatch({ type: cardActionTypes.LABEL_ATTACHED, data: res.data });
+      return res;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: cardActionTypes.LABEL_ATTACH_FAILED,
+          data: createErrorResponseObject(err),
+        }),
+      );
+    });
+};
+
+const removeLabel = (token, boardId, cardId, labelId) => (dispatch) => {
+  return api.board.removeLabel(token, boardId, cardId, labelId)
+    .then((res) => {
+      dispatch({ type: cardActionTypes.LABEL_REMOVED, data: res.data });
+      return res;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: cardActionTypes.LABEL_REMOVE_FAILED,
+          data: createErrorResponseObject(err),
+        }),
+      );
+    });
+};
+
+
 export {
   createCard,
   deleteCard,
@@ -147,4 +180,6 @@ export {
   addCardComment,
   updateCardComment,
   deleteCardComment,
+  attachLabel,
+  removeLabel,
 };

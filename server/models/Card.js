@@ -2,9 +2,10 @@
 /* eslint-disable no-restricted-syntax */
 const mongoose = require('mongoose');
 const { LabelSchema } = require('./Label');
+const { Board } = require('./Board');
 const { CardCommentSchema, CardComment } = require('./CardComment');
 
-const { Schema } = mongoose;
+const { Schema, Types } = mongoose;
 
 const CardSchema = new Schema({
   column: {
@@ -19,7 +20,7 @@ const CardSchema = new Schema({
     type: Number,
     required: true,
   },
-  labels: [LabelSchema],
+  labels: [Schema.Types.ObjectId],
   description: {
     type: String,
     default: '',
@@ -60,6 +61,18 @@ CardSchema.methods.deleteComment = function deleteComment(commentId) {
   const card = this;
 
   card.comments.id(commentId).remove();
+};
+
+CardSchema.methods.attachLabel = function attachLabel(labelId) {
+  const card = this;
+
+  if (!card.labels.find(label => label._id.toHexString() === labelId)) card.labels.push(new Types.ObjectId(labelId));
+};
+
+CardSchema.methods.removeLabel = function removeLabel(labelId) {
+  const card = this;
+
+  card.labels = card.labels.filter(label => label._id.toHexString() !== labelId);
 };
 
 const Card = mongoose.model('cards', CardSchema);

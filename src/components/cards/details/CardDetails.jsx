@@ -99,7 +99,7 @@ const CardDetails = (props) => {
 
       {status.err.message && <Messages.ErrorMessage closeMessage={resetStatus} message={status.err.message} />}
 
-      <div className="card-details-container p-3">
+      <div className="card-details__container p-3">
         <FontAwesomeIcon onClick={closeDetails} className="popup-close-btn m-1" icon={faTimes} />
 
         <CardTitle
@@ -117,6 +117,8 @@ const CardDetails = (props) => {
 
         <CardLabels
           labels={labels}
+          cardId={id}
+          getPopupContainerPosition={getPopupContainerPosition}
         />
 
         <CardDescription

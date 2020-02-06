@@ -7,8 +7,13 @@ const LabelSchema = new Schema({
     type: String,
     required: true,
   },
+  colorName: {
+    type: String,
+    required: true,
+  },
   title: {
     type: String,
+    default: '',
   },
 });
 
