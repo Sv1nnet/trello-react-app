@@ -1,12 +1,23 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import '../../../../styles/addLabelForm.sass';
 import LabelCheckbox from './LabelCheckbox';
 import boardActions from '../../../../actions/boardActions';
+import useStatus from '../../../../utlis/hooks/useStatus';
+import Messages from '../../../utils/Messages';
 
 
 const AddLabelForm = ({ token, board, cardId, attachedLabels, attachLabel, removeLabel }) => {
+  const {
+    status,
+    setStatusLoading,
+    resetStatus,
+    handleSuccess,
+    handleError,
+  } = useStatus();
+
   const onLableChange = (e) => {
     const { target } = e;
     const data = {
@@ -15,21 +26,29 @@ const AddLabelForm = ({ token, board, cardId, attachedLabels, attachLabel, remov
     };
 
     const changeResultPromise = target.checked ? attachLabel(token.token, board._id, cardId, target.id, data) : removeLabel(token.token, board._id, cardId, target.id, data);
+    setStatusLoading();
+
     changeResultPromise
-      .then((res) => console.log('label action success', res))
-      .catch((err) => console.log('label error', err));
+      .then(handleSuccess)
+      .catch(handleError);
   };
 
   return (
-    <div className="add-label-popup__container">
-      <span className="popup-title">Lables</span>
+    <>
+      <div className="add-label-popup__container">
+        <span className="popup-title">Lables</span>
 
-      <form action="" onSubmit={() => {}}>
-        <span className="add-label-popup-title">SELECT LABEL</span>
+        <form action="" onSubmit={() => { }}>
+          <span className="add-label-popup-title">SELECT LABEL</span>
 
-        {board.labels.map(label => <LabelCheckbox key={label._id} id={label._id} onChange={onLableChange} colorName={label.colorName} color={label.color} title={label.title} checked={!!attachedLabels[label._id]} />)}
-      </form>
-    </div>
+          {board.labels.map(label => <LabelCheckbox key={label._id} id={label._id} onChange={onLableChange} colorName={label.colorName} color={label.color} title={label.title} checked={!!attachedLabels[label._id]} />)}
+        </form>
+      </div>
+      {status.err.message && ReactDOM.createPortal(
+        <Messages.ErrorMessage message={status.err.message} closeMessage={resetStatus} btn />,
+        document.querySelector('.App'),
+      )}
+    </>
   );
 };
 
@@ -44,7 +63,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 AddLabelForm.propTypes = {
-  
+
 };
 
 

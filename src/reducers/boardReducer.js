@@ -248,6 +248,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         ...state,
         activities: [...data.activities],
         cards,
+        cashedCards: cards,
       };
     case cardActionTypes.CARD_DELETED:
       data = { ...action.data };

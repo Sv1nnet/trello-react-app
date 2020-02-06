@@ -205,7 +205,9 @@ const BoardContentContextProvider = (props) => {
 
   let cardForDetails = null;
 
+  // If we need to open card details
   if (cardIdDetails) {
+    // This object we need to find out if the card has attached labels and what these labels are
     const boardLabels = {};
     board.labels.forEach((label) => {
       boardLabels[label._id] = {

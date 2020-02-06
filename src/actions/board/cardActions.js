@@ -119,7 +119,7 @@ const updateCardComment = (token, boardId, cardId, commentId, dataToUpdate) => (
         dispatch({
           type: cardActionTypes.CARD_UPDATE_FAILED,
           data: createErrorResponseObject(err),
-        }),
+        }).data,
       );
     });
 };
@@ -134,7 +134,7 @@ const deleteCardComment = (token, boardId, cardId, commentId) => (dispatch) => {
         dispatch({
           type: cardActionTypes.CARD_COMMENT_DELETE_FALIED,
           data: createErrorResponseObject(err),
-        }),
+        }).data,
       );
     });
 };
@@ -150,7 +150,7 @@ const attachLabel = (token, boardId, cardId, labelId) => (dispatch) => {
         dispatch({
           type: cardActionTypes.LABEL_ATTACH_FAILED,
           data: createErrorResponseObject(err),
-        }),
+        }).data,
       );
     });
 };
@@ -166,7 +166,7 @@ const removeLabel = (token, boardId, cardId, labelId) => (dispatch) => {
         dispatch({
           type: cardActionTypes.LABEL_REMOVE_FAILED,
           data: createErrorResponseObject(err),
-        }),
+        }).data,
       );
     });
 };

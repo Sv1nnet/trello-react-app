@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import '../../../styles/cardDetails.sass';
 import '../../../styles/popupContainer.sass';
 import PropTypes from 'prop-types';
@@ -97,7 +98,10 @@ const CardDetails = (props) => {
       onKeyPress={onBgClick}
     >
 
-      {status.err.message && <Messages.ErrorMessage closeMessage={resetStatus} message={status.err.message} />}
+      {status.err.message && ReactDOM.createPortal(
+        <Messages.ErrorMessage message={status.err.message} closeMessage={resetStatus} btn />,
+        document.querySelector('.App'),
+      )}
 
       <div className="card-details__container p-3">
         <FontAwesomeIcon onClick={closeDetails} className="popup-close-btn m-1" icon={faTimes} />

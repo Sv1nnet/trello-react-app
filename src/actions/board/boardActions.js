@@ -111,7 +111,7 @@ const updateLabel = (token, boardId, labelId, data) => (dispatch) => {
         dispatch({
           type: boardActionTypes.LABEL_UPDATE_FAILED,
           data: createErrorResponseObject(err),
-        }),
+        }).data,
       );
     });
 };
