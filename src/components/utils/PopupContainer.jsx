@@ -44,10 +44,13 @@ class PopupContainer extends Component {
     mounted: false,
   }
 
-  // When component mounted we need watch if popup component was target of click e. If not we need popup to be closed
+  // When component mounted we need watch if popup component was target of click event. If not we need popup to be closed
   componentDidMount() {
     if (window) {
-      window.addEventListener('click', this.windowClick, false);
+      setTimeout(() => {
+        window.addEventListener('click', this.windowClick, false);
+        this.setState(state => ({ ...state, mounted: true }));
+      }, 0);
     }
   }
 
@@ -64,7 +67,7 @@ class PopupContainer extends Component {
 
     // If we specified array of classes then we check should we close popup by using classesToNotClosePopup. Otherwise we look up popup container in e.target.parents and if we don't find it then popup should be closed
     if (classesToNotClosePopup) {
-      targetIsPopup = classesToNotClosePopup && !!classesToNotClosePopup.find(className => e.target.classList.contains(className) || e.target.parentElement.classList.contains(className));
+      targetIsPopup = hasParent(this.containerElement.current, e.target) || !!classesToNotClosePopup.find(className => e.target.classList.contains(className) || e.target.parentElement.classList.contains(className));
     } else {
       targetIsPopup = hasParent(this.containerElement.current, e.target);
     }
@@ -74,7 +77,6 @@ class PopupContainer extends Component {
     }
 
     if (mounted && removeElement) removeElement(e, popupToClose);
-    else this.setState(state => ({ ...state, mounted: true })); // We need this line because once user icon was clicked popup component also handles this click e and close himself. So we set mounted true after the very first lick e was invoked
   }
 
   closeSelf = (e, isClosedFromChild) => {
