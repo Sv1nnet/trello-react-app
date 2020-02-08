@@ -9,7 +9,7 @@ import useStatus from '../../../../utlis/hooks/useStatus';
 import Messages from '../../../utils/Messages';
 
 
-const AddLabelForm = ({ token, board, cardId, attachedLabels, attachLabel, removeLabel }) => {
+const AddLabelForm = ({ token, board, cardId, attachedLabels, attachLabel, removeLabel, popupContainerRef, style }) => {
   const {
     status,
     setStatusLoading,
@@ -44,6 +44,7 @@ const AddLabelForm = ({ token, board, cardId, attachedLabels, attachLabel, remov
           {board.labels.map(label => <LabelCheckbox key={label._id} id={label._id} onChange={onLableChange} colorName={label.colorName} color={label.color} title={label.title} checked={!!attachedLabels[label._id]} />)}
         </form>
       </div>
+
       {status.err.message && ReactDOM.createPortal(
         <Messages.ErrorMessage message={status.err.message} closeMessage={resetStatus} btn />,
         document.querySelector('.App'),

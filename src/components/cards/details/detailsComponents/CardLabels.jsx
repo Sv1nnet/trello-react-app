@@ -1,11 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Label from './Label';
 import PopupContainer from '../../../utils/PopupContainer';
 import AddLabelForm from './AddLabelForm';
-import hasParent from '../../../../utlis/hasParent';
 
 
 const CardLabels = (props) => {
@@ -16,7 +15,9 @@ const CardLabels = (props) => {
   } = props;
   const [addLabelPopupIsActive, setAddLabelPopupIsActive] = useState(false);
   const [popupPosition, setPopupPosition] = useState({});
+
   const buttonRef = useRef(null);
+  const popupContainerRef = useRef(null);
 
   // Need this ref in order to find out should we close popup (if clicked the same element that opened the popup)
   // or open the popup/update popup position (if clicked an element different from that opened the popup).
@@ -56,6 +57,15 @@ const CardLabels = (props) => {
     sourceOpenedPupopRef.current = el;
   };
 
+  useEffect(() => {
+    const cardDetailsContainer = document.querySelector('.card-details__container');
+    const isContainerOverflowed = cardDetailsContainer.offsetWidth !== cardDetailsContainer.scrollWidth;
+
+    if (isContainerOverflowed) {
+      popupContainerRef.current.style.left = '0';
+    }
+  }, [popupPosition]);
+
   const attachedLables = {};
 
   return (
@@ -78,6 +88,7 @@ const CardLabels = (props) => {
           <PopupContainer
             removeElement={() => { setAddLabelPopupIsActive(false); sourceOpenedPupopRef.current = null; }}
             closeBtn
+            popupContainerRef={popupContainerRef}
             extraClasses={['card-details__popup']}
             classesToNotClosePopup={['label-container', 'label-content', 'add-label-btn', 'not-close-label-popup']}
             style={popupPosition}

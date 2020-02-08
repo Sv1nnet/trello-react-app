@@ -1,10 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { BoardContentContext } from '../../../context/BoardContentContext';
 import '../../../../styles/moveCardForm.sass';
 
 
-const MoveCardForm = ({ sourceColumnId, sourcePosition, moveCard }) => {
+const MoveCardForm = ({ sourceColumnId, sourcePosition, moveCard, popupContainerRef }) => {
   const { columnsWithCards } = useContext(BoardContentContext);
   const [position, setPosition] = useState(sourcePosition);
   const [columnToMove, setColumnToMove] = useState({
@@ -65,6 +65,15 @@ const MoveCardForm = ({ sourceColumnId, sourcePosition, moveCard }) => {
       id: sourceColumnId,
     });
   }, [columnsWithCards, sourceColumnId]);
+
+  useEffect(() => {
+    const cardDetailsContainer = document.querySelector('.card-details__container');
+    const isContainerOverflowed = cardDetailsContainer.offsetWidth !== cardDetailsContainer.scrollWidth;
+
+    if (isContainerOverflowed) {
+      popupContainerRef.current.style.left = '0';
+    }
+  }, [popupContainerRef]);
 
   return (
     <div className="move-card-popup__container">

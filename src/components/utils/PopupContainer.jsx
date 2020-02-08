@@ -19,11 +19,15 @@ const propTypes = {
   extraClasses: PropTypes.arrayOf(PropTypes.string),
   style: PropTypes.shape({}),
   popupToClose: PropTypes.string,
+  popupContainerRef: PropTypes.shape({
+    current: PropTypes.instanceOf(HTMLElement),
+  }),
   closeBtn: PropTypes.bool,
 };
 
 const defaultProps = {
   classesToNotClosePopup: null,
+  popupContainerRef: null,
   extraClasses: null,
   style: {},
   popupToClose: null,
@@ -89,18 +93,19 @@ class PopupContainer extends Component {
 
   render() {
     const { state, props, containerElement } = this;
-    const { children, extraClasses, closeBtnExtraClasses, closeBtn, style } = props;
+    const { children, extraClasses, closeBtnExtraClasses, closeBtn, style, popupContainerRef } = props;
 
     if (state.shouldCloseItself) return null;
 
     return (
-      <div ref={containerElement} style={{ ...style }} className={`dropdown-menu ${extraClasses ? extraClasses.join(' ') : ''} active`}>
+      <div ref={(el) => { containerElement.current = el; if (popupContainerRef) popupContainerRef.current = el; }} style={{ ...style }} className={`dropdown-menu ${extraClasses ? extraClasses.join(' ') : ''} active`}>
         <div className="container-fluid">
 
           {closeBtn && <FontAwesomeIcon onClick={this.closeSelf} className={`popup-close-btn ${closeBtnExtraClasses ? closeBtnExtraClasses.join(' ') : ''}`} icon={faTimes} />}
 
           <div className="row">
-            {children}
+            {React.Children.map(children, child => React.cloneElement(child, { ...child.props, popupContainerRef: containerElement }))}
+            {/* {children} */}
           </div>
 
         </div>
