@@ -46,12 +46,10 @@ class PopupContainer extends Component {
 
   // When component mounted we need watch if popup component was target of click event. If not we need popup to be closed
   componentDidMount() {
-    if (window) {
-      setTimeout(() => {
-        window.addEventListener('click', this.windowClick, false);
-        this.setState(state => ({ ...state, mounted: true }));
-      }, 0);
-    }
+    setTimeout(() => {
+      window.addEventListener('click', this.windowClick, false);
+      this.setState(state => ({ ...state, mounted: true }));
+    }, 0);
   }
 
   // Remove watching click e

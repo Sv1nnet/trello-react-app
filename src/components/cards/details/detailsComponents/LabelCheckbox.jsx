@@ -1,18 +1,104 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faEdit, faTimes, faSave } from '@fortawesome/free-solid-svg-icons';
 import boardActions from '../../../../actions/boardActions';
+import TextInput from '../../../utils/TextInput';
+import useStatus from '../../../../utlis/hooks/useStatus';
+import Messages from '../../../utils/Messages';
+import isEnterPressed from '../../../../utlis/isEnterPressed';
 
-const LabelCheckbox = ({ id, color, colorName, title, checked, onChange, updateLabel }) => {
-  
+const LabelCheckbox = ({ id, color, colorName, title, checked, onChange, board, token, updateLabel }) => {
+  const [labelTitle, setLabelTitle] = useState(title);
+  const [isInputActive, setIsInputActive] = useState(false);
+  const {
+    status,
+    setStatusLoading,
+    resetStatus,
+    handleSuccess,
+    handleError,
+  } = useStatus();
+
+  // const set
+  const setInputState = () => {
+    setIsInputActive(prevState => !prevState);
+  };
+
+  const saveLabelTitleChanges = (e) => {
+    e.preventDefault();
+    // console.log('prevented')
+
+    setStatusLoading();
+
+    updateLabel(token.token, board._id, id, { title: labelTitle })
+      .then(handleSuccess)
+      .then(() => { setIsInputActive(false); })
+      .catch(handleError);
+  };
+
+  const onLabelTitleChange = (e) => {
+    const { target } = e;
+
+    setLabelTitle(target.value);
+  };
+
+  const onKeyPress = (e) => {
+    if (isEnterPressed(e)) {
+      e.preventDefault();
+      saveLabelTitleChanges(e);
+    }
+  };
+
+  const discardTitleChanges = () => {
+    setIsInputActive(false);
+    setLabelTitle(title);
+  };
+
   return (
-    <div className="color-label-checkbox__container">
-      <label htmlFor={id} style={{ backgroundColor: color }} className="color-checkbox-label">{title}</label>
-      <input type="checkbox" onChange={onChange} checked={checked} name={colorName} id={id} className="color-checkbox" />
-      <FontAwesomeIcon icon={faCheck} className="check-icon" />
-    </div>
+    <>
+      <div className="color-label-checkbox__container">
+        <label htmlFor={id} style={{ backgroundColor: color }} className="color-checkbox-label">{isInputActive ? '' : labelTitle}</label>
+        {isInputActive && (
+          <TextInput
+            hideCrossBtn
+            hideSearchBtn
+            focusAfterActivated
+            onKeyPress={onKeyPress}
+            onChange={onLabelTitleChange}
+            inputType="input"
+            placeholder="Label title..."
+            inputValue={labelTitle}
+            containerClassList="label-title-input__container"
+            classList="label-title-input"
+          />
+        )}
+        <input type="checkbox" onChange={onChange} checked={checked} name={colorName} id={id} className="color-checkbox" />
+
+        {!isInputActive && <FontAwesomeIcon icon={faCheck} className="check-icon" />}
+        {isInputActive && (
+          <FontAwesomeIcon
+            icon={faSave}
+            onClick={!status.loading ? saveLabelTitleChanges : () => { }}
+            onKeyPress={!status.loading ? saveLabelTitleChanges : () => { }}
+            style={{ opacity: status.loading ? '0.3' : '1' }}
+            className="save-icon"
+          />
+        )}
+
+        {!isInputActive && <FontAwesomeIcon icon={faEdit} onClick={setInputState} onKeyPress={setInputState} className="edit-icon" />}
+        {isInputActive && <FontAwesomeIcon icon={faTimes} onClick={discardTitleChanges} onKeyPress={discardTitleChanges} className="close-edit-icon" />}
+      </div>
+      {status.err.message && ReactDOM.createPortal(
+        <Messages.ErrorMessage
+          closeMessage={resetStatus}
+          message={status.err.message}
+          btn
+        />,
+        document.querySelector('.App'),
+      )}
+    </>
   );
 };
 
@@ -22,7 +108,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateLabel: (token, boardId, cardId, data) => dispatch(boardActions.updateLabel(token, boardId, cardId, data)),
+  updateLabel: (token, boardId, labelId, data) => dispatch(boardActions.updateLabel(token, boardId, labelId, data)),
 });
 
 

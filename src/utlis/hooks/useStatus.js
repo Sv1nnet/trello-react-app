@@ -33,6 +33,8 @@ const useStatus = (initialStatus = defaultStatus) => {
         data: res.data,
       },
     });
+
+    return res;
   };
 
   const handleError = (err) => {
@@ -48,6 +50,8 @@ const useStatus = (initialStatus = defaultStatus) => {
         data: null,
       },
     });
+
+    return Promise.reject(err);
   };
 
   const resetStatus = () => {

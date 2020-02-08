@@ -1,7 +1,7 @@
 import axios from 'axios';
 import setAuthHeaders from './utlis/setAuthHeaders';
 
-const ip = 'http://192.168.0.11:3111';
+const ip = 'http://192.168.0.10:3111';
 const api = {
   auth: {
     signup: (data) => {

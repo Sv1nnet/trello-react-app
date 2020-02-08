@@ -17,7 +17,7 @@ const updateLabel = (req, res) => {
         const isOwner = board.owner.toHexString() === decoded._id;
 
         if (!isOwner) {
-          res.status(400).send({ err: 'Only board owner can change board settings and content' });
+          res.status(400).send({ err: 'Only board owner can change label title' });
         } else {
           try {
             board.updateLabel(labelId, { title });
@@ -28,10 +28,10 @@ const updateLabel = (req, res) => {
 
             const activities = await board.getActivities();
 
-            res.status(200).send({ ...updatedBoard, activities });
+            res.status(200).send({ ...updatedBoard._doc, activities });
           } catch (e) {
             console.log(e);
-            res.status(400).send({ err: 'Could not update board in updating' });
+            res.status(400).send({ err: 'Could not update board with the new label title' });
           }
         }
       } else {

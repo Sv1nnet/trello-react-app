@@ -8,7 +8,6 @@ import AddLabelForm from './AddLabelForm';
 import hasParent from '../../../../utlis/hasParent';
 
 
-
 const CardLabels = (props) => {
   const {
     labels,
@@ -19,11 +18,42 @@ const CardLabels = (props) => {
   const [popupPosition, setPopupPosition] = useState({});
   const buttonRef = useRef(null);
 
+  // Need this ref in order to find out should we close popup (if clicked the same element that opened the popup)
+  // or open the popup/update popup position (if clicked an element different from that opened the popup).
+  // So we will sign the element was clicked to this ref.
+  const sourceOpenedPupopRef = useRef(null);
+
   const setAddLabelPopupState = (e, label) => {
     const el = label || buttonRef.current;
+    const openedByLabelClick = !!label;
 
-    setAddLabelPopupIsActive(prevState => !prevState);
+    if (openedByLabelClick) {
+      if (label === sourceOpenedPupopRef.current) {
+        sourceOpenedPupopRef.current = null;
+        setAddLabelPopupIsActive(false);
+        return;
+      }
+
+      if (!addLabelPopupIsActive) {
+        sourceOpenedPupopRef.current = el;
+        setAddLabelPopupIsActive(true);
+        setPopupPosition(getPopupContainerPosition(el, { paddingTop: 35 }));
+        return;
+      }
+    }
+
+    if (addLabelPopupIsActive) {
+      if (sourceOpenedPupopRef.current === buttonRef.current && !openedByLabelClick) {
+        sourceOpenedPupopRef.current = null;
+        setAddLabelPopupIsActive(false);
+        return;
+      }
+    } else {
+      setAddLabelPopupIsActive(true);
+    }
+
     setPopupPosition(getPopupContainerPosition(el, { paddingTop: 35 }));
+    sourceOpenedPupopRef.current = el;
   };
 
   const attachedLables = {};
@@ -36,19 +66,20 @@ const CardLabels = (props) => {
         {labels.map((label) => {
           attachedLables[label.id] = true;
           return (
-            <Label isTitleRevealed onClick={setAddLabelPopupState} key={label.id} title={label.title} color={label.color} />
+            <Label isTitleRevealed events={{ onClick: setAddLabelPopupState }} key={label.id} id={label.id} title={label.title} color={label.color} />
           );
         })}
 
-        <div tabIndex="0" role="button" ref={buttonRef} onClick={setAddLabelPopupState} onKeyPress={() => { console.log('key pressed ') }} className="add-label-btn btn p-1 btn-sm">
-          <FontAwesomeIcon icon={faPlus} />
+        <div tabIndex="0" role="button" ref={buttonRef} onClick={setAddLabelPopupState} onKeyPress={setAddLabelPopupState} className="add-label-btn btn p-1 btn-sm">
+          <FontAwesomeIcon className="not-close-label-popup" icon={faPlus} />
         </div>
 
         {addLabelPopupIsActive && (
           <PopupContainer
-            removeElement={setAddLabelPopupState}
+            removeElement={() => { setAddLabelPopupIsActive(false); sourceOpenedPupopRef.current = null; }}
             closeBtn
             extraClasses={['card-details__popup']}
+            classesToNotClosePopup={['label-container', 'label-content', 'add-label-btn', 'not-close-label-popup']}
             style={popupPosition}
           >
             <AddLabelForm cardId={cardId} attachedLabels={attachedLables} />

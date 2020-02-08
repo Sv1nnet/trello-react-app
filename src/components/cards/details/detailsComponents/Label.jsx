@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import '../../../../styles/label.sass';
 
@@ -16,9 +16,11 @@ const defaultProps = {
 
 
 const Label = ({ title, color, isTitleRevealed, events }) => {
+  const labelRef = useRef(null);
+
   return (
     <div className={`label-container ${isTitleRevealed ? 'revealed' : ''}`}>
-      <div tabIndex="0" role="button" className="label-content" style={{ backgroundColor: color }} {...events}>{isTitleRevealed && title}</div>
+      <div ref={labelRef} tabIndex="0" role="button" className="label-content" style={{ backgroundColor: color }} onClick={(e) => { events.onClick(e, labelRef.current); }}>{isTitleRevealed && title}</div>
     </div>
   );
 };

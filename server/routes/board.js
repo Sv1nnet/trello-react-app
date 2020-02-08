@@ -41,7 +41,7 @@ router.get('/all', getUserBoards);
 router.get('/:id', getBoardById);
 router.post('/:id', updateBoardSetting);
 router.post('/', createBoard);
-router.post('/update_label/:labelId', updateLabel);
+router.post('/:id/update_label/:labelId', updateLabel);
 router.get('/:id/get_activities', getActivities);
 
 // Members routes

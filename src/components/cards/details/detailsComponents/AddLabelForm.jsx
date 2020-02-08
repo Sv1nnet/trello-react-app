@@ -38,7 +38,7 @@ const AddLabelForm = ({ token, board, cardId, attachedLabels, attachLabel, remov
       <div className="add-label-popup__container">
         <span className="popup-title">Lables</span>
 
-        <form action="" onSubmit={() => { }}>
+        <form action="" onSubmit={(e) => { e.preventDefault(); }}>
           <span className="add-label-popup-title">SELECT LABEL</span>
 
           {board.labels.map(label => <LabelCheckbox key={label._id} id={label._id} onChange={onLableChange} colorName={label.colorName} color={label.color} title={label.title} checked={!!attachedLabels[label._id]} />)}
