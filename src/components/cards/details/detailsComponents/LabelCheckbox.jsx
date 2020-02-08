@@ -21,14 +21,17 @@ const LabelCheckbox = ({ id, color, colorName, title, checked, onChange, board, 
     handleError,
   } = useStatus();
 
-  // const set
   const setInputState = () => {
     setIsInputActive(prevState => !prevState);
   };
 
   const saveLabelTitleChanges = (e) => {
     e.preventDefault();
-    // console.log('prevented')
+
+    if (labelTitle === title) {
+      setIsInputActive(false);
+      return;
+    }
 
     setStatusLoading();
 
