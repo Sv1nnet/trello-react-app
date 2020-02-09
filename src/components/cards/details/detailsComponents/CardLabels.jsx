@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Label from './Label';
 import PopupContainer from '../../../utils/PopupContainer';
 import AddLabelForm from './AddLabelForm';
+import isOutOfViewport from '../../../../utlis/isOutOfViewport';
 
 
 const propTypes = {
@@ -73,12 +74,17 @@ const CardLabels = (props) => {
     sourceOpenedPupopRef.current = el;
   };
 
-  useEffect(() => {
-    const cardDetailsContainer = document.querySelector('.card-details__container');
-    const isContainerOverflowed = cardDetailsContainer.offsetWidth !== cardDetailsContainer.scrollWidth;
+  // If popup doesn't fit the screen then make it to fit
+  useLayoutEffect(() => {
+    const isOutResult = popupContainerRef.current ? isOutOfViewport(popupContainerRef.current) : {};
 
-    if (isContainerOverflowed) {
-      popupContainerRef.current.style.left = '0';
+    if (isOutResult.right) {
+      const windowWidth = window.innerWidth;
+      const popupBoundingRect = popupContainerRef.current.getBoundingClientRect();
+      const popupLeft = parseInt(popupContainerRef.current.style.left, 10);
+      const updatedLeft = popupLeft - (popupBoundingRect.right - windowWidth);
+
+      popupContainerRef.current.style.left = `${updatedLeft}px`;
     }
   }, [popupPosition]);
 

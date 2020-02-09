@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { BoardContentContext } from '../../../context/BoardContentContext';
 import '../../../../styles/moveCardForm.sass';
+import isOutOfViewport from '../../../../utlis/isOutOfViewport';
 
 
 const propTypes = {
@@ -83,12 +84,17 @@ const MoveCardForm = (props) => {
     });
   }, [columnsWithCards, sourceColumnId]);
 
+  // If popup doesn't fit the screen then make it to fit
   useEffect(() => {
-    const cardDetailsContainer = document.querySelector('.card-details__container');
-    const isContainerOverflowed = cardDetailsContainer.offsetWidth !== cardDetailsContainer.scrollWidth;
+    const isOutResult = popupContainerRef.current ? isOutOfViewport(popupContainerRef.current) : {};
 
-    if (isContainerOverflowed) {
-      popupContainerRef.current.style.left = '0';
+    if (isOutResult.right) {
+      const windowWidth = window.innerWidth;
+      const popupBoundingRect = popupContainerRef.current.getBoundingClientRect();
+      const popupLeft = parseInt(popupContainerRef.current.style.left, 10);
+      const updatedLeft = popupLeft - (popupBoundingRect.right - windowWidth);
+
+      popupContainerRef.current.style.left = `${updatedLeft}px`;
     }
   }, [popupContainerRef]);
 
