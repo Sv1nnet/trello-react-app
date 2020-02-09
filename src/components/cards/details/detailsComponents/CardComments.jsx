@@ -14,12 +14,10 @@ const propTypes = {
   comments: PropTypes.arrayOf(PropTypes.shape({
     _id: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
-    cardId: PropTypes.string.isRequired,
     authorName: PropTypes.string.isRequired,
     authorId: PropTypes.string.isRequired,
     edited: PropTypes.bool.isRequired,
     date: PropTypes.string.isRequired,
-    isOwner: PropTypes.bool.isRequired,
   })),
   userData: PropTypes.shape({
     _id: PropTypes.string.isRequired,

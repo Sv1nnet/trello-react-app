@@ -28,7 +28,7 @@ const propTypes = {
   }).isRequired,
   board: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    owner: PropTypes.bool.isRequired,
+    owner: PropTypes.string.isRequired,
   }).isRequired,
   updateCardComment: PropTypes.func.isRequired,
   deleteCardComment: PropTypes.func.isRequired,
