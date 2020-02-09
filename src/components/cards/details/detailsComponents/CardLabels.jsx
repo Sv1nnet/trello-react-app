@@ -7,12 +7,20 @@ import PopupContainer from '../../../utils/PopupContainer';
 import AddLabelForm from './AddLabelForm';
 
 
+const propTypes = {
+  labels: PropTypes.string.isRequired,
+  getPopupContainerPosition: PropTypes.func.isRequired,
+  cardId: PropTypes.string.isRequired,
+};
+
+
 const CardLabels = (props) => {
   const {
     labels,
     getPopupContainerPosition,
     cardId,
   } = props;
+
   const [addLabelPopupIsActive, setAddLabelPopupIsActive] = useState(false);
   const [popupPosition, setPopupPosition] = useState({});
 
@@ -103,9 +111,7 @@ const CardLabels = (props) => {
 };
 
 
-CardLabels.propTypes = {
-
-};
+CardLabels.propTypes = propTypes;
 
 
 export default CardLabels;

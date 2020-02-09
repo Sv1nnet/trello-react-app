@@ -11,6 +11,30 @@ import useStatus from '../../../../utlis/hooks/useStatus';
 import Messages from '../../../utils/Messages';
 
 
+const propTypes = {
+  text: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  authorId: PropTypes.string.isRequired,
+  edited: PropTypes.bool.isRequired,
+  date: PropTypes.string.isRequired,
+  isOwner: PropTypes.bool.isRequired,
+  id: PropTypes.string.isRequired,
+  cardId: PropTypes.string.isRequired,
+  userData: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+  }).isRequired,
+  token: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  board: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    owner: PropTypes.bool.isRequired,
+  }).isRequired,
+  updateCardComment: PropTypes.func.isRequired,
+  deleteCardComment: PropTypes.func.isRequired,
+};
+
+
 const Comment = (props) => {
   const {
     text,
@@ -172,9 +196,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 
-Comment.propTypes = {
-
-};
+Comment.propTypes = propTypes;
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Comment);

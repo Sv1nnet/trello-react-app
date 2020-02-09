@@ -15,6 +15,45 @@ import CardComments from './detailsComponents/CardComments';
 import useStatus from '../../../utlis/hooks/useStatus';
 
 
+const propTypes = {
+  title: PropTypes.string.isRequired,
+  labels: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    color: PropTypes.string.isRequired,
+  })),
+  comments: PropTypes.arrayOf(PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired,
+    cardId: PropTypes.string.isRequired,
+    authorName: PropTypes.string.isRequired,
+    authorId: PropTypes.string.isRequired,
+    edited: PropTypes.bool.isRequired,
+    date: PropTypes.string.isRequired,
+    isOwner: PropTypes.bool.isRequired,
+  })),
+  description: PropTypes.string,
+  id: PropTypes.string.isRequired,
+  columnTitle: PropTypes.string.isRequired,
+  closeDetails: PropTypes.func.isRequired,
+  position: PropTypes.number.isRequired,
+  columnId: PropTypes.string.isRequired,
+  board: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+  }).isRequired,
+  token: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  updateCard: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+  labels: [],
+  comments: [],
+  description: '',
+};
+
+
 const CardDetails = (props) => {
   const {
     title,
@@ -154,9 +193,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 
-CardDetails.propTypes = {
-
-};
+CardDetails.propTypes = propTypes;
+CardDetails.defaultProps = defaultProps;
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(CardDetails);

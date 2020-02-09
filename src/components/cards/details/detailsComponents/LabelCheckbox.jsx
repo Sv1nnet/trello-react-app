@@ -10,7 +10,37 @@ import useStatus from '../../../../utlis/hooks/useStatus';
 import Messages from '../../../utils/Messages';
 import isEnterPressed from '../../../../utlis/isEnterPressed';
 
-const LabelCheckbox = ({ id, color, colorName, title, checked, onChange, board, token, updateLabel }) => {
+
+const propTypes = {
+  id: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+  colorName: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  checked: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired,
+  board: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+  }).isRequired,
+  token: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  updateLabel: PropTypes.func.isRequired,
+};
+
+
+const LabelCheckbox = (props) => {
+  const {
+    id,
+    color,
+    colorName,
+    title,
+    checked,
+    onChange,
+    board,
+    token,
+    updateLabel,
+  } = props;
+
   const [labelTitle, setLabelTitle] = useState(title);
   const [isInputActive, setIsInputActive] = useState(false);
   const {
@@ -115,9 +145,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 
-LabelCheckbox.propTypes = {
-
-};
+LabelCheckbox.propTypes = propTypes;
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(LabelCheckbox);

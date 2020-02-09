@@ -1,10 +1,27 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { BoardContentContext } from '../../../context/BoardContentContext';
 import '../../../../styles/moveCardForm.sass';
 
 
-const MoveCardForm = ({ sourceColumnId, sourcePosition, moveCard, popupContainerRef }) => {
+const propTypes = {
+  sourceColumnId: PropTypes.string.isRequired,
+  sourcePosition: PropTypes.number.isRequired,
+  moveCard: PropTypes.func.isRequired,
+  popupContainerRef: PropTypes.shape({
+    current: PropTypes.instanceOf(HTMLElement).isRequired,
+  }).isRequired,
+};
+
+
+const MoveCardForm = (props) => {
+  const {
+    sourceColumnId,
+    sourcePosition,
+    moveCard,
+    popupContainerRef,
+  } = props;
+
   const { columnsWithCards } = useContext(BoardContentContext);
   const [position, setPosition] = useState(sourcePosition);
   const [columnToMove, setColumnToMove] = useState({
@@ -109,9 +126,7 @@ const MoveCardForm = ({ sourceColumnId, sourcePosition, moveCard, popupContainer
 };
 
 
-MoveCardForm.propTypes = {
-
-};
+MoveCardForm.propTypes = propTypes;
 
 
 export default MoveCardForm;

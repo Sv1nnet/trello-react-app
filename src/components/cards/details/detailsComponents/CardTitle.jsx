@@ -12,6 +12,20 @@ import useStatus from '../../../../utlis/hooks/useStatus';
 import Messages from '../../../utils/Messages';
 
 
+const propTypes = {
+  title: PropTypes.string.isRequired,
+  columnTitle: PropTypes.string.isRequired,
+  columnId: PropTypes.string.isRequired,
+  position: PropTypes.number.isRequired,
+  handleUpdateRequest: PropTypes.func.isRequired,
+  discardChangesOnEscapePressed: PropTypes.func.isRequired,
+  blurOnShiftAndEnterPressed: PropTypes.func.isRequired,
+  setMoveCardPopupState: PropTypes.func.isRequired,
+  moveCardPopupIsActive: PropTypes.bool.isRequired,
+  getPopupContainerPosition: PropTypes.func.isRequired,
+};
+
+
 const CardTitle = (props) => {
   const {
     title,
@@ -121,9 +135,7 @@ const CardTitle = (props) => {
 };
 
 
-CardTitle.propTypes = {
-
-};
+CardTitle.propTypes = propTypes;
 
 
 export default CardTitle;

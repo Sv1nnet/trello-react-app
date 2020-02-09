@@ -9,7 +9,40 @@ import useStatus from '../../../../utlis/hooks/useStatus';
 import Messages from '../../../utils/Messages';
 
 
-const AddLabelForm = ({ token, board, cardId, attachedLabels, attachLabel, removeLabel, popupContainerRef, style }) => {
+const propTypes = {
+  token: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+  board: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    labels: PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      color: PropTypes.string.isRequired,
+      colorName: PropTypes.string.isRequired,
+      title: PropTypes.string,
+    }),
+  }).isRequired,
+  cardId: PropTypes.string.isRequired,
+  attachedLabels: PropTypes.shape({ }),
+  attachLabel: PropTypes.func.isRequired,
+  removeLabel: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+  attachedLabels: {},
+};
+
+
+const AddLabelForm = (props) => {
+  const {
+    token,
+    board,
+    cardId,
+    attachedLabels,
+    attachLabel,
+    removeLabel,
+  } = props;
+
   const {
     status,
     setStatusLoading,
@@ -63,9 +96,8 @@ const mapDispatchToProps = dispatch => ({
   removeLabel: (token, boardId, cardId, data) => dispatch(boardActions.removeLabel(token, boardId, cardId, data)),
 });
 
-AddLabelForm.propTypes = {
-
-};
+AddLabelForm.propTypes = propTypes;
+AddLabelForm.defaultProps = defaultProps;
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddLabelForm);

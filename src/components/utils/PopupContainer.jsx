@@ -56,7 +56,7 @@ class PopupContainer extends Component {
     }, 0);
   }
 
-  // Remove watching click e
+  // Remove watching click event
   componentWillUnmount() {
     window.removeEventListener('click', this.windowClick, false);
   }
@@ -81,9 +81,7 @@ class PopupContainer extends Component {
     if (mounted && removeElement) removeElement(e, popupToClose);
   }
 
-  closeSelf = (e, isClosedFromChild) => {
-    // if (isClosedFromChild) this.setState(() => ({ shouldCloseItself: true }));
-
+  closeSelf = (e) => {
     const { removeElement, popupToClose } = this.props;
     const { mounted } = this.state;
 
@@ -105,7 +103,6 @@ class PopupContainer extends Component {
 
           <div className="row">
             {React.Children.map(children, child => React.cloneElement(child, { ...child.props, popupContainerRef: containerElement }))}
-            {/* {children} */}
           </div>
 
         </div>

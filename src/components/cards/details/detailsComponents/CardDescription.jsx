@@ -5,7 +5,26 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import TextInput from '../../../utils/TextInput';
 
 
-const CardDescription = ({ description, handleUpdateRequest, discardChangesOnEscapePressed, blurOnShiftAndEnterPressed }) => {
+const propTypes = {
+  description: PropTypes.string,
+  handleUpdateRequest: PropTypes.func.isRequired,
+  discardChangesOnEscapePressed: PropTypes.func.isRequired,
+  blurOnShiftAndEnterPressed: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+  description: '',
+};
+
+
+const CardDescription = (props) => {
+  const {
+    description,
+    handleUpdateRequest,
+    discardChangesOnEscapePressed,
+    blurOnShiftAndEnterPressed,
+  } = props;
+
   const [cardDescription, setCardDescription] = useState(description);
   const [buttonsActive, setButtonsActive] = useState(false);
 
@@ -68,9 +87,8 @@ const CardDescription = ({ description, handleUpdateRequest, discardChangesOnEsc
 };
 
 
-CardDescription.propTypes = {
-
-};
+CardDescription.propTypes = propTypes;
+CardDescription.defaultProps = defaultProps;
 
 
 export default CardDescription;
