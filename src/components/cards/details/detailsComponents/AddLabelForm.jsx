@@ -15,15 +15,15 @@ const propTypes = {
   }).isRequired,
   board: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    labels: PropTypes.shape({
+    labels: PropTypes.arrayOf(PropTypes.shape({
       _id: PropTypes.string.isRequired,
       color: PropTypes.string.isRequired,
       colorName: PropTypes.string.isRequired,
       title: PropTypes.string,
-    }),
+    })),
   }).isRequired,
   cardId: PropTypes.string.isRequired,
-  attachedLabels: PropTypes.shape({ }),
+  attachedLabels: PropTypes.shape({}),
   attachLabel: PropTypes.func.isRequired,
   removeLabel: PropTypes.func.isRequired,
 };

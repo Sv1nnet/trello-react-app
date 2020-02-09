@@ -126,6 +126,7 @@ const CardTitle = (props) => {
           </PopupContainer>
         )}
       </div>
+
       {status.err.message && ReactDOM.createPortal(
         <Messages.ErrorMessage message={status.err.message} closeBtn closeMessage={resetStatus} />,
         document.querySelector('.App'),

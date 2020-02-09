@@ -8,9 +8,17 @@ import AddLabelForm from './AddLabelForm';
 
 
 const propTypes = {
-  labels: PropTypes.string.isRequired,
+  labels: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    color: PropTypes.string.isRequired,
+  })),
   getPopupContainerPosition: PropTypes.func.isRequired,
   cardId: PropTypes.string.isRequired,
+};
+
+const defaultProps = {
+  labels: [],
 };
 
 
@@ -112,6 +120,7 @@ const CardLabels = (props) => {
 
 
 CardLabels.propTypes = propTypes;
+CardLabels.defaultProps = defaultProps;
 
 
 export default CardLabels;

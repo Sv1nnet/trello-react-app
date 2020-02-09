@@ -9,7 +9,7 @@ const propTypes = {
   sourcePosition: PropTypes.number.isRequired,
   moveCard: PropTypes.func.isRequired,
   popupContainerRef: PropTypes.shape({
-    current: PropTypes.instanceOf(HTMLElement).isRequired,
+    current: PropTypes.instanceOf(HTMLElement),
   }).isRequired,
 };
 
