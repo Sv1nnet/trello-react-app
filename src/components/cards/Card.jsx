@@ -1,5 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
+import { BoardContentContext } from '../context/BoardContentContext';
+import Label from './details/detailsComponents/Label';
 
 
 const propTypes = {
@@ -37,15 +39,23 @@ const defaultProps = {
 
 
 // We need ot separate card's body and its container because in search popup we shows cards withour draggable functionality
-const Card = ({ dragProvided, deleteCard, editingTargetRef, title }) => {
-  const dragHandleProps = dragProvided ? dragProvided.dragHandleProps : {};
+const Card = ({ dragProvided, deleteCard, editingTargetRef, title, labels }) => {
+  const { boardLabels } = useContext(BoardContentContext);
   const titleRef = useRef(null);
+
+  const dragHandleProps = dragProvided ? dragProvided.dragHandleProps : {};
   const cardBody = (
     <div tabIndex="0" role="button" onKeyPress={deleteCard} onClick={deleteCard} {...dragHandleProps} className="card-item d-flex px-2 flex-wrap align-items-center drag-source">
       <div ref={editingTargetRef} className="h-100 w-100">
+
+        <div className="card-labels__container">
+          {labels.map(label => <Label key={label} color={boardLabels[label].color} />)}
+        </div>
+
         <div ref={titleRef} className="title">
           <span>{title}</span>
         </div>
+
       </div>
     </div>
   );

@@ -6,11 +6,13 @@ import '../../../../styles/label.sass';
 const propTypes = {
   title: PropTypes.string,
   color: PropTypes.string.isRequired,
+  isTitleRevealed: PropTypes.bool,
   events: PropTypes.shape({}),
 };
 
 const defaultProps = {
   title: '',
+  isTitleRevealed: false,
   events: {},
 };
 
@@ -20,7 +22,7 @@ const Label = ({ title, color, isTitleRevealed, events }) => {
 
   return (
     <div className={`label-container ${isTitleRevealed ? 'revealed' : ''}`}>
-      <div ref={labelRef} tabIndex="0" role="button" className="label-content" style={{ backgroundColor: color }} onClick={(e) => { events.onClick(e, labelRef.current); }}>{isTitleRevealed && title}</div>
+      <div ref={labelRef} tabIndex="0" role="button" className="label-content" style={{ backgroundColor: color }} onClick={(e) => { if (events.onClick) events.onClick(e, labelRef.current); }}>{isTitleRevealed && title}</div>
     </div>
   );
 };

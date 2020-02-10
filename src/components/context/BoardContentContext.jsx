@@ -38,6 +38,7 @@ const BoardContentContextProvider = (props) => {
   const { columns, cards } = board;
 
   const [cardIdDetails, setCardIdDetails] = useState(null);
+  const [boardLabels, setBoardLabels] = useState(null);
   const [updatePositionsState, setUpdatePositionsState] = useState({
     message: '',
     statusCode: undefined,
@@ -198,6 +199,19 @@ const BoardContentContextProvider = (props) => {
     setColumnsWithCards(newColumnsWithCards);
   }, [cards, columns]);
 
+  useEffect(() => {
+    const tempBoardLabels = {};
+    board.labels.forEach((label) => {
+      tempBoardLabels[label._id] = {
+        title: label.title,
+        color: label.color,
+        colorName: label.colorName,
+      };
+    });
+
+    setBoardLabels(tempBoardLabels);
+  }, [board.labels]);
+
   useEffect(() => () => {
     clearBoardData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -207,16 +221,6 @@ const BoardContentContextProvider = (props) => {
 
   // If we need to open card details
   if (cardIdDetails) {
-    // This object we need to find out if the card has attached labels and what these labels are
-    const boardLabels = {};
-    board.labels.forEach((label) => {
-      boardLabels[label._id] = {
-        title: label.title,
-        color: label.color,
-        colorName: label.colorName,
-      };
-    });
-
     for (const column in columnsWithCards) {
       cardForDetails = columnsWithCards[column].cards.find(card => card._id === cardIdDetails);
 
@@ -247,6 +251,7 @@ const BoardContentContextProvider = (props) => {
         switchCards,
         openDetails,
         closeDetails,
+        boardLabels,
       }}
     >
       {updatePositionsState.message && <Messages.ErrorMessage message={updatePositionsState.message} closeMessage={closeMessage} />}

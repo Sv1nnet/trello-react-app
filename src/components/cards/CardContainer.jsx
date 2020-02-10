@@ -1,9 +1,8 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useContext } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Draggable from '../utils/dragdrop/Draggable';
 import Card from './Card';
-import CardDetails from './details/CardDetails';
 import boardActions from '../../actions/boardActions';
 import '../../styles/cardItem.sass';
 import { BoardContentContext } from '../context/BoardContentContext';
@@ -32,30 +31,16 @@ const CardContainer = (props) => {
     board,
     cardData,
     columnId,
-    columnTitle,
   } = props;
 
   const {
     id,
-    position,
     title,
     labels,
-    comments,
-    description,
   } = cardData;
 
   const { openDetails, switchCards } = useContext(BoardContentContext);
-
-  // const [detailsOpened, setDetailsOpened] = useState(false);
   const editingTargetRef = useRef(null);
-
-  // const openDetails = () => {
-  //   setDetailsOpened(true);
-  // };
-
-  // const closeDetails = (e) => {
-  //   setDetailsOpened(false);
-  // };
 
   const deleteCard = (e) => {
     if (e.nativeEvent.shiftKey) {
@@ -78,23 +63,10 @@ const CardContainer = (props) => {
             deleteCard={deleteCard}
             editingTargetRef={editingTargetRef}
             title={title}
+            labels={labels}
           />
         )}
       </Draggable>
-      {/* {detailsOpened && ReactDOM.createPortal(
-        <CardDetails
-          title={title}
-          labels={labels}
-          comments={comments}
-          position={position}
-          description={description}
-          closeDetails={closeDetails}
-          id={id}
-          columnTitle={columnTitle}
-          columnId={columnId}
-        />,
-        document.querySelector('.App'),
-      )} */}
     </>
   );
 };

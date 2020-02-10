@@ -19,7 +19,6 @@ const propTypes = {
   position: PropTypes.number.isRequired,
   handleUpdateRequest: PropTypes.func.isRequired,
   discardChangesOnEscapePressed: PropTypes.func.isRequired,
-  blurOnShiftAndEnterPressed: PropTypes.func.isRequired,
   setMoveCardPopupState: PropTypes.func.isRequired,
   moveCardPopupIsActive: PropTypes.bool.isRequired,
   getPopupContainerPosition: PropTypes.func.isRequired,
