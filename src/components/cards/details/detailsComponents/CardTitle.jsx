@@ -34,7 +34,6 @@ const CardTitle = (props) => {
     position,
     handleUpdateRequest,
     discardChangesOnEscapePressed,
-    blurOnShiftAndEnterPressed,
     setMoveCardPopupState,
     moveCardPopupIsActive,
     getPopupContainerPosition,
@@ -51,15 +50,18 @@ const CardTitle = (props) => {
 
   const { switchCards } = useContext(BoardContentContext);
 
-  const onTitleChange = (e) => {
+  const onKeyPress = (e) => {
     const { target } = e;
 
-    // Send send change request if user pressed Enter
+    // Send change request if user pressed Enter
     if (isEnterPressed(e)) {
       e.preventDefault();
       target.blur();
-      return;
     }
+  };
+
+  const onTitleChange = (e) => {
+    const { target } = e;
 
     setCardTitle(target.value);
   };
@@ -96,9 +98,9 @@ const CardTitle = (props) => {
         name="card-title"
         maxLength="128"
         inputValue={cardTitle}
+        onKeyPress={onKeyPress}
         onChange={onTitleChange}
         onKeyDown={discardChangesOnEscapePressed(setCardTitle, title)}
-        onKeyPress={blurOnShiftAndEnterPressed}
         onBlur={onTitleBlur}
         verticalPadding={2}
         classList="card-details__title-input font-weight-bold"

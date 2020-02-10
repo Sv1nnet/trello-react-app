@@ -150,7 +150,6 @@ const CardDetails = (props) => {
           columnId={columnId}
           handleUpdateRequest={handleUpdateRequest}
           discardChangesOnEscapePressed={discardChangesOnEscapePressed}
-          blurOnShiftAndEnterPressed={blurOnShiftAndEnterPressed}
           setMoveCardPopupState={setMoveCardPopupState}
           moveCardPopupIsActive={moveCardPopupIsActive}
           getPopupContainerPosition={getPopupContainerPosition}
