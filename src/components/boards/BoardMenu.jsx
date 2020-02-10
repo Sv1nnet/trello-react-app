@@ -6,6 +6,7 @@ import Messages from '../utils/Messages';
 import '../../styles/boardMenu.sass';
 import BoardDescriptionForm from '../forms/boardForms/BoardDescriptionForm';
 import boardActions from '../../actions/boardActions';
+import useStatus from '../../utlis/hooks/useStatus';
 
 
 const propTypes = {
@@ -27,75 +28,28 @@ const propTypes = {
 
 const BoardMenu = ({ token, board, getActivities, cleanActivities }) => {
   const [activityCount, setActivityCount] = useState(10); // activityCount is a start index for requesting activities from activities array on the server
-  const [status, setStatus] = useState({
-    loading: false,
-    success: { // for success resquest
-      message: '',
-      statusCode: null,
-    },
-    err: { // for resquest errors
-      message: '',
-      statusCode: null,
-    },
-  });
+  const {
+    status,
+    setStatusLoading,
+    resetStatus,
+    handleSuccess,
+    handleError,
+  } = useStatus();
 
-  const handleError = (err) => {
-    setStatus(prevStatus => ({
-      ...prevStatus,
-      loading: false,
-      success: {
-        message: null,
-        statusCode: null,
-      },
-      err: {
-        message: err.message,
-        statusCode: err.status,
-      },
-    }));
-  };
-
-  const loadActivities = (e) => {
-    setStatus(prevStatus => ({
-      ...prevStatus,
-      loading: true,
-    }));
+  const loadActivities = () => {
+    setStatusLoading();
 
     const data = { start: board.activities.length };
     return getActivities(token.token, board._id, data)
       .then((res) => {
-        setStatus(prevStatus => ({
-          ...prevStatus,
-          loading: false,
-          success: {
-            message: res.data.message,
-            statusCode: res.status,
-          },
-          err: {
-            message: '',
-            statusCode: null,
-          },
-        }));
-
+        handleSuccess(res);
         setActivityCount(res.data.activities.length);
       })
-      .catch((err) => {
-        handleError(err);
-      });
+      .catch(handleError);
   };
 
   const closeMessage = () => {
-    setStatus(prevStatus => ({
-      ...prevStatus,
-      loading: false,
-      success: {
-        message: null,
-        statusCode: null,
-      },
-      err: {
-        message: null,
-        statusCode: null,
-      },
-    }));
+    resetStatus();
   };
 
   useEffect(() => () => {
@@ -107,7 +61,7 @@ const BoardMenu = ({ token, board, getActivities, cleanActivities }) => {
     <div className="w-100 overflow-hidden board-menu-container">
       {status.err.message && <Messages.ErrorMessage message={status.err.message} closeMessage={closeMessage} btn />}
       <span className="popup-title">Menu</span>
-      <BoardDescriptionForm setStatus={setStatus} handleError={handleError} />
+      <BoardDescriptionForm handleError={handleError} />
 
       <div className="activity-container">
         <span className="d-block w-100 text-center pb-1">Activity</span>

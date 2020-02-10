@@ -35,10 +35,7 @@ const BoardDescriptionForm = ({ token, board, updateBoard, handleError }) => {
       .then((res) => {
         console.log('res', res);
       })
-      .catch((err) => {
-        handleError(err);
-      });
-    console.log('submitted');
+      .catch(handleError);
   };
 
   const onBlur = (e) => {

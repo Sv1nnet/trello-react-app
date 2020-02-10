@@ -6,10 +6,12 @@ const getBoardById = (req, res) => {
 
   const boardId = req.params.id;
   Board.findById(boardId)
-    .then((board) => {
+    .then(async (board) => {
       if (board) {
         if (!board.isPrivate) {
-          return res.status(200).send(board);
+          const activities = await board.getActivities();
+
+          return res.status(200).send({ ...board._doc, activities });
         }
 
         if (token) {
@@ -32,7 +34,7 @@ const getBoardById = (req, res) => {
           res.status(403).send({ err: 'You have no access to this board' });
         }
       } else {
-        res.status(400).send({ err: 'Could not find the board' });
+        return res.status(400).send({ err: 'Could not find the board' });
       }
     })
     .catch(() => res.status(400).send({ err: 'Could not find the board' }));
