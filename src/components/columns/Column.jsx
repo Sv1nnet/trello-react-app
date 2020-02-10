@@ -155,6 +155,7 @@ const Column = (props) => {
   useEffect(() => {
     // Set title height corresponding its content
     resizeTextarea(titleInputRef);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

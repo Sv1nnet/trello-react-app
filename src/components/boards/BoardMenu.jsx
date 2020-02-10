@@ -100,6 +100,7 @@ const BoardMenu = ({ token, board, getActivities, cleanActivities }) => {
 
   useEffect(() => () => {
     cleanActivities();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

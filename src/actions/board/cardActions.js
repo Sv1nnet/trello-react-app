@@ -2,7 +2,6 @@
 import { cardActionTypes } from '../../types';
 import api from '../../api';
 import createErrorResponseObject from '../../utlis/createErrorResponseObject';
-import Axios from 'axios';
 
 const createCard = (token, boardId, card) => (dispatch) => {
   const cardData = {
