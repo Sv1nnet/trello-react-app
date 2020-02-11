@@ -41,7 +41,7 @@ const messagePropTypes = {
 };
 
 const messageDefaultProps = {
-  closeMessage: () => {},
+  closeMessage: () => { },
   styles: {},
   btn: true,
   loadingTextAnimation: false,
@@ -59,7 +59,7 @@ const ErrorMessage = (props) => {
   } = props;
   const animationClassName = loadingTextAnimation ? 'loading-text' : '';
   return (
-    <MessageContainer style={styles} containerBorder="message-error">
+    <MessageContainer style={styles} containerBorder="message-danger">
       <h4 className="bg-danger">Error</h4>
       <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
       {btn !== false && <button onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-danger bg-danger my-3">OK</button>}
@@ -117,4 +117,51 @@ SuccessMessage.propTypes = messagePropTypes;
 SuccessMessage.defaultProps = messageDefaultProps;
 
 
-export default { ErrorMessage, InfoMessage, SuccessMessage };
+const questionMessagePropTypes = {
+  type: PropTypes.oneOf(['error', 'info', 'success']),
+  message: PropTypes.string.isRequired,
+  answer: PropTypes.shape({
+    positive: PropTypes.func.isRequired,
+    negative: PropTypes.func.isRequired,
+  }).isRequired,
+  styles: PropTypes.shape({}),
+};
+
+const questionMessageDefaultProps = {
+  type: 'info',
+  styles: {},
+};
+
+const QuestionMessage = (props) => {
+  const {
+    type,
+    message,
+    answer,
+    styles,
+  } = props;
+
+  const colors = {
+    error: 'danger',
+    info: 'primary',
+    success: 'success',
+  };
+
+  const colorType = colors[type] || 'primary';
+
+  return (
+    <MessageContainer style={styles} containerBorder={`message-${colorType}`}>
+      <h4 className={`bg-${colorType}`}>Confirm</h4>
+      <h5 className="mt-4 w-100">{message}</h5>
+      <div className="question-message__buttons-container">
+        <button onClick={answer.positive} onKeyPress={answer.positive} type="button" className="question-message-btn btn btn-outline-success my-3">Yes</button>
+        <button onClick={answer.negative} onKeyPress={answer.negative} type="button" className="question-message-btn btn btn-outline-danger my-3">No</button>
+      </div>
+    </MessageContainer>
+  );
+};
+
+QuestionMessage.propTypes = questionMessagePropTypes;
+QuestionMessage.defaultProps = questionMessageDefaultProps;
+
+
+export default { ErrorMessage, InfoMessage, SuccessMessage, QuestionMessage };
