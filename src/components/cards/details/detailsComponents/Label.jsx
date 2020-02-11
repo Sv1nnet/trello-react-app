@@ -20,9 +20,13 @@ const defaultProps = {
 const Label = ({ title, color, isTitleRevealed, events }) => {
   const labelRef = useRef(null);
 
+  const onClick = (e) => {
+    if (events.onClick) events.onClick(e, labelRef.current);
+  };
+
   return (
     <div className={`label-container ${isTitleRevealed ? 'revealed' : ''}`}>
-      <div ref={labelRef} tabIndex="0" role="button" className="label-content" style={{ backgroundColor: color }} onClick={(e) => { if (events.onClick) events.onClick(e, labelRef.current); }}>{isTitleRevealed && title}</div>
+      <div ref={labelRef} tabIndex="0" role="button" className="label-content" style={{ backgroundColor: color }} onClick={onClick} onKeyPress={onClick}>{isTitleRevealed && title}</div>
     </div>
   );
 };
