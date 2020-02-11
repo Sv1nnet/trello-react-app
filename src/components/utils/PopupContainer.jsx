@@ -39,7 +39,7 @@ class PopupContainer extends Component {
   constructor(props) {
     super(props);
 
-    this.containerElement = React.createRef();
+    this.containerElement = React.createRef(null);
   }
 
   state = {
@@ -91,7 +91,14 @@ class PopupContainer extends Component {
 
   render() {
     const { state, props, containerElement } = this;
-    const { children, extraClasses, closeBtnExtraClasses, closeBtn, style, popupContainerRef } = props;
+    const {
+      children,
+      extraClasses,
+      closeBtnExtraClasses,
+      closeBtn,
+      style,
+      popupContainerRef,
+    } = props;
 
     if (state.shouldCloseItself) return null;
 
