@@ -1,4 +1,5 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef, useState, useContext } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Draggable from '../utils/dragdrop/Draggable';
@@ -6,6 +7,9 @@ import Card from './Card';
 import boardActions from '../../actions/boardActions';
 import '../../styles/cardItem.sass';
 import { BoardContentContext } from '../context/BoardContentContext';
+import Messages from '../utils/Messages';
+import useStatus from '../../utlis/hooks/useStatus';
+import hasParent from '../../utlis/hasParent';
 
 
 const propTypes = {
@@ -39,18 +43,39 @@ const CardContainer = (props) => {
     labels,
   } = cardData;
 
+  const [questionIsActive, setQuestionIsActive] = useState(false);
+  const {
+    status,
+    setStatusLoading,
+    resetStatus,
+    handleError,
+  } = useStatus();
+
   const { openDetails, switchCards } = useContext(BoardContentContext);
   const editingTargetRef = useRef(null);
+  const deleteButtonRef = useRef(null);
 
-  const deleteCard = (e) => {
-    if (e.nativeEvent.shiftKey) {
-      props.deleteCard(token.token, board._id, id)
-        .then(() => {
+  const deleteCard = () => {
+    setQuestionIsActive(true);
+  };
 
-        });
-    } else {
-      openDetails(id);
-    }
+  const onCardClick = (e) => {
+    const { target } = e;
+    if (!hasParent(deleteButtonRef.current, target)) openDetails(id);
+  };
+
+  const positiveAnswer = () => {
+    setStatusLoading();
+
+    props.deleteCard(token.token, board._id, id)
+      .catch((err) => {
+        handleError(err);
+        setQuestionIsActive(false);
+      });
+  };
+
+  const negativeAnswer = () => {
+    setQuestionIsActive(false);
   };
 
   return (
@@ -60,13 +85,25 @@ const CardContainer = (props) => {
           <Card
             openDetails={openDetails}
             dragProvided={dragProvided}
+            onClick={onCardClick}
             deleteCard={deleteCard}
             editingTargetRef={editingTargetRef}
+            deleteButtonRef={deleteButtonRef}
             title={title}
             labels={labels}
           />
         )}
       </Draggable>
+
+      {questionIsActive && ReactDOM.createPortal(
+        <Messages.QuestionMessage type="error" answer={{ positive: positiveAnswer, negative: negativeAnswer }} message={`Delete the card ${title}`} />,
+        document.querySelector('.App'),
+      )}
+
+      {status.err.message && ReactDOM.createPortal(
+        <Messages.ErrorMessage btn message={status.err.message} closeMessage={resetStatus} />,
+        document.querySelector('.App'),
+      )}
     </>
   );
 };

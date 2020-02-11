@@ -9,6 +9,7 @@
     & .card-item
       box-shadow: none
 .card-item
+  position: relative
   border-radius: 2px
   min-height: 35px
   width: 260px
@@ -30,3 +31,13 @@
   &:hover
     background: #f4f6f7
     cursor: pointer
+    & .delete-card__btn
+      display: block
+  .delete-card__btn
+    display: none
+    background-color: transparent
+    border: none
+    position: absolute
+    top: 50%
+    right: 0
+    transform: translateY(-50%)

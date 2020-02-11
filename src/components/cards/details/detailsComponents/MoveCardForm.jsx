@@ -20,6 +20,7 @@ const MoveCardForm = (props) => {
     sourceColumnId,
     sourcePosition,
     moveCard,
+    deleteCard,
     popupContainerRef,
   } = props;
 
@@ -126,6 +127,7 @@ const MoveCardForm = (props) => {
         </label>
 
         <button className="move-card-popup__submit-btn btn btn-primary" type="submit">Move</button>
+        <button className="move-card-popup__delete-card-btn btn btn-danger" type="button" onClick={deleteCard}>Delete this card</button>
       </form>
     </div>
   );

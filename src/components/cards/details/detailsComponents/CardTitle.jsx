@@ -31,6 +31,7 @@ const CardTitle = (props) => {
     columnTitle,
     columnId,
     position,
+    deleteCard,
     handleUpdateRequest,
     discardChangesOnEscapePressed,
     setMoveCardPopupState,
@@ -123,6 +124,7 @@ const CardTitle = (props) => {
               sourceColumnId={columnId}
               sourcePosition={position}
               moveCard={moveCard}
+              deleteCard={deleteCard}
             />
           </PopupContainer>
         )}
