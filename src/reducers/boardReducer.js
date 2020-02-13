@@ -140,11 +140,11 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         isPrivate: data.isPrivate,
         labels: data.labels,
         cards,
-        cashedCards: data.cards,
+        cashedCards: cards,
         members: data.members,
         isReadOnly: data.isReadOnly,
-        columns: state.columns,
-        cashedColumns: columns,
+        columns: data.columns,
+        cashedColumns: data.columns,
         timeOfLastChange: null,
       };
     case columnActionTypes.COLUMN_POSITIONS_SWITCHED:
@@ -229,11 +229,13 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
       };
     case cardActionTypes.CARD_CREATED:
       data = { ...action.data };
+      cards = [...state.cards, data.card];
 
       return {
         ...state,
         activities: data.activities,
-        cards: [...state.cards, data.card],
+        cards,
+        cashedCards: cards,
       };
     case cardActionTypes.CARD_COMMENT_ADDED:
     case cardActionTypes.CARD_COMMENT_UPDATED:
@@ -252,11 +254,13 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
       };
     case cardActionTypes.CARD_DELETED:
       data = { ...action.data };
+      cards = [...state.cards];
 
       return {
         ...state,
         activities: data.activities,
-        cards: data.cards,
+        cards,
+        cashedCards: cards,
       };
     case boardActionTypes.ACTIVITIES_LOADED:
       data = { ...action.data };
