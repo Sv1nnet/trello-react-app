@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Droppable from '../utils/dragdrop/Droppable';
@@ -47,8 +47,7 @@ const ColumnList = (props) => {
 
     if (!columnTitle) {
       const err = { status: 400, message: 'Column title can not be blank' };
-      handleError(err);
-      return Promise.reject(err);
+      return handleError(err);
     }
 
     const column = {
@@ -57,14 +56,8 @@ const ColumnList = (props) => {
     };
 
     return createColumn(token.token, board._id, column)
-      .then((res) => {
-        handleSuccess(res);
-        return res;
-      })
-      .catch((err) => {
-        handleError(err);
-        return Promise.reject(err);
-      });
+      .then(handleSuccess)
+      .catch(handleError);
   };
 
   return (
