@@ -9,6 +9,7 @@ import Messages from '../utils/Messages';
 import ColumnContainer from '../columns/ColumnContainer';
 import '../../styles/columnList.sass';
 import AddBoardContent from '../utils/AddBoardContent';
+import useStatus from '../../utlis/hooks/useStatus';
 
 
 const propTypes = {
@@ -32,24 +33,14 @@ const propTypes = {
 const ColumnList = (props) => {
   const { createColumn, token, board } = props;
 
-  const [updatePositionsState, setUpdatePositionsState] = useState({
-    err: {
-      message: '',
-      statusCode: undefined,
-    },
-  });
+  const {
+    status,
+    handleSuccess,
+    handleError,
+    resetStatus,
+  } = useStatus();
 
   const boardListContainerRef = useRef(null);
-
-  const handleError = (err) => {
-    setUpdatePositionsState({
-      ...updatePositionsState,
-      err: {
-        message: err.message,
-        statusCode: err.status,
-      },
-    });
-  };
 
   const addColumn = (e, columnTitle) => {
     e.preventDefault();
@@ -66,29 +57,19 @@ const ColumnList = (props) => {
     };
 
     return createColumn(token.token, board._id, column)
+      .then((res) => {
+        handleSuccess(res);
+        return res;
+      })
       .catch((err) => {
         handleError(err);
         return Promise.reject(err);
       });
   };
 
-  const closeMessage = () => {
-    setUpdatePositionsState({
-      ...updatePositionsState,
-      err: {
-        message: '',
-        statusCode: undefined,
-      },
-      addNewColumn: {
-        active: false,
-        columnTitle: '',
-      },
-    });
-  };
-
   return (
     <>
-      {updatePositionsState.err.message && <Messages.ErrorMessage message={updatePositionsState.err.message} closeMessage={closeMessage} />}
+      {status.err.message && <Messages.ErrorMessage message={status.err.message} closeMessage={resetStatus} />}
       <DragDropContextProvider
         handleError={handleError}
       >
@@ -133,9 +114,9 @@ const ColumnList = (props) => {
   );
 };
 
-const mapStateToProps = updatePositionsState => ({
-  token: updatePositionsState.user.token,
-  board: updatePositionsState.board,
+const mapStateToProps = state => ({
+  token: state.user.token,
+  board: state.board,
 });
 
 const mapDispatchToProps = dispatch => ({
