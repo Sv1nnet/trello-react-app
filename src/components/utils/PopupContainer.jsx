@@ -8,7 +8,7 @@ import '../../styles/popupContainer.sass';
 
 /*
  *
- * props.classesToNotClosePopup - array of classNames those could be target of click e and popup would be not closed
+ * props.classesToNotClosePopup - array of classNames that could be a target of click event and popup would be not closed
  * props.extraClasses - array of extra classes for main component container
  * props.popupToClose - name of state field that presents popup activator
  */
@@ -109,7 +109,12 @@ class PopupContainer extends Component {
           {closeBtn && <FontAwesomeIcon onClick={this.closeSelf} className={`popup-close-btn ${closeBtnExtraClasses ? closeBtnExtraClasses.join(' ') : ''}`} icon={faTimes} />}
 
           <div className="row">
-            {React.Children.map(children, child => React.cloneElement(child, { ...child.props, popupContainerRef: containerElement }))}
+            {React.Children.map(children, (child) => {
+              if (typeof child.type === 'function') {
+                return React.cloneElement(child, { ...child.props, popupContainerRef: containerElement });
+              }
+              return child;
+            })}
           </div>
 
         </div>

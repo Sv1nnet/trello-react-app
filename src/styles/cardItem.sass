@@ -33,6 +33,8 @@
     cursor: pointer
     & .delete-card__btn
       display: block
+      transition: all 0.2s
+      opacity: 0.5
   .delete-card__btn
     display: none
     background-color: transparent
@@ -41,3 +43,5 @@
     top: 50%
     right: 0
     transform: translateY(-50%)
+    &:hover
+      opacity: 1
