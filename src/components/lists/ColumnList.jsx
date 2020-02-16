@@ -14,17 +14,11 @@ import useStatus from '../../utlis/hooks/useStatus';
 
 const propTypes = {
   token: PropTypes.shape({
-    access: PropTypes.string.isRequired,
     token: PropTypes.string.isRequired,
   }).isRequired,
   board: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    isReadOnly: PropTypes.bool.isRequired,
-    isPrivate: PropTypes.bool.isRequired,
-    members: PropTypes.array.isRequired,
     columns: PropTypes.array.isRequired,
-    cards: PropTypes.array.isRequired,
   }).isRequired,
   createColumn: PropTypes.func.isRequired,
 };

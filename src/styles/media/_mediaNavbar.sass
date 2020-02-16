@@ -25,7 +25,6 @@
   .nav
     .dropdown-search
       right: 45px !important
-      width: 500px !important
       &-container
         display: none
     .dropdown-user, .dropdown-boards
@@ -40,5 +39,9 @@
       left: initial
     .dropdown-boards
       left: 0px
+
+@media screen and (max-width: 576px)    
+  .search-results
+    max-height: calc(100vh - 190px) !important
     
 

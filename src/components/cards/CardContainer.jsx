@@ -84,7 +84,7 @@ const CardContainer = (props) => {
         {dragProvided => (
           <Card
             openDetails={openDetails}
-            dragProvided={dragProvided}
+            dragProvided={dragProvided || null}
             onClick={onCardClick}
             deleteCard={deleteCard}
             editingTargetRef={editingTargetRef}

@@ -43,16 +43,21 @@
 
   .dropdown-search
     display: none
-    width: 100%
+    flex-direction: column
+    max-height: calc(100vh - 70px)
+    overflow: hidden
+    width: 320px
     border-radius: 2px
     min-width: 250px
     top: 48px
     left: initial
     right: 0
+    box-shadow: 0 0 10px rgba(0, 0, 0, .4)
+    background-color: $popup-background-light
     .dropdown-search-container
       position: relative
     &.active
-      display: block
+      display: flex
 
   .dropdown-user, .dropdown-boards
     display: inline-block
@@ -93,3 +98,20 @@
     display: none
   input.nav-link::placeholder
     color: white
+  
+.dropdown-search-wrap
+  height: 100%
+  flex-direction: column
+  display: flex
+  flex-grow: 1
+  overflow: hidden
+
+.search-results-container
+  overflow: hidden
+  display: flex
+  flex-grow: 1
+  padding:
+    bottom: 15px
+  .search-results
+    max-height: calc(100vh - 150px);
+    overflow-y: auto

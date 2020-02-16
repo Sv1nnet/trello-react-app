@@ -177,9 +177,12 @@ class TextInput extends Component {
       placeholder: placeholder || 'Search',
       value: inputValue,
       maxLength,
-      id,
       name,
     };
+
+    if (id) {
+      inputProps.id = id;
+    }
 
     return inputType === 'input'
       ? (

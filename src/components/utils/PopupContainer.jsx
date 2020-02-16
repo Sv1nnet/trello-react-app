@@ -103,7 +103,7 @@ class PopupContainer extends Component {
     if (state.shouldCloseItself) return null;
 
     return (
-      <div ref={(el) => { containerElement.current = el; if (popupContainerRef) popupContainerRef.current = el; }} style={{ ...style }} className={`dropdown-menu ${extraClasses ? extraClasses.join(' ') : ''} active`}>
+      <div ref={(el) => { containerElement.current = el; if (popupContainerRef) popupContainerRef.current = el; }} style={{ ...style }} className={`dropdown-menu popup-container ${extraClasses ? extraClasses.join(' ') : ''} active`}>
         <div className="container-fluid">
 
           {closeBtn && <FontAwesomeIcon onClick={this.closeSelf} className={`popup-close-btn ${closeBtnExtraClasses ? closeBtnExtraClasses.join(' ') : ''}`} icon={faTimes} />}

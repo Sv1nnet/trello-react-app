@@ -190,14 +190,10 @@ const Column = (props) => {
                 index={index}
                 cardData={{
                   id: card._id,
-                  position: card.position,
                   title: card.title,
-                  description: card.description,
                   labels: card.labels,
-                  comments: card.comments,
                 }}
                 columnId={card.column}
-                columnTitle={listTitle}
               />
             ))}
 

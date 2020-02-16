@@ -18,6 +18,7 @@ dotenv.config();
 const { mongoose } = require('./db/mongoose');
 const { userRouter } = require('./routes/user');
 const { boardRouter } = require('./routes/board');
+const { utilsRouter } = require('./routes/utils');
 
 const app = express();
 const port = process.env.PORT;
@@ -38,6 +39,7 @@ app.use((req, res, next) => {
 
 app.use('/user', userRouter);
 app.use('/board', boardRouter);
+app.use('/utils', utilsRouter);
 
 app.listen(port, () => {
   console.log(`Started on port ${port}`);

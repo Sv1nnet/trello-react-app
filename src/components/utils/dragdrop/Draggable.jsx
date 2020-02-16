@@ -36,12 +36,14 @@ const Draggable = (props) => {
     dragHandlers,
   } = props;
 
+  const DNDContext = useContext(DragDropContext);
+
   const {
     dragState,
     dragStart,
     dragUpdate,
     dragEnd,
-  } = useContext(DragDropContext);
+  } = DNDContext || { dragState: { draggind: false } };
 
   const draggableElementRef = useRef();
   const draggableAnchorRef = useRef();
@@ -103,7 +105,7 @@ const Draggable = (props) => {
         index,
         type,
       },
-      dragHandlers.onDragStart);
+        dragHandlers.onDragStart);
     }
   };
 
@@ -173,26 +175,30 @@ const Draggable = (props) => {
     }
   };
 
-  const provider = {
-    dragHandleProps: {
-      ref: draggableAnchorRef,
-      onMouseDown,
-    },
-    draggableProps: {
-      onMouseEnter,
-      key: draggableId,
-      'data-draggable-id': draggableId,
-      'data-draggable-index': index,
-      'data-draggable-direction': direction || 'vertical',
-      'data-draggable-type': type || '',
-    },
-    innerRef: draggableElementRef,
-  };
+  const provider = DNDContext
+    ? {
+      dragHandleProps: {
+        ref: draggableAnchorRef,
+        onMouseDown,
+      },
+      draggableProps: {
+        onMouseEnter,
+        key: draggableId,
+        'data-draggable-id': draggableId,
+        'data-draggable-index': index,
+        'data-draggable-direction': direction || 'vertical',
+        'data-draggable-type': type || '',
+      },
+      innerRef: draggableElementRef,
+    }
+    : null;
 
-  const snapshot = {
-    ...dragState,
-    isThisElementDragging: dragState.dragging && dragState.draggableId === draggableId,
-  };
+  const snapshot = DNDContext
+    ? {
+      ...dragState,
+      isThisElementDragging: dragState.dragging && dragState.draggableId === draggableId,
+    }
+    : null;
 
   return children(provider, snapshot);
 };
