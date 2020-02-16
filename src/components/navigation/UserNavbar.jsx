@@ -256,7 +256,7 @@ class UserNavbar extends Component {
                 <h5 className="mt-2 w-100 boards-title text-secondary text-center">Boards</h5>
 
                 <div className="board-list-container">
-                  {boards.map(board => <BoardListItem key={board._id} id={board._id} title={board.title} />)}
+                  {boards.map(board => <BoardListItem key={board._id} id={board._id} title={board.title} events={{ onClick: e => onPopupBtnClick(e, 'boardsPopupActive') }} />)}
                 </div>
 
                 <div className="col-12 px-0 text-center dropdown-board-list-item pt-2">
