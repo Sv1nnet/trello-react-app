@@ -12,7 +12,6 @@ import BoardListItem from '../boards/BoardListItem';
 import CreateBoard from '../boards/CreateBoard';
 import authActions from '../../actions/authActions';
 import boardActions from '../../actions/boardActions';
-import CardContainer from '../cards/CardContainer';
 import CardsSearchDropdown from '../lists/CardsSearchDropdown';
 
 

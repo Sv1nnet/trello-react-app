@@ -1,8 +1,7 @@
-const resolve = require('path').resolve;
+const { resolve } = require('path');
 
 const findCardWorker = (req, res) => {
-  console.log('request for  card worker')
-  res.header('Cache-Control', 'max-age=5').sendFile('/Users/sv1nnet/Documents/Code/GitHub/trello-react-app/server/utils/findCardWorker.js');
+  res.header('Cache-Control', 'max-age=5').sendFile(resolve(`.${req.originalUrl}`));
 };
 
 module.exports = findCardWorker;
