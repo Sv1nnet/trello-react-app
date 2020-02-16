@@ -50,11 +50,14 @@ const CardsSearchDropdown = (props) => {
   } = props;
 
   const [searchResult, setSearchResult] = useState([]);
+  // Request webworker from the server and initilize it
   const workerRef = useRef(new Worker('../../utils/findCardWorker.js'));
 
   useEffect(() => {
     const worker = new Worker('../../utils/findCardWorker.js');
 
+    // Kill a previous worker in order to prevent it from invocation onmessage handler
+    // after previous input onChange events
     workerRef.current.terminate();
     workerRef.current = worker;
 
