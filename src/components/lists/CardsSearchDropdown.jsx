@@ -87,9 +87,7 @@ const CardsSearchDropdown = (props) => {
         </div>
 
         <div className="row search-results-container">
-          <div className="col-12">
-            <h5 className="mt-3 text-secondary text-center">Cards</h5>
-          </div>
+          <h5 className="mt-3 text-secondary text-center">Cards</h5>
 
           <ul className="col-12 search-results">
             {searchResult.map((card, i) => (

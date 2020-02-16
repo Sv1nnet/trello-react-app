@@ -31,7 +31,7 @@ const ColumnContainer = (props) => {
   } = props;
 
   const { columnsWithCards, switchColumns } = useContext(BoardContentContext);
-  const { cards } = columnsWithCards[columnId];
+  const cards = columnsWithCards[columnId] ? columnsWithCards[columnId].cards : [];
 
   const mouseState = {
     onMouseDownPosition: {

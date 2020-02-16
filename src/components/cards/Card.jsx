@@ -31,6 +31,7 @@ const propTypes = {
     current: PropTypes.instanceOf(Element),
   }),
   title: PropTypes.string.isRequired,
+  labels: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 const defaultProps = {
