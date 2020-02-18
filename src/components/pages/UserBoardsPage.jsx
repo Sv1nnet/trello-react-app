@@ -26,11 +26,11 @@ class UserBoardsPage extends Component {
       loading: true,
       success: {
         message: '',
-        statusCode: undefined,
+        statusCode: null,
       },
       err: {
         message: '',
-        statusCode: undefined,
+        statusCode: null,
       },
     },
   }
@@ -41,7 +41,6 @@ class UserBoardsPage extends Component {
 
     props.loadAllBoards(token)
       .then((res) => {
-        console.log('all boards response', res);
         const { message } = res.data;
 
         this.setState(state => ({
@@ -56,7 +55,6 @@ class UserBoardsPage extends Component {
         }));
       })
       .catch((err) => {
-        console.log('all boards error', err);
         this.setState(state => ({
           ...state,
           status: {
@@ -98,7 +96,7 @@ class UserBoardsPage extends Component {
         <div className="row overflow-auto all-boards-container">
           {boards && boards.map(board => (
             <div key={board._id} className="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-2">
-              <BoardListItem id={board._id} title={board.title} />
+              <BoardListItem id={board._id} owner={board.owner} title={board.title} />
             </div>
           ))}
         </div>

@@ -105,7 +105,6 @@ const Comment = (props) => {
 
   const deleteComment = () => {
     deleteCardComment(token.token, board._id, cardId, id)
-      .then(handleSuccess)
       .catch(handleError);
   };
 

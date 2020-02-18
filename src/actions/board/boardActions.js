@@ -8,13 +8,49 @@ const createBoard = ({ token, title, access, description }) => (dispatch) => {
   return api.board.createBoard(token, { title, access, description })
     .then((res) => {
       dispatch({ type: userActionTypes.BOARD_ADDED, data: res.data }); // Add board to user reducer
-      dispatch({ type: boardActionTypes.CREATED, data: res.data });
       return res;
     })
     .catch((err) => {
       return Promise.reject(
         dispatch({
           type: boardActionTypes.CREATE_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
+
+const deleteBoard = (token, boardId) => (dispatch) => {
+  return api.board.deleteBoard(token, boardId)
+    .then((res) => {
+      dispatch({ type: userActionTypes.BOARD_DELETED, data: res.data });
+      return res;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: userActionTypes.BOARD_DELETE_FAILED,
+          data: createErrorResponseObject(err),
+        }).data,
+      );
+    });
+};
+
+const removeBoard = (token, boardId) => (dispatch, getState) => {
+  return api.board.removeBoard(token, boardId)
+    .then((res) => {
+      const downloadedBoard = getState().board;
+      const { userData } = res.data;
+      const { board } = res.data;
+
+      if (downloadedBoard._id === boardId) dispatch({ type: boardActionTypes.BOARD_REMOVED, data: board });
+      dispatch({ type: userActionTypes.BOARD_REMOVED, data: userData });
+      return res;
+    })
+    .catch((err) => {
+      return Promise.reject(
+        dispatch({
+          type: userActionTypes.BOARD_REMOVE_FAILED,
           data: createErrorResponseObject(err),
         }).data,
       );
@@ -125,4 +161,6 @@ export {
   getActivities,
   cleanActivities,
   updateLabel,
+  deleteBoard,
+  removeBoard,
 };

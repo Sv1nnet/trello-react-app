@@ -31,6 +31,7 @@ const createBoard = (req, res) => {
               .then((board) => {
                 user.boards.push({
                   _id: board._id,
+                  owner: user._id,
                   title: board.title,
                 });
                 return user.save().catch(err => console.log('Error saving user with new board', err));

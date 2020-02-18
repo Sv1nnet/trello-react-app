@@ -24,7 +24,7 @@ const propTypes = {
 const CreateBoard = (props) => {
   const [state, setState] = useState({
     err: {
-      status: undefined,
+      status: null,
       message: '',
     },
     description: '',
@@ -35,11 +35,11 @@ const CreateBoard = (props) => {
   });
   const { close } = props;
 
-  const handleChange = (e) => {
+  const onChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
 
     const { token } = props;
@@ -52,7 +52,7 @@ const CreateBoard = (props) => {
       .then((res) => {
         setState({
           err: {
-            status: undefined,
+            status: null,
             message: '',
           },
           access: 'private',
@@ -73,7 +73,7 @@ const CreateBoard = (props) => {
   };
 
   const closeMessage = () => {
-    setState({ ...state, err: { status: undefined, message: '' } });
+    setState({ ...state, err: { status: null, message: '' } });
   };
 
   useEffect(() => {
@@ -102,7 +102,7 @@ const CreateBoard = (props) => {
 
             <div className="col-12 col-sm-12">
               {state.err.message && <Messages.ErrorMessage message={state.err.message} closeMessage={closeMessage} />}
-              <CreateBoardForm handleSubmit={handleSubmit} handleChange={handleChange} title={state.title} description={state.description} />
+              <CreateBoardForm handleSubmit={onSubmit} handleChange={onChange} title={state.title} description={state.description} />
             </div>
 
           </div>

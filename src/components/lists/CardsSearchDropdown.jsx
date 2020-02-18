@@ -50,8 +50,12 @@ const CardsSearchDropdown = (props) => {
   } = props;
 
   const [searchResult, setSearchResult] = useState([]);
-  // Request webworker from the server and initilize it
-  const workerRef = useRef(new Worker('/utils/findCardWorker.js'));
+  const workerRef = useRef();
+
+  useEffect(() => {
+    // Request webworker from the server and initilize it
+    workerRef.current = new Worker('/utils/findCardWorker.js');
+  }, []);
 
   useEffect(() => {
     const worker = new Worker('/utils/findCardWorker.js');

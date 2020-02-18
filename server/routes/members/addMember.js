@@ -24,7 +24,7 @@ const addMember = (req, res) => {
         if (!board.members.find(boardMember => boardMember._id.toHexString() === member)) {
 
           board.addMember({ _id: user._id, email: user.email, nickname: user.nickname });
-          user.addBoard({ _id: board.id, title: board.title });
+          user.addBoard({ _id: board.id, owner: board.owner, title: board.title });
 
           const savedBoard = await board.save();
           const savedUser = await user.save();
@@ -52,6 +52,7 @@ const addMember = (req, res) => {
 
       res.status(400).send({ err: 'Only board owner can add members' });
     } catch (e) {
+      console.log(e);
       res.status(400).send({ err: 'Could not add a member' });
     }
   });

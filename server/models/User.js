@@ -52,6 +52,10 @@ const UserSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
       },
+      owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+      },
       title: {
         type: String,
         required: true,

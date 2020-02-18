@@ -80,11 +80,11 @@ class UserNavbar extends Component {
       ...state,
       searchText: '',
     }),
-    () => {
-      // After we clear search input we need return focus to it
-      if (getComputedStyle(navSearchInput.current.inputElement.current).display !== 'none') navSearchInput.current.inputElement.current.focus();
-      if (getComputedStyle(searchCardsInput.current.inputElement.current).display !== 'none') searchCardsInput.current.inputElement.current.focus();
-    });
+      () => {
+        // After we clear search input we need return focus to it
+        if (getComputedStyle(navSearchInput.current.inputElement.current).display !== 'none') navSearchInput.current.inputElement.current.focus();
+        if (getComputedStyle(searchCardsInput.current.inputElement.current).display !== 'none') searchCardsInput.current.inputElement.current.focus();
+      });
   }
 
   // This works on small screen. Search button showed instead of search text input so when we click the button search popup appears
@@ -96,9 +96,9 @@ class UserNavbar extends Component {
         ...state,
         searchText: '',
       }),
-      () => {
-        this.searchBar.current.classList.remove('active');
-      });
+        () => {
+          this.searchBar.current.classList.remove('active');
+        });
     } else {
       this.searchBar.current.classList.add('active');
       this.searchCardsInput.current.inputElement.current.focus();
@@ -126,11 +126,11 @@ class UserNavbar extends Component {
         ...state,
         [popupType]: !state[popupType],
       }),
-      () => { // Load all boards if popup opened
-        if (this.state[popupType]) {
-          props.loadAllBoards(props.token.token);
-        }
-      });
+        () => { // Load all boards if popup opened
+          if (this.state[popupType]) {
+            props.loadAllBoards(props.token.token);
+          }
+        });
     } else {
       this.setState(state => ({
         ...state,
@@ -195,6 +195,9 @@ class UserNavbar extends Component {
     const { nickname, email, boards } = user;
     const emailInitials = nickname && `${nickname[0]}${nickname[1]}`.toUpperCase();
 
+    const [, route, endPoint] = window.location.pathname.split('/');
+    const isBoardOpened = (route !== 'user') && (route === 'board' && endPoint !== 'all');
+
     return (
       <>
         <ul className="nav align-items-center justify-content-between">
@@ -216,47 +219,53 @@ class UserNavbar extends Component {
             </Link>
           </div>
 
-          <li className="nav-item nav-button dropdown search-button">
-            <div className="nav-search-input-container">
+          {
+            isBoardOpened && (
+              <li className="nav-item nav-button dropdown search-button">
+                <div className="nav-search-input-container">
 
-              <TextInput
-                ref={navSearchInput}
-                inputValue={searchText}
-                placeholder="Search"
-                onChange={onSearchChange}
-                onFocus={onSearchInputFocus}
-                onBlur={onSearchInputBlur}
-                onCrossBtnClick={clearInput}
-                hideSearchBtn
-              />
+                  <TextInput
+                    ref={navSearchInput}
+                    inputValue={searchText}
+                    placeholder="Search"
+                    onChange={onSearchChange}
+                    onFocus={onSearchInputFocus}
+                    onBlur={onSearchInputBlur}
+                    onCrossBtnClick={clearInput}
+                    hideSearchBtn
+                  />
 
-            </div>
-            <input ref={searchBtn} onClick={onSearchButtonClick} type="button" className="nav-link text-white" value="Search" />
-          </li>
-
+                </div>
+                <input ref={searchBtn} onClick={onSearchButtonClick} type="button" className="nav-link text-white" value="Search" />
+              </li>
+            )}
           <li className="nav-item nav-button user-logo">
             <button onClick={onPopupBtnClick} data-popup-type="userPopupActive" type="button" className="nav-link p-0 w-100 text-primary rounded-circle bg-white text-center font-weight-bold">{emailInitials || 'US'}</button>
           </li>
 
           {/* Further I placed dropdown menu for navigation. Search specifically in dropdown-menu container and User menu, Boards list as separeted components out of dropdown-menu container */}
-          <CardsSearchDropdown
-            searchBar={searchBar}
-            searchCardsInput={searchCardsInput}
-            onSearchChange={onSearchChange}
-            searchText={searchText}
-            clearInput={clearInput}
-            onSearchInputBlur={onSearchInputBlur}
-            cards={board.cards}
-          />
+          {
+            isBoardOpened && (
+              <CardsSearchDropdown
+                searchBar={searchBar}
+                searchCardsInput={searchCardsInput}
+                onSearchChange={onSearchChange}
+                searchText={searchText}
+                clearInput={clearInput}
+                onSearchInputBlur={onSearchInputBlur}
+                cards={board.cards}
+              />
+            )
+          }
 
           {
             boardsPopupActive
             && (
-              <PopupContainer popupToClose="boardsPopupActive" classesToNotClosePopup={['dropdown-boards', 'boards-title']} extraClasses={['dropdown-boards']} removeElement={onPopupBtnClick} userData={{ email, nickname }}>
+              <PopupContainer popupToClose="boardsPopupActive" classesToNotClosePopup={['dropdown-boards', 'boards-title', 'message-container', 'message', 'btn']} extraClasses={['dropdown-boards']} removeElement={onPopupBtnClick} userData={{ email, nickname }}>
                 <h5 className="mt-2 w-100 boards-title text-secondary text-center">Boards</h5>
 
                 <div className="board-list-container">
-                  {boards.map(board => <BoardListItem key={board._id} id={board._id} title={board.title} events={{ onClick: e => onPopupBtnClick(e, 'boardsPopupActive') }} />)}
+                  {boards.map(board => <BoardListItem key={board._id} id={board._id} owner={board.owner} title={board.title} events={{ onClick: e => onPopupBtnClick(e, 'boardsPopupActive') }} />)}
                 </div>
 
                 <div className="col-12 px-0 text-center dropdown-board-list-item pt-2">

@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 import '../../styles/boardListItem.sass';
+import boardActions from '../../actions/boardActions';
+import useStatus from '../../utlis/hooks/useStatus';
+import Messages from '../utils/Messages';
 
 
 const propTypes = {
   id: PropTypes.string.isRequired,
+  owner: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   events: PropTypes.shape({
     onClick: PropTypes.func,
@@ -17,21 +25,112 @@ const defaultProps = {
   events: {},
 };
 
+const boardDeleteOptions = {
+  owner: {
+    getRequestMessage: title => `Delete "${title}" board?`,
+    action: 'deleteBoard',
+    getPostActionHandler: (id, board) => (res) => {
+      if (window.location.pathname !== '/board/all' && id === board._id) window.location.replace(`${window.location.origin}/board/all`);
+      return res;
+    },
+  },
+  member: {
+    getRequestMessage: title => `Stop being "${title}" board member?`,
+    action: 'removeBoard',
+    getPostActionHandler: () => (res) => {
+      if (res.data.board.isPrivate) window.location.replace(`${window.location.origin}/board/all`);
+      return res;
+    },
+  },
+};
 
-const BoardListItem = ({ id, title, events }) => {
+
+const BoardListItem = (props) => {
+  const {
+    id,
+    owner,
+    title,
+    events,
+    board,
+    token,
+    userData,
+  } = props;
+
+  const {
+    status,
+    setStatusLoading,
+    resetStatus,
+    handleError,
+  } = useStatus();
+
+  const [questionIsActive, setQuestionIsActive] = useState(false);
+
   const url = `/board/${id}`;
+
+  const isOwner = userData._id === owner;
+  const { getRequestMessage, action, getPostActionHandler } = isOwner ? boardDeleteOptions.owner : boardDeleteOptions.member;
+  const postActionHandler = getPostActionHandler(id, board);
+
+  const deleteBoard = () => {
+    setQuestionIsActive(true);
+  };
+
+  const positiveAnswer = () => {
+    const boardAction = props[action];
+
+    setStatusLoading();
+
+    boardAction(token.token, id)
+      .then(postActionHandler)
+      .catch((err) => {
+        handleError(err);
+        setQuestionIsActive(false);
+      });
+  };
+
+  const negativeAnswer = () => {
+    setQuestionIsActive(false);
+  };
+
   return (
-    <div className="col-12 px-0 dropdown-board-list-item pt-2">
-      <div className="board-list-item-container">
-        <Link to={url} {...events} className="px-1 w-100 d-block text-decoration-none text-center font-weight-bold">{title}</Link>
+    <>
+      <div className="col-12 px-0 dropdown-board-list-item pt-2">
+        <div className="board-list-item-container">
+          <Link to={url} {...events} className="px-1 w-100 d-block text-decoration-none text-center font-weight-bold">{title}</Link>
+
+          <button onClick={deleteBoard} type="button" className="delete-board-btn">
+            <FontAwesomeIcon className="delete-icon" icon={faTrashAlt} />
+          </button>
+        </div>
       </div>
-    </div>
+
+      {questionIsActive && ReactDOM.createPortal(
+        <Messages.QuestionMessage type="error" message={getRequestMessage(title)} answer={{ positive: positiveAnswer, negative: negativeAnswer }} />,
+        document.querySelector('.App'),
+      )}
+
+      {status.err.message && ReactDOM.createPortal(
+        <Messages.ErrorMessage message={status.err.message} closeMessage={resetStatus} btn />,
+        document.querySelector('.App'),
+      )}
+    </>
   );
 };
+
+const mapStateToProps = state => ({
+  userData: state.user.userData,
+  token: state.user.token,
+  board: state.board,
+});
+
+const mapDispatchToProps = dispatch => ({
+  deleteBoard: (token, boardId) => dispatch(boardActions.deleteBoard(token, boardId)),
+  removeBoard: (token, boardId) => dispatch(boardActions.removeBoard(token, boardId)),
+});
 
 
 BoardListItem.propTypes = propTypes;
 BoardListItem.defaultProps = defaultProps;
 
 
-export default BoardListItem;
+export default connect(mapStateToProps, mapDispatchToProps)(BoardListItem);

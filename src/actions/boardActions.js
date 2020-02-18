@@ -7,6 +7,8 @@ import {
   getActivities,
   cleanActivities,
   updateLabel,
+  deleteBoard,
+  removeBoard,
 } from './board/boardActions';
 import {
   createColumn,
@@ -58,4 +60,6 @@ export default {
   updateLabel,
   attachLabel,
   removeLabel,
+  deleteBoard,
+  removeBoard,
 };

@@ -50,11 +50,11 @@ class Board extends Component {
       loading: false,
       success: { // for success resquest
         message: '',
-        statusCode: undefined,
+        statusCode: null,
       },
       err: { // for resquest errors
         message: '',
-        statusCode: undefined,
+        statusCode: null,
       },
       redirect: false, // If we can not get access to a board then set this true to redirect to all boards page
     },
@@ -82,16 +82,12 @@ class Board extends Component {
             },
             err: {
               message: '',
-              statusCode: undefined,
+              statusCode: null,
             },
           },
         }));
       })
-      .catch((err) => {
-        console.log('error in board', err);
-
-        this.handleError(err);
-      });
+      .catch(this.handleError);
   }
 
   componentDidUpdate() {
@@ -103,13 +99,10 @@ class Board extends Component {
       board,
     } = this.props;
 
+    // If we redirected to a board page with other id then we need to load that board
     if (!state.status.err.message && match.params.id !== board._id) {
       getBoard(token.token, match.params.id)
-        .catch((err) => {
-          console.log('error in board', err);
-
-          this.handleError(err);
-        });
+        .catch(this.handleError);
     }
   }
 
@@ -121,13 +114,13 @@ class Board extends Component {
         ...state,
       };
 
-      const targetPopupOpened = state.popup[popupType];
+      const isTargetPopupOpened = state.popup[popupType];
 
       for (const field in state.popup) {
         newState.popup[field] = false;
       }
 
-      if (!targetPopupOpened) newState.popup[popupType] = !state.popup[popupType];
+      if (!isTargetPopupOpened) newState.popup[popupType] = !state.popup[popupType];
 
       return newState;
     });
@@ -137,11 +130,7 @@ class Board extends Component {
     const { getMembers, board, token } = this.props;
 
     return getMembers(token.token, board._id)
-      .then(() => console.log('members updated'))
-      .catch((err) => {
-        console.log('getMembers error', err);
-        this.handleError(err);
-      });
+      .catch(this.handleError);
   }
 
   closeMessage = (redirect = true) => {
@@ -151,7 +140,7 @@ class Board extends Component {
         ...prevState.status,
         err: {
           message: '',
-          statusCode: undefined,
+          statusCode: null,
         },
         redirect,
       },
@@ -165,7 +154,7 @@ class Board extends Component {
         loading: false,
         success: {
           message: '',
-          statusCode: undefined,
+          statusCode: null,
         },
         err: {
           message: err.message,

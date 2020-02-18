@@ -6,6 +6,8 @@ const getUserBoards = require('./board/getUserBoards');
 const getBoardById = require('./board/getBoardById');
 const updateBoardSetting = require('./board/updateBoardSetting');
 const createBoard = require('./board/createBoard');
+const deleteBoard = require('./board/deleteBoard');
+const removeBoard = require('./board/removeBoard');
 const updateLabel = require('./board/updateLabel');
 const getActivities = require('./board/getActivities');
 
@@ -41,6 +43,8 @@ router.get('/all', getUserBoards);
 router.get('/:id', getBoardById);
 router.post('/:id', updateBoardSetting);
 router.post('/', createBoard);
+router.post('/:id/delete', deleteBoard);
+router.post('/:id/remove', removeBoard);
 router.post('/:id/update_label/:labelId', updateLabel);
 router.get('/:id/get_activities', getActivities);
 

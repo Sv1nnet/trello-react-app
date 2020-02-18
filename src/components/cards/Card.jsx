@@ -69,7 +69,7 @@ const Card = (props) => {
           <span>{title}</span>
         </div>
 
-        <button ref={deleteButtonRef} onClick={deleteCard} type="button" className="delete-card__btn">
+        <button ref={deleteButtonRef} onClick={deleteCard} type="button" className="delete-card-btn">
           <FontAwesomeIcon className="delete-icon" icon={faTrashAlt} />
         </button>
       </div>

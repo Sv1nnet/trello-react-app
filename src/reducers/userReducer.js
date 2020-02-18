@@ -3,7 +3,7 @@
  * {
  *   config: axios config object,
  *   data: {
- *     boards: [{ id, title }],
+ *     boards: [{ id, title, owner }],
  *     email: 'email@email.ru',
  *     firstName: 'First',
  *     lastName: 'Last',
@@ -31,7 +31,6 @@ const initialState = user ? JSON.parse(user) : {
 const userReducer = (state = initialState, action) => {
   let data;
   let newState;
-
   console.log(action);
 
   switch (action.type) {
@@ -111,6 +110,8 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
       };
+    case userActionTypes.BOARD_REMOVED:
+    case userActionTypes.BOARD_DELETED:
     case userActionTypes.ALL_BOARDS_DOWNLOADED:
       data = { ...action.data };
       return {

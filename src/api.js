@@ -42,6 +42,14 @@ const api = {
       setAuthHeaders(token);
       return axios.post(`${ip}/board`, data);
     },
+    deleteBoard: (token, boardId) => {
+      setAuthHeaders(token);
+      return axios.post(`${ip}/board/${boardId}/delete`);
+    },
+    removeBoard: (token, boardId) => {
+      setAuthHeaders(token);
+      return axios.post(`${ip}/board/${boardId}/remove`);
+    },
     getBoard: (token, boardId) => {
       setAuthHeaders(token);
       return axios.get(`${ip}/board/${boardId}`);
