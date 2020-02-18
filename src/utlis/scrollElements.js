@@ -44,7 +44,8 @@ const scrollElements = options => (e) => {
           scrollIntervals.scrollHorizontalInterval = setInterval(() => {
             const isEndOfScroll = HTMLElement.offsetWidth === (HTMLElement.scrollWidth - HTMLElement.scrollLeft);
 
-            HTMLElement.scrollTo(HTMLElement.scrollLeft + scrollStepX, HTMLElement.scrollTop);
+            if (HTMLElement.scrollTo) HTMLElement.scrollTo(HTMLElement.scrollLeft + scrollStepX, HTMLElement.scrollTop);
+            else HTMLElement.scrollLeft += scrollStepX;
 
             if (isEndOfScroll) clearInterval(scrollIntervals.scrollHorizontalInterval);
           }, 1000 / 60);
@@ -59,7 +60,8 @@ const scrollElements = options => (e) => {
           scrollIntervals.scrollHorizontalInterval = setInterval(() => {
             const isEndOfScroll = HTMLElement.scrollLeft === 0;
 
-            HTMLElement.scrollTo(HTMLElement.scrollLeft - scrollStepX, HTMLElement.scrollTop);
+            if (HTMLElement.scrollTo) HTMLElement.scrollTo(HTMLElement.scrollLeft - scrollStepX, HTMLElement.scrollTop);
+            else HTMLElement.scrollLeft -= scrollStepX;
 
             if (isEndOfScroll) clearInterval(scrollIntervals.scrollHorizontalInterval);
           }, 1000 / 60);
@@ -84,7 +86,8 @@ const scrollElements = options => (e) => {
           scrollIntervals.scrollVerticalInterval = setInterval(() => {
             const isEndOfScroll = HTMLElement.offsetHeight >= (HTMLElement.scrollHeight - HTMLElement.scrollTop);
 
-            HTMLElement.scrollTo(HTMLElement.scrollLeft, HTMLElement.scrollTop + scrollStepY);
+            if (HTMLElement.scrollTo) HTMLElement.scrollTo(HTMLElement.scrollLeft, HTMLElement.scrollTop + scrollStepY);
+            else HTMLElement.scrollTop += scrollStepY;
 
             if (isEndOfScroll) clearInterval(scrollIntervals.scrollVerticalInterval);
           }, 1000 / 60);
@@ -99,7 +102,8 @@ const scrollElements = options => (e) => {
           scrollIntervals.scrollVerticalInterval = setInterval(() => {
             const isEndOfScroll = HTMLElement.scrollTop <= 0;
 
-            HTMLElement.scrollTo(HTMLElement.scrollLeft, HTMLElement.scrollTop - scrollStepY);
+            if (HTMLElement.scrollTo) HTMLElement.scrollTo(HTMLElement.scrollLeft, HTMLElement.scrollTop - scrollStepY);
+            else HTMLElement.scrollTop -= scrollStepY;
 
             if (isEndOfScroll) clearInterval(scrollIntervals.scrollVerticalInterval);
           }, 1000 / 60);

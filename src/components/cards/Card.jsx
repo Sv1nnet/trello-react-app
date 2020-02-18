@@ -61,7 +61,7 @@ const Card = (props) => {
     <div tabIndex="0" role="button" onKeyPress={onClick} onClick={onClick} {...dragHandleProps} className="card-item d-flex px-2 flex-wrap align-items-center drag-source">
       <div ref={editingTargetRef} className="h-100 w-100">
 
-        <div className="card-labels__container">
+        <div className="card-labels-container">
           {labels.map(label => <Label key={label} color={boardLabels[label].color} />)}
         </div>
 

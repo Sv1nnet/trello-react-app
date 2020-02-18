@@ -25,6 +25,8 @@ const defaultProps = {
   events: {},
 };
 
+// User can either delete a board or remove it from his board list (if he is not the board owner).
+// So we have 2 types of actions of delete/remove button and we can get them from the object below.
 const boardDeleteOptions = {
   owner: {
     getRequestMessage: title => `Delete "${title}" board?`,

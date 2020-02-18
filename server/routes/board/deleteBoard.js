@@ -14,9 +14,16 @@ const deleteBoard = (req, res) => {
       try {
         const user = await User.findById({ _id: decoded._id });
         const board = await Board.findById(boardId);
+        const { members } = board;
 
         if (user && board && user._id.toHexString() === board.owner.toHexString()) {
-          user.boards.id(boardId).remove();
+          await Promise.all(members.map(async (boardMember) => {
+            const member = await User.findById(boardMember._id);
+
+            member.boards.id(boardId).remove();
+            await member.save();
+          }));
+
           board.remove();
 
           const updatedUser = await user.save();
@@ -26,6 +33,7 @@ const deleteBoard = (req, res) => {
           res.status(400).json({ err: 'Could not delete board board' });
         }
       } catch (e) {
+        console.log(e);
         res.status(400).json({ err: 'Could not delete the baord' });
       }
     }

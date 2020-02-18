@@ -105,7 +105,7 @@ const Draggable = (props) => {
         index,
         type,
       },
-        dragHandlers.onDragStart);
+      dragHandlers.onDragStart);
     }
   };
 
@@ -129,7 +129,12 @@ const Draggable = (props) => {
             // and card's container is being scrolled by scrollElements function a vertical scroll
             // of the container jumps back due to inserting an element before a card we mouse move on
             if (direction === 'vertical') {
-              container.scrollTo(0, containerScrollPosition);
+              if (container.scrollTo) {
+                container.scrollTo(0, containerScrollPosition);
+              } else {
+                container.scrollLeft = 0;
+                container.scrollTop = containerScrollPosition;
+              }
             }
           }
         } else {
@@ -151,7 +156,10 @@ const Draggable = (props) => {
 
   const onMouseUp = () => {
     const placeholder = document.querySelector('[data-type="placeholder"]');
-    if (placeholder) placeholder.remove();
+    if (placeholder) {
+      if (placeholder.remove) placeholder.remove();
+      else placeholder.parentNode.removeChild(placeholder);
+    }
 
     window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('mouseup', onMouseUp);

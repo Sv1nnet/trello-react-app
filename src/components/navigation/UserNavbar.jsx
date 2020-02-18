@@ -80,11 +80,11 @@ class UserNavbar extends Component {
       ...state,
       searchText: '',
     }),
-      () => {
-        // After we clear search input we need return focus to it
-        if (getComputedStyle(navSearchInput.current.inputElement.current).display !== 'none') navSearchInput.current.inputElement.current.focus();
-        if (getComputedStyle(searchCardsInput.current.inputElement.current).display !== 'none') searchCardsInput.current.inputElement.current.focus();
-      });
+    () => {
+      // After we clear search input we need return focus to it
+      if (getComputedStyle(navSearchInput.current.inputElement.current).display !== 'none') navSearchInput.current.inputElement.current.focus();
+      if (getComputedStyle(searchCardsInput.current.inputElement.current).display !== 'none') searchCardsInput.current.inputElement.current.focus();
+    });
   }
 
   // This works on small screen. Search button showed instead of search text input so when we click the button search popup appears
@@ -96,9 +96,9 @@ class UserNavbar extends Component {
         ...state,
         searchText: '',
       }),
-        () => {
-          this.searchBar.current.classList.remove('active');
-        });
+      () => {
+        this.searchBar.current.classList.remove('active');
+      });
     } else {
       this.searchBar.current.classList.add('active');
       this.searchCardsInput.current.inputElement.current.focus();
@@ -126,11 +126,11 @@ class UserNavbar extends Component {
         ...state,
         [popupType]: !state[popupType],
       }),
-        () => { // Load all boards if popup opened
-          if (this.state[popupType]) {
-            props.loadAllBoards(props.token.token);
-          }
-        });
+      () => { // Load all boards if popup opened
+        if (this.state[popupType]) {
+          props.loadAllBoards(props.token.token);
+        }
+      });
     } else {
       this.setState(state => ({
         ...state,
