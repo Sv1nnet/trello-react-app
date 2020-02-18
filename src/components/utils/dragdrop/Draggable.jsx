@@ -157,8 +157,7 @@ const Draggable = (props) => {
   const onMouseUp = () => {
     const placeholder = document.querySelector('[data-type="placeholder"]');
     if (placeholder) {
-      if (placeholder.remove) placeholder.remove();
-      else placeholder.parentNode.removeChild(placeholder);
+      placeholder.parentNode.removeChild(placeholder);
     }
 
     window.removeEventListener('mousemove', onMouseMove);
