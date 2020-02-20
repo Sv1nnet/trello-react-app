@@ -95,7 +95,7 @@ class UserBoardsPage extends Component {
 
         <div className="row overflow-auto all-boards-container">
           {boards && boards.map(board => (
-            <div key={board._id} className="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-2">
+            <div key={board._id} className="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4">
               <BoardListItem id={board._id} owner={board.owner} title={board.title} />
             </div>
           ))}

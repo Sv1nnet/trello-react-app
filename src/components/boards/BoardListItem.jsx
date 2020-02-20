@@ -98,7 +98,7 @@ const BoardListItem = (props) => {
     <>
       <div className="col-12 px-0 dropdown-board-list-item pt-2">
         <div className="board-list-item-container">
-          <Link to={url} {...events} className="px-1 w-100 d-block text-decoration-none text-center font-weight-bold">{title}</Link>
+          <Link to={url} {...events} className="pl-3 pr-5 w-100 d-block text-decoration-none text-center font-weight-bold">{title}</Link>
 
           <button onClick={deleteBoard} type="button" className="delete-board-btn">
             <FontAwesomeIcon className="delete-icon" icon={faTrashAlt} />
