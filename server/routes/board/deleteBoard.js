@@ -30,7 +30,7 @@ const deleteBoard = (req, res) => {
 
           res.status(200).send(_.pick(updatedUser, ['email', 'nickname', 'firstName', 'lastName', 'boards']));
         } else {
-          res.status(400).json({ err: 'Could not delete board board' });
+          throw new Error(`Could not find the user with id "${decoded._id}", board with id "${boardId}" or user is not the board owner`);
         }
       } catch (e) {
         console.log(e);
