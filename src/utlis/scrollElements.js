@@ -28,7 +28,6 @@ const scrollElements = options => (e) => {
       scrollX = scrollBoth,
       scrollY = scrollBoth,
     } = option;
-    // console.log('mouse move', elementToScroll)
 
     const HTMLElement = elementToScroll.getBoundingClientRect ? elementToScroll : elementToScroll.current;
     const rect = HTMLElement.getBoundingClientRect();
@@ -65,7 +64,7 @@ const scrollElements = options => (e) => {
           }, 1000 / 60);
         }
         // Otherwise clear scrollHorizontalInterval to stop scrolling
-        // and set scrollHorizontalInterval undefined to let scroll handler know
+        // and set scrollHorizontalInterval null to let scroll handler know
         // does he need to set a new scroll interval or another one still exists
       } else {
         clearInterval(scrollIntervals.scrollHorizontalInterval);
@@ -105,7 +104,7 @@ const scrollElements = options => (e) => {
           }, 1000 / 60);
         }
         // Otherwise clear scrollVerticalInterval to stop scrolling
-        // and set scrollVerticalInterval undefined to let scroll handler know
+        // and set scrollVerticalInterval null to let scroll handler know
         // does he need to set a new vertical scroll interval or another one still exists
       } else {
         clearInterval(scrollIntervals.scrollVerticalInterval);
