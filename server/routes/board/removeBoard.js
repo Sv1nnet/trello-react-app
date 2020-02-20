@@ -29,7 +29,7 @@ const removeBoard = (req, res) => {
             board: { ...updatedBoard._doc, activities },
           });
         } else {
-          res.status(400).json({ err: 'Could not remove board board' });
+          throw new Error(`Could not find the user with id "${decoded._id}", board with id "${boardId}"`);
         }
       } catch (e) {
         res.status(400).json({ err: 'Could not remove the baord' });
