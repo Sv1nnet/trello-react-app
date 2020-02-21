@@ -215,7 +215,7 @@ class UserNavbar extends Component {
           <div className="logo-container text-center">
             <Link className="text-white text-decoration-none" to="/board/all">
               <FontAwesomeIcon icon={faThList} />
-              <span className="font-weight-bold">Trello-like</span>
+              <span className="font-weight-bold">Kanban Board</span>
             </Link>
           </div>
 
