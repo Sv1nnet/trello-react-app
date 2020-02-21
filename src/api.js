@@ -118,13 +118,13 @@ const api = {
       setAuthHeaders(token);
       return axios.post(`${ip}/board/${boardId}/${cardId}/delete_comment/${commentId}`);
     },
-    attachLabel: (token, boardId, cardId, labelId) => {
+    attachLabel: (token, boardId, cardId, labelId, data) => {
       setAuthHeaders(token);
-      return axios.post(`${ip}/board/${boardId}/${cardId}/attach_label/${labelId}`);
+      return axios.post(`${ip}/board/${boardId}/${cardId}/attach_label/${labelId}`, data);
     },
-    removeLabel: (token, boardId, cardId, labelId) => {
+    removeLabel: (token, boardId, cardId, labelId, data) => {
       setAuthHeaders(token);
-      return axios.post(`${ip}/board/${boardId}/${cardId}/remove_label/${labelId}`);
+      return axios.post(`${ip}/board/${boardId}/${cardId}/remove_label/${labelId}`, data);
     },
     updateLabel: (token, boardId, labelId, data) => {
       setAuthHeaders(token);

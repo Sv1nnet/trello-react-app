@@ -138,10 +138,27 @@ const deleteCardComment = (token, boardId, cardId, commentId) => (dispatch) => {
     });
 };
 
-const attachLabel = (token, boardId, cardId, labelId) => (dispatch) => {
-  return api.board.attachLabel(token, boardId, cardId, labelId)
+const attachLabel = (token, boardId, cardId, labelId) => (dispatch, getState) => {
+  const timeOfChange = Date.now();
+  const { board } = getState();
+  const updatedBoard = {
+    ...getState().board,
+    timeOfLastChange: timeOfChange,
+    cards: board.cards.map((card) => {
+      if (card._id === cardId) {
+        return { ...card, labels: [...card.labels, labelId] };
+      }
+      return { ...card };
+    }),
+  };
+
+  // Attach label on the client
+  dispatch({ type: cardActionTypes.LABEL_ATTACHED, data: updatedBoard });
+
+  // Send request for attaching a label to the server
+  return api.board.attachLabel(token, boardId, cardId, labelId, { timeOfChange })
     .then((res) => {
-      dispatch({ type: cardActionTypes.LABEL_ATTACHED, data: res.data });
+      dispatch({ type: cardActionTypes.CARD_LOCAL_CHANGES_UPDATED, data: res.data });
       return res;
     })
     .catch((err) => {
@@ -154,10 +171,27 @@ const attachLabel = (token, boardId, cardId, labelId) => (dispatch) => {
     });
 };
 
-const removeLabel = (token, boardId, cardId, labelId) => (dispatch) => {
-  return api.board.removeLabel(token, boardId, cardId, labelId)
+const removeLabel = (token, boardId, cardId, labelId) => (dispatch, getState) => {
+  const timeOfChange = Date.now();
+  const { board } = getState();
+  const updatedBoard = {
+    ...getState().board,
+    timeOfLastChange: timeOfChange,
+    cards: board.cards.map((card) => {
+      if (card._id === cardId) {
+        return { ...card, labels: card.labels.filter(label => label !== labelId) };
+      }
+      return { ...card };
+    }),
+  };
+
+  // Remove label on the client
+  dispatch({ type: cardActionTypes.LABEL_REMOVED, data: updatedBoard });
+
+  // Send request for removing a label to the server
+  return api.board.removeLabel(token, boardId, cardId, labelId, { timeOfChange })
     .then((res) => {
-      dispatch({ type: cardActionTypes.LABEL_REMOVED, data: res.data });
+      dispatch({ type: cardActionTypes.CARD_LOCAL_CHANGES_UPDATED, data: res.data });
       return res;
     })
     .catch((err) => {

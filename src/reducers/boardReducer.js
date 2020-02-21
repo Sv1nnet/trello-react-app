@@ -46,12 +46,22 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         cashedColumns: columns,
         timeOfLastChange: null,
       };
+    // case cardActionTypes.LABEL_ATTACHED:
+    // case cardActionTypes.LABEL_REMOVED:
+    //   data = { ...action.data };
+
+    //   columns = [...data.columns];
+    //   cards = [...data.cards];
+
+    //   return {
+    //     ...state,
+    //     cards,
+    //     timeOfLastChange: data.timeOfLastChange,
+    //   };
     case boardActionTypes.BOARD_REMOVED:
     case columnActionTypes.COLUMN_DELETED:
     case columnActionTypes.COLUMN_UPDATED:
     case cardActionTypes.CARD_UPDATED:
-    case cardActionTypes.LABEL_ATTACHED:
-    case cardActionTypes.LABEL_REMOVED:
     case boardActionTypes.BOARD_UPDATED:
     case boardActionTypes.LABEL_UPDATED:
     case boardActionTypes.BOARD_DOWNLOADED:
@@ -107,6 +117,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         cashedColumns: columns,
         timeOfLastChange: null,
       };
+    case cardActionTypes.CARD_LOCAL_CHANGES_UPDATED:
     case cardActionTypes.CARD_POSITIONS_UPDATED:
       data = { ...action.data };
 
@@ -144,6 +155,8 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         timeOfLastChange: data.timeOfChange,
         columns,
       };
+    case cardActionTypes.LABEL_ATTACHED:
+    case cardActionTypes.LABEL_REMOVED:
     case cardActionTypes.CARD_POSITIONS_SWITCHED:
       cards = [...action.data.cards];
       return {
@@ -270,6 +283,7 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
     case cardActionTypes.CARD_COMMENT_DELETE_FALIED:
     case cardActionTypes.LABEL_ATTACH_FAILED:
     case cardActionTypes.LABEL_REMOVE_FAILED:
+    case cardActionTypes.CARD_LOCAL_CHANGES_UPDATE_FAILED:
     case columnActionTypes.COLUMN_CREATE_FAILED:
     case columnActionTypes.COLUMN_DELETE_FAILED:
       return {

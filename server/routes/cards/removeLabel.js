@@ -6,6 +6,7 @@ const removeLabel = (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const boardId = req.params.id;
   const { cardId, labelId } = req.params;
+  const { timeOfChange } = req.body;
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
@@ -34,7 +35,7 @@ const removeLabel = (req, res) => {
 
         const activities = await updatedBoard.getActivities();
 
-        return res.status(200).send({ ...updatedBoard._doc, activities });
+        return res.status(200).send({ ...updatedBoard._doc, timeOfLastChange: timeOfChange, activities });
       }
 
       res.status(400).send({ err: 'Only board owner can remove label to cards' });
