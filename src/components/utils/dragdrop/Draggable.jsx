@@ -70,8 +70,10 @@ const Draggable = (props) => {
     }
 
     const childrenItems = Array
-      .from(container.querySelectorAll(`[data-droppable-id="${containerId}"] > [data-draggable-id]`))
-      .filter(item => source.id !== item.dataset.draggableId);
+      .prototype.filter.call(
+        container.querySelectorAll(`[data-droppable-id="${containerId}"] > [data-draggable-id]`),
+        item => source.id !== item.dataset.draggableId,
+      );
 
     return childrenItems.findIndex(item => item === placeholder);
   }, [index, containerId]);

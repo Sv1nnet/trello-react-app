@@ -9,7 +9,6 @@ import '../../styles/cardItem.sass';
 import { BoardContentContext } from '../context/BoardContentContext';
 import Messages from '../utils/Messages';
 import useStatus from '../../utlis/hooks/useStatus';
-import hasParent from '../../utlis/hasParent';
 
 
 const propTypes = {
