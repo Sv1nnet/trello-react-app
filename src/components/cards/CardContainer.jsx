@@ -55,13 +55,13 @@ const CardContainer = (props) => {
   const editingTargetRef = useRef(null);
   const deleteButtonRef = useRef(null);
 
-  const deleteCard = () => {
+  const deleteCard = (e) => {
+    e.stopPropagation();
     setQuestionIsActive(true);
   };
 
-  const onCardClick = (e) => {
-    const { target } = e;
-    if (!hasParent(deleteButtonRef.current, target)) openDetails(id);
+  const onCardClick = () => {
+    openDetails(id);
   };
 
   const positiveAnswer = () => {

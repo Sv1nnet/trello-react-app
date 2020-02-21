@@ -7,7 +7,7 @@ import TextInput from '../../utils/TextInput';
 import Loader from '../../utils/Loader';
 import actions from '../../../actions/boardActions';
 import Messages from '../../utils/Messages';
-import User from '../../lists/UserListItem';
+import UserListIten from '../../lists/UserListItem';
 
 
 const propTypes = {
@@ -336,7 +336,7 @@ class MembersForm extends Component {
               }
 
               return (
-                <User
+                <UserListIten
                   addMember={this.handleAddMember}
                   removeMember={this.handleRemoveMember}
                   key={user._id}
