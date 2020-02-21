@@ -53,7 +53,6 @@ const CardContainer = (props) => {
 
   const { openDetails, switchCards } = useContext(BoardContentContext);
   const editingTargetRef = useRef(null);
-  const deleteButtonRef = useRef(null);
 
   const deleteCard = (e) => {
     e.stopPropagation();
@@ -88,7 +87,6 @@ const CardContainer = (props) => {
             onClick={onCardClick}
             deleteCard={deleteCard}
             editingTargetRef={editingTargetRef}
-            deleteButtonRef={deleteButtonRef}
             title={title}
             labels={labels}
           />
