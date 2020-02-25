@@ -140,6 +140,8 @@ class TextInput extends Component {
     const emptyValue = '';
     const { props, inputElement } = this;
     const {
+      hideCrossBtn,
+      hideSearchBtn,
       inputType,
       textColor = emptyValue,
       inputValue = emptyValue,
@@ -173,7 +175,7 @@ class TextInput extends Component {
       },
       style: { color: textColor },
       type: 'text',
-      className: `nav-link ${classList}`,
+      className: `nav-link text-input ${classList} ${hideCrossBtn && hideSearchBtn ? '' : 'text-input_btn-active'}`,
       placeholder: placeholder || 'Search',
       value: inputValue,
       maxLength,
@@ -214,15 +216,15 @@ class TextInput extends Component {
     const input = getInput();
 
     return (
-      <div className={`search-input-container position-relative ${containerClassList}`}>
+      <div className={`text-input-container position-relative ${containerClassList}`}>
         {input}
 
-        <div ref={this.crossBtn} className={`icon-container ${crossBtnActive}`}>
-          <FontAwesomeIcon style={{ display: hideCrossBtn ? 'none' : '' }} onClick={onCrossBtnClick} className="dropdown-search-icon clear-input-button" icon={faTimes} />
+        <div ref={this.crossBtn} className={`text-input__icon-container ${crossBtnActive}`}>
+          <FontAwesomeIcon style={{ display: hideCrossBtn ? 'none' : '' }} onClick={onCrossBtnClick} className="text-input__icon clear-input-button" icon={faTimes} />
         </div>
 
-        <div ref={this.searchBtn} className={`icon-container ${searchBtnActive}`}>
-          <FontAwesomeIcon style={{ display: hideSearchBtn ? 'none' : '' }} onClick={onSearchBtnClick} className="dropdown-search-icon search-button" icon={faSearch} />
+        <div ref={this.searchBtn} className={`text-input__icon-container ${searchBtnActive}`}>
+          <FontAwesomeIcon style={{ display: hideSearchBtn ? 'none' : '' }} onClick={onSearchBtnClick} className="text-input__icon search-button" icon={faSearch} />
         </div>
       </div>
     );
