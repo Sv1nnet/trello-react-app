@@ -4,16 +4,17 @@ import UserNavbar from '../navigation/UserNavbar';
 import UserBoardsPage from '../pages/UserBoardsPage';
 import Board from '../pages/Board';
 import BoardContentContextProvider from '../context/BoardContentContext';
+import EditAccountPage from '../pages/EditAccountPage';
 
 const AuthenticatedRoutes = () => (
   <>
     <BoardContentContextProvider>
       <UserNavbar />
-      <div className="container-fluid px-0">
+      <div className="container-fluid px-0 h-100">
         <Switch>
           <Route exact path="/board/all" component={UserBoardsPage} />
           <Route exact path="/board/:id" component={Board} />
-          <Route exact path="/user" component={() => <h1>User page</h1>} />
+          <Route exact path="/user" component={EditAccountPage} />
           <Route path="*" component={() => <Redirect to="/board/all" />} />
         </Switch>
       </div>

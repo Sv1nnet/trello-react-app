@@ -215,6 +215,50 @@ router.post('/reset_password', (req, res) => {
   });
 });
 
+// Reset password
+router.post('/edit_account', (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      res.status(401).send({ err: 'Invalid token' });
+    } else {
+      try {
+        const { userData } = req.body;
+        const {
+          currentPassword,
+          newPassword,
+          ...credentials
+        } = userData;
+
+        const user = await User.findById({ _id: decoded._id });
+        const isPasswordValid = user.isValidPassword(currentPassword);
+
+        if (!isPasswordValid) {
+          throw new Error('Wrong password');
+        }
+
+        if (newPassword) user.hashPassword(newPassword);
+        user.updateCredentials(credentials);
+
+        const updatedUser = await user.save();
+
+        res.status(200).send({
+          ..._.pick(updatedUser, ['_id', 'email', 'nickname', 'firstName', 'lastName', 'boards']),
+          message: 'Credentials were updated',
+          token: {
+            access: 'auth',
+            token,
+          },
+        });
+      } catch (error) {
+        console.log('Wrong password');
+        res.status(400).send({ err: error.message });
+      }
+    }
+  });
+});
+
 // Login
 router.post('/login', (req, res) => {
   const { credentials } = req.body;

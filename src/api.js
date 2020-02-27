@@ -135,6 +135,12 @@ const api = {
       return axios.get(`${ip}/board/${boardId}/get_activities?start=${data.start}`);
     },
   },
+  user: {
+    editAccount: (token, boardId, data) => {
+      setAuthHeaders(token);
+      return axios.post(`${ip}/user/edit_account`, data);
+    },
+  },
 };
 
 export default api;

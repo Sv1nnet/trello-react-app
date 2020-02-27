@@ -73,6 +73,7 @@ const userReducer = (state = initialState, action) => {
           boards: [...state.userData.boards, { _id: data._id, title: data.title }],
         },
       };
+    case userActionTypes.ACCOUNT_EDITED:
     case userActionTypes.EMAIL_CONFIRMED:
     case userActionTypes.LOGGEDIN:
       data = { ...action.data };
@@ -106,6 +107,7 @@ const userReducer = (state = initialState, action) => {
         userData: {},
         token: {},
       };
+    case userActionTypes.ACCOUNT_EDIT_FAILED:
     case userActionTypes.EMAIL_CONFIRMATION_FAILED:
       return {
         ...state,

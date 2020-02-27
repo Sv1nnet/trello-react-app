@@ -1,6 +1,7 @@
 .column-drag-area
-  height: 98%
+  max-height: 98%
   margin: 5px
+  display: flex
   min-width: 280px
   &.dragging
     pointer-events: none
@@ -12,11 +13,12 @@
 .add-new-column-button-container
   margin: 5px
 .cards-list-container, .add-new-column-button-container
-  display: inline-block
+  display: flex
+  flex-direction: column
   position: relative
   width: 280px
   border-radius: 4px
-  max-height: 100vh
+  max-height: calc(100vh - 130px)
   background-color: #dfe1e6c7
   flex: 0 0 280px
   &.dragging
@@ -85,7 +87,8 @@
   overflow-y: auto
   overflow-x: hidden
   padding-bottom: 15px
-  max-height: calc(100vh - 240px)
+  flex: 0 1 auto
+  // max-height: calc(100vh - 240px)
 
 .create-card-button-wrapper, .add-new-column-button-container
   a

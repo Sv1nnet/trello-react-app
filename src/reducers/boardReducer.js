@@ -46,18 +46,6 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         cashedColumns: columns,
         timeOfLastChange: null,
       };
-    // case cardActionTypes.LABEL_ATTACHED:
-    // case cardActionTypes.LABEL_REMOVED:
-    //   data = { ...action.data };
-
-    //   columns = [...data.columns];
-    //   cards = [...data.cards];
-
-    //   return {
-    //     ...state,
-    //     cards,
-    //     timeOfLastChange: data.timeOfLastChange,
-    //   };
     case boardActionTypes.BOARD_REMOVED:
     case columnActionTypes.COLUMN_DELETED:
     case columnActionTypes.COLUMN_UPDATED:

@@ -1,6 +1,10 @@
 @import './_vars.sass'
 @import './media/_mediaBoard.sass'
 
+.board-container
+  display: flex
+  flex-direction: column
+
 .board-controls-container
   width: 100%
   min-height: 50px
@@ -75,7 +79,7 @@
   text-align: center
 
 .board-list-container
-  max-height: calc(100vh - 140px)
+  // max-height: calc(100vh - 140px)
 
 .access-dropdown-inputs-container
   display: flex

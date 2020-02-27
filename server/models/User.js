@@ -216,6 +216,14 @@ UserSchema.methods.removeBoard = function removeBoard(board) {
   return user.boards;
 };
 
+UserSchema.methods.updateCredentials = function updateCredentials(credentials) {
+  const user = this;
+
+  for (const cred in credentials) {
+    user[cred] = credentials[cred];
+  }
+};
+
 const User = mongoose.model('users', UserSchema);
 
 module.exports = {

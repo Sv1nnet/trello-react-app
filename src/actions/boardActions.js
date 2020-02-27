@@ -33,6 +33,9 @@ import {
   addMember,
   removeMember,
 } from './board/membersActions';
+import {
+  editAccount,
+} from './user/userActions';
 
 export default {
   createBoard,
@@ -62,4 +65,5 @@ export default {
   removeLabel,
   deleteBoard,
   removeBoard,
+  editAccount,
 };
