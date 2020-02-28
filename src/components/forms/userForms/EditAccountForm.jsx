@@ -17,12 +17,12 @@ const propTypes = {
     status: PropTypes.shape({
       loading: PropTypes.bool.isRequired,
       success: PropTypes.shape({
-        statusCode: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.number]),
-        message: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.string]),
+        statusCode: PropTypes.number,
+        message: PropTypes.string,
       }).isRequired,
       err: PropTypes.shape({
-        statusCode: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.number]),
-        message: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.string]),
+        statusCode: PropTypes.number,
+        message: PropTypes.string,
       }).isRequired,
     }).isRequired,
     resetStatus: PropTypes.func.isRequired,
@@ -35,8 +35,8 @@ const propTypes = {
         message: PropTypes.string,
       }).isRequired,
       err: PropTypes.shape({
-        statusCode: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.number]),
-        message: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.string]),
+        statusCode: PropTypes.number,
+        message: PropTypes.string,
       }).isRequired,
     }).isRequired,
     resetPasswordStatus: PropTypes.func.isRequired,
@@ -97,7 +97,7 @@ const EditAccountForm = (props) => {
             <input onChange={onChange} type="password" name="currentPassword" id="current-password" className="w-100 px-2" value={currentPassword} required />
             <span className="form-label-text">Current Password<span className="text-danger"> *</span></span>
           </label>
-          <div className="position-relative edit-account-form__btn-container mt-4 mb-3">
+          <div className="position-relative edit-account-form__submit-btn-container mt-4 mb-3">
             {
               status.loading
                 ? <Loader.FormLoader />
@@ -107,18 +107,20 @@ const EditAccountForm = (props) => {
         </form>
 
         {
-          passwordStatus.loading
-            ? (
-              <button type="button" className={`edit-account-form__reset-password-btn ${'edit-account-form__reset-password-btn_loading'}`} onClick={resetPassword}>
-                <div className="reset-password-btn__loader" />
-              </button>
-            )
-            : (
-              <button type="button" className="edit-account-form__reset-password-btn" onClick={resetPassword}>
-                Reset password
-              </button>
-            )
-        }
+          <div className="edit-account-form__reset-password-btn-container">
+            {passwordStatus.loading
+              ? (
+                <button type="button" className="edit-account-form__reset-password-btn edit-account-form__reset-password-btn_loading" onClick={resetPassword}>
+                  <div className="reset-password-btn__loader" />
+                </button>
+              )
+              : (
+                <button type="button" className="edit-account-form__reset-password-btn" onClick={resetPassword}>
+                  Reset password
+                </button>
+              )
+            }
+          </div>}
       </div>
 
       {status.success.statusCode === 200 && ReactDOM.createPortal(

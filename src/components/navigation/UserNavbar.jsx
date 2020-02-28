@@ -226,6 +226,7 @@ class UserNavbar extends Component {
 
                   <TextInput
                     ref={navSearchInput}
+                    containerClassList="nav-search-input__text-input"
                     inputValue={searchText}
                     placeholder="Search"
                     onChange={onSearchChange}

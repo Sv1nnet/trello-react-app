@@ -1,18 +1,27 @@
 .edit-account-form
   border: 2px solid #007bff;
-  &__btn-container
+  margin:
+    bottom: 1rem
+  &__submit-btn-container
     height: 38px
-  &__reset-password-btn
+  &__reset-password-btn-container
     display: block
     width: 100%
+    text-align: center
+  &__reset-password-btn
     margin:
       bottom: 10px
     text-decoration: underline
     color: #007bff
     position: relative
+    background-color: transparent
+    border: none
+    &:focus
+      outline: none
+      border: none
     &_loading
       text-decoration: none
-      height: 30px
+      height: 26px
     .reset-password-btn__loader
       &:after
         content: '.'

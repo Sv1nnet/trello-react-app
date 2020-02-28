@@ -84,10 +84,15 @@ class TextInput extends Component {
 
   onFocus = (e) => {
     const { props } = this;
+    const { hideCrossBtn, hideSearchBtn } = props;
 
     if (props.inputValue || (!props.inputValue && props.hideSearchBtn)) {
       this.searchBtn.current.classList.remove('active');
       this.crossBtn.current.classList.add('active');
+    }
+
+    if (!(hideCrossBtn && hideSearchBtn)) {
+      this.inputElement.current.classList.add('text-input_btn-active');
     }
 
     if (props.onFocus) props.onFocus(e);
@@ -99,6 +104,7 @@ class TextInput extends Component {
     if (!props.inputValue) {
       this.searchBtn.current.classList.add('active');
       this.crossBtn.current.classList.remove('active');
+      this.inputElement.current.classList.remove('text-input_btn-active');
     }
 
     if (props.onBlur) props.onBlur(e);
@@ -140,8 +146,6 @@ class TextInput extends Component {
     const emptyValue = '';
     const { props, inputElement } = this;
     const {
-      hideCrossBtn,
-      hideSearchBtn,
       inputType,
       textColor = emptyValue,
       inputValue = emptyValue,
@@ -175,7 +179,7 @@ class TextInput extends Component {
       },
       style: { color: textColor },
       type: 'text',
-      className: `nav-link text-input ${classList} ${hideCrossBtn && hideSearchBtn ? '' : 'text-input_btn-active'}`,
+      className: `nav-link text-input ${classList}`,
       placeholder: placeholder || 'Search',
       value: inputValue,
       maxLength,
