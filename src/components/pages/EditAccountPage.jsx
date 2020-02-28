@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import boardActions from '../../actions/boardActions';
+import authActions from '../../actions/authActions';
 import useStatus from '../../utlis/hooks/useStatus';
 import EditAccountForm from '../forms/userForms/EditAccountForm';
 
@@ -20,6 +21,7 @@ const propTypes = {
     _id: PropTypes.string.isRequired,
   }).isRequired,
   editAccount: PropTypes.func.isRequired,
+  resetPassword: PropTypes.func.isRequired,
 };
 
 
@@ -29,6 +31,7 @@ const EditAccountPage = (props) => {
     token,
     board,
     editAccount,
+    resetPassword,
   } = props;
 
 
@@ -47,6 +50,14 @@ const EditAccountPage = (props) => {
     resetStatus,
     handleSuccess,
     handleError,
+  } = useStatus();
+
+  const {
+    status: passwordStatus,
+    setStatusLoading: setPasswordStatusLoading,
+    resetStatus: resetPasswordStatus,
+    handleSuccess: handlePasswordSuccess,
+    handleError: handlePasswordError,
   } = useStatus();
 
   const onChange = (e) => {
@@ -75,6 +86,17 @@ const EditAccountPage = (props) => {
       .catch(handleError);
   };
 
+  const sendResetPasswordEmail = (e) => {
+    const { email } = userData;
+
+    setPasswordStatusLoading();
+
+    // setTimeout(resetPasswordStatus, 5000);
+    resetPassword({ email })
+      .then(handlePasswordSuccess)
+      .catch(handlePasswordError);
+  };
+
   return (
     <div className="container">
       <div className="row justify-content-center align-items-center mt-1">
@@ -86,10 +108,11 @@ const EditAccountPage = (props) => {
           lastName={userDetails.lastName}
           newPassword={userDetails.newPassword}
           currentPassword={userDetails.currentPassword}
-          status={status}
-          resetStatus={resetStatus}
+          submitState={{ status, resetStatus }}
+          resetPasswordState={{ passwordStatus, resetPasswordStatus }}
           onChange={onChange}
           onSubmit={onSubmit}
+          resetPassword={sendResetPasswordEmail}
         />
       </div>
     </div>
@@ -104,6 +127,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   editAccount: (token, boardId, data) => dispatch(boardActions.editAccount(token, boardId, data)),
+  resetPassword: data => dispatch(authActions.forgotPassword(data)),
 });
 
 

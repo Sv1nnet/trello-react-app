@@ -55,12 +55,17 @@ class App extends Component {
 
   render() {
     const { state } = this;
+    const { location } = window;
+    const resetPasswordRoute = state.isAuthenticated && !state.loading && location.pathname.includes('/user/reset_password/') && <GuestRoutes />;
 
     return (
       <div className="App">
         {state.loading && <Loader.PageLoader bg />}
-        {state.isAuthenticated && !state.loading && <AuthenticatedRoutes />}
-        {!state.isAuthenticated && !state.loading && <GuestRoutes />}
+        {
+          resetPasswordRoute
+          || (state.isAuthenticated && !state.loading && <AuthenticatedRoutes />)
+          || (!state.isAuthenticated && !state.loading && <GuestRoutes />)
+        }
       </div>
     );
   }

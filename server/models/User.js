@@ -146,7 +146,7 @@ UserSchema.methods.generateResetPasswordToken = function generateResetPasswordTo
     user.tokens.push(resetPasswordToken);
   } else {
     // If reset password token exists then detele the one and push a new one
-    user.tokens = user.tokens.filter(token => token.access === 'reset');
+    user.tokens = user.tokens.filter(token => token.access !== 'reset');
     user.tokens.push(resetPasswordToken);
   }
 };

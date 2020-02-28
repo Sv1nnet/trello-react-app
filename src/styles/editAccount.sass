@@ -2,3 +2,31 @@
   border: 2px solid #007bff;
   &__btn-container
     height: 38px
+  &__reset-password-btn
+    display: block
+    width: 100%
+    margin:
+      bottom: 10px
+    text-decoration: underline
+    color: #007bff
+    position: relative
+    &_loading
+      text-decoration: none
+      height: 30px
+    .reset-password-btn__loader
+      &:after
+        content: '.'
+        position: absolute
+        top: -100%
+        left: 50%
+        font-size: 40px
+        transform: translate(-50%, 0)
+        animation: dots-loader 1.5s linear infinite
+
+@keyframes dots-loader
+  0%
+    content: '.'
+  33%
+    content: '..'
+  66%
+    content: '...'

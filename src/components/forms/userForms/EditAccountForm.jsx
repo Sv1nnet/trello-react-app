@@ -13,18 +13,34 @@ const propTypes = {
   lastName: PropTypes.string.isRequired,
   newPassword: PropTypes.string.isRequired,
   currentPassword: PropTypes.string.isRequired,
-  status: PropTypes.shape({
-    loading: PropTypes.bool.isRequired,
-    success: PropTypes.shape({
-      statusCode: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.number]),
-      message: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.string]),
+  submitState: PropTypes.shape({
+    status: PropTypes.shape({
+      loading: PropTypes.bool.isRequired,
+      success: PropTypes.shape({
+        statusCode: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.number]),
+        message: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.string]),
+      }).isRequired,
+      err: PropTypes.shape({
+        statusCode: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.number]),
+        message: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.string]),
+      }).isRequired,
     }).isRequired,
-    err: PropTypes.shape({
-      statusCode: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.number]),
-      message: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.string]),
-    }).isRequired,
+    resetStatus: PropTypes.func.isRequired,
   }).isRequired,
-  resetStatus: PropTypes.func.isRequired,
+  resetPasswordState: PropTypes.shape({
+    passwordStatus: PropTypes.shape({
+      loading: PropTypes.bool.isRequired,
+      success: PropTypes.shape({
+        statusCode: PropTypes.number,
+        message: PropTypes.string,
+      }).isRequired,
+      err: PropTypes.shape({
+        statusCode: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.number]),
+        message: PropTypes.oneOfType([PropTypes.instanceOf(null), PropTypes.string]),
+      }).isRequired,
+    }).isRequired,
+    resetPasswordStatus: PropTypes.func.isRequired,
+  }).isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
@@ -38,11 +54,15 @@ const EditAccountForm = (props) => {
     lastName,
     newPassword,
     currentPassword,
-    status,
-    resetStatus,
+    submitState,
+    resetPasswordState,
     onChange,
     onSubmit,
+    resetPassword,
   } = props;
+
+  const { status, resetStatus } = submitState;
+  const { passwordStatus, resetPasswordStatus } = resetPasswordState;
 
   return (
     <>
@@ -85,16 +105,40 @@ const EditAccountForm = (props) => {
             }
           </div>
         </form>
+
+        {
+          passwordStatus.loading
+            ? (
+              <button type="button" className={`edit-account-form__reset-password-btn ${'edit-account-form__reset-password-btn_loading'}`} onClick={resetPassword}>
+                <div className="reset-password-btn__loader" />
+              </button>
+            )
+            : (
+              <button type="button" className="edit-account-form__reset-password-btn" onClick={resetPassword}>
+                Reset password
+              </button>
+            )
+        }
       </div>
 
       {status.success.statusCode === 200 && ReactDOM.createPortal(
         <Messages.SuccessMessage message={status.success.message} closeMessage={resetStatus} btn />,
-        document.querySelector('.App'),
+        document.querySelector('#root'),
       )}
 
       {status.err.message && ReactDOM.createPortal(
         <Messages.ErrorMessage message={status.err.message} closeMessage={resetStatus} btn />,
-        document.querySelector('.App'),
+        document.querySelector('#root'),
+      )}
+
+      {passwordStatus.success.statusCode === 200 && ReactDOM.createPortal(
+        <Messages.SuccessMessage message={passwordStatus.success.message} closeMessage={resetPasswordStatus} btn />,
+        document.querySelector('#root'),
+      )}
+
+      {passwordStatus.err.message && ReactDOM.createPortal(
+        <Messages.ErrorMessage message={passwordStatus.err.message} closeMessage={resetPasswordStatus} btn />,
+        document.querySelector('#root'),
       )}
     </>
   );
