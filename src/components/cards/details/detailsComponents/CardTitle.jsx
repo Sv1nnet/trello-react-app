@@ -10,6 +10,7 @@ import MoveCardForm from './MoveCardForm';
 import { BoardContentContext } from '../../../context/BoardContentContext';
 import useStatus from '../../../../utlis/hooks/useStatus';
 import Messages from '../../../utils/Messages';
+import MoveCardPopup from './MoveCardPopup';
 
 
 const propTypes = {
@@ -120,7 +121,7 @@ const CardTitle = (props) => {
             extraClasses={['card-details__popup']}
             style={getPopupContainerPosition(document.querySelector('.column-title > a'), { paddingTop: 17 })}
           >
-            <MoveCardForm
+            <MoveCardPopup
               sourceColumnId={columnId}
               sourcePosition={position}
               moveCard={moveCard}

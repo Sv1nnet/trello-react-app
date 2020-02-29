@@ -1,4 +1,5 @@
-.move-card-popup__container
+.move-item-popup__container
+  width: 100%
   .destination-popup-title
     font-size: 14px
     display: inline-block
@@ -6,23 +7,28 @@
     margin: 
       top: 15px
       bottom: 10px
-  .move-card-popup__label-select-column
-    margin-top: 0
-    width: 75%
-    padding:
-      right: 10px
-  .move-card-popup__label-select-position
-    margin-top: 0
-    width: 25%
-    padding:
-      right: 0
+  .move-item-form__labels-container
+    display: flex
+    width: 100%
+    .label-container__label
+      margin-top: 0
+      &_select-column
+        flex-grow: 20
+        flex-shrink: 0
+        padding:
+          right: 10px
+      &_select-position
+        flex-grow: 1
+        flex-shrink: 1
+        padding:
+          right: 0
   #select-column, #select-position
     width: 100%
     height: 30px
-  .move-card-popup__submit-btn, .move-card-popup__delete-card-btn
+  .move-item-popup__submit-btn, .move-item-popup__delete-item-btn
     width: 100%
     margin:
       top: 5px
-  .move-card-popup__delete-card-btn
+  .move-item-popup__delete-item-btn
     margin:
       top: 15px

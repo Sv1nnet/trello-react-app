@@ -100,34 +100,36 @@ const MoveCardForm = (props) => {
   }, [popupContainerRef]);
 
   return (
-    <div className="move-card-popup__container">
+    <div className="move-item-popup__container">
       <span className="popup-title">Move Card</span>
       <form action="" onSubmit={onSubmit}>
         <span className="destination-popup-title">SELECT DESTINATION</span>
 
-        <label className="move-card-popup__label-select-column" htmlFor="select-column">Column
-          <br />
-          <select defaultValue={columnToMove.id} onChange={onColumnSelected} name="select-column" id="select-column" className="move-card-form__select-column">
-            {columns.map(column => (
-              <option value={column.id} key={column.id}>{column.title}</option>
-            ))}
-          </select>
-        </label>
+        <div className="move-item-form__labels-container">
+          <label className="label-container__label label-container__label_select-column" htmlFor="select-column">Column
+            <br />
+            <select defaultValue={columnToMove.id} onChange={onColumnSelected} name="select-column" id="select-column" className="move-card-form__select-column">
+              {columns.map(column => (
+                <option value={column.id} key={column.id}>{column.title}</option>
+              ))}
+            </select>
+          </label>
 
-        <label className="move-card-popup__label-select-position" htmlFor="select-position">Position
-          <br />
-          <select value={position} onChange={onPositionSelected} name="select-position" id="select-position" className="move-card-form__select-position">
-            {columnToMove.cards.map((card, index) => (
-              <option value={index} key={card._id}>{index + 1}</option>
-            ))}
-            {columnToMove.id !== sourceColumnId && (
-              <option value={columnToMove.cards.length}>{columnToMove.cards.length + 1}</option>
-            )}
-          </select>
-        </label>
+          <label className="label-container__label label-container__label_select-position" htmlFor="select-position">Position
+            <br />
+            <select value={position} onChange={onPositionSelected} name="select-position" id="select-position">
+              {columnToMove.cards.map((card, index) => (
+                <option value={index} key={card._id}>{index + 1}</option>
+              ))}
+              {columnToMove.id !== sourceColumnId && (
+                <option value={columnToMove.cards.length}>{columnToMove.cards.length + 1}</option>
+              )}
+            </select>
+          </label>
+        </div>
 
-        <button className="move-card-popup__submit-btn btn btn-primary" type="submit">Move</button>
-        <button className="move-card-popup__delete-card-btn btn btn-danger" type="button" onClick={deleteCard}>Delete this card</button>
+        <button className="move-item-popup__submit-btn btn btn-primary" type="submit">Move</button>
+        <button className="move-item-popup__delete-item-btn btn btn-danger" type="button" onClick={deleteCard}>Delete</button>
       </form>
     </div>
   );
