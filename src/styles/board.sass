@@ -19,6 +19,7 @@
   width: 1px
 
 .board-control-button
+  min-width: 90px
   font-weight: normal
   height: 35px
   background-color: transparent
@@ -26,6 +27,7 @@
     background-color: transparentize(black, .75)  !important
 
 .board-title
+  width: 100%
   font-weight: bold
   font-size: 22px
   overflow: hidden
@@ -33,17 +35,26 @@
   white-space: nowrap
 
 .board-control-item-title
-  margin-left: 15px
+  overflow: hidden
+  width: 100%
 
-.board-access
+.board-control-item-options
+  justify-content: space-between
+  flex-grow: 1
+  margin-left: 0px
+
+
+.board-control-button_options
   min-width: 90px
   margin: 0 5px
+  &-menu
+    margin: 0
 
 
 .board-controls-dropdown
   background-color: $popup-background-light
   display: block
-  top: 40px
+  top: 75px
   width: 100%
   &.board-controls-dropdown-members
     max-height: calc(100vh - 100px)
@@ -165,3 +176,5 @@ input[type="radio"]:checked
 .board-controls-dropdown-board-menu
   right: 0
   left: auto
+  flex-grow: 1
+  justify-content: flex-end

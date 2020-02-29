@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import '../../styles/searchInput.sass';
+import '../../styles/textInput.sass';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import resizeTextarea from '../../utlis/resizeTextarea';
