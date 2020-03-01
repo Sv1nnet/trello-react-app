@@ -31,7 +31,8 @@ MessageContainer.defaultProps = messageContainerDefaultProps;
 
 
 const messagePropTypes = {
-  message: PropTypes.string.isRequired,
+  title: PropTypes.string,
+  message: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
   closeMessage: PropTypes.func,
   styles: PropTypes.shape({}),
   btn: PropTypes.bool,
@@ -50,6 +51,7 @@ const messageDefaultProps = {
 
 const ErrorMessage = (props) => {
   const {
+    title,
     message,
     closeMessage,
     styles,
@@ -60,7 +62,7 @@ const ErrorMessage = (props) => {
   const animationClassName = loadingTextAnimation ? 'loading-text' : '';
   return (
     <MessageContainer style={styles} containerBorder="message-danger">
-      <h4 className="bg-danger">Error</h4>
+      <h4 className="bg-danger">{title}</h4>
       <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
       {btn !== false && <button onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-danger bg-danger my-3">OK</button>}
     </MessageContainer>
@@ -68,11 +70,12 @@ const ErrorMessage = (props) => {
 };
 
 ErrorMessage.propTypes = messagePropTypes;
-ErrorMessage.defaultProps = messageDefaultProps;
+ErrorMessage.defaultProps = { ...messageDefaultProps, title: 'Error' };
 
 
 const InfoMessage = (props) => {
   const {
+    title,
     message,
     closeMessage,
     styles,
@@ -83,7 +86,7 @@ const InfoMessage = (props) => {
   const animationClassName = loadingTextAnimation ? 'loading-text' : '';
   return (
     <MessageContainer style={styles} containerBorder="message-info">
-      <h4 className="bg-primary">Info</h4>
+      <h4 className="bg-primary">{title}</h4>
       <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
       {btn !== false && <button onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-primary bg-primary my-3">OK</button>}
     </MessageContainer>
@@ -91,11 +94,12 @@ const InfoMessage = (props) => {
 };
 
 InfoMessage.propTypes = messagePropTypes;
-InfoMessage.defaultProps = messageDefaultProps;
+InfoMessage.defaultProps = { ...messageDefaultProps, title: 'Info' };
 
 
 const SuccessMessage = (props) => {
   const {
+    title,
     message,
     closeMessage,
     styles,
@@ -106,7 +110,7 @@ const SuccessMessage = (props) => {
   const animationClassName = loadingTextAnimation ? 'loading-text' : '';
   return (
     <MessageContainer style={styles} containerBorder="message-success">
-      <h4 className="bg-success">Success</h4>
+      <h4 className="bg-success">{title}</h4>
       <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
       {btn !== false && <button onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-success bg-success my-3">OK</button>}
     </MessageContainer>
@@ -114,7 +118,7 @@ const SuccessMessage = (props) => {
 };
 
 SuccessMessage.propTypes = messagePropTypes;
-SuccessMessage.defaultProps = messageDefaultProps;
+SuccessMessage.defaultProps = { ...messageDefaultProps, title: 'Success' };
 
 
 const questionMessagePropTypes = {

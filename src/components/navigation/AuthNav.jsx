@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import SignupForm from '../forms/authForms/SignupForm';
 import LoginForm from '../forms/authForms/LoginForm';
 import ResetPasswordForm from '../forms/authForms/ForgotPasswordForm';
 import AuthFormHolder from '../pages/AuthFormHolder';
+import PopupContainer from '../utils/PopupContainer';
+import Messages from '../utils/Messages';
 
 
 const propTypes = {
@@ -20,6 +23,7 @@ class AuthNav extends Component {
     isSignupButtonActive: true,
     isLoginButtonActive: false,
     resetPassword: false,
+    isPopupOpened: true,
   }
 
   componentDidMount() {
@@ -29,6 +33,13 @@ class AuthNav extends Component {
       routeInfo.history.push('/');
       this.switchForm({ resetPassword: true });
     }
+  }
+
+  openAboutPopup = () => {
+    this.setState(state => ({
+      ...state,
+      isPopupOpened: !state.isPopupOpened,
+    }));
   }
 
   // Switch a form that we need render
@@ -67,12 +78,12 @@ class AuthNav extends Component {
   }
 
   render() {
-    const { isSignupButtonActive, isLoginButtonActive } = this.state;
+    const { isSignupButtonActive, isLoginButtonActive, isPopupOpened } = this.state;
     const height = this.getFormHeight();
     const authForm = this.getForm();
 
     return (
-      <div className="container auth-page mb-4">
+      <div className="container auth-page mb-3">
         <div className="row justify-content-center">
           <div
             style={{ height }}
@@ -100,6 +111,35 @@ class AuthNav extends Component {
             {authForm}
           </div>
         </div>
+
+        <div className="auth-page__about-btn-container">
+          <button
+            type="button"
+            onClick={this.openAboutPopup}
+            className="auth-page__about-btn"
+          >
+            <h4>About</h4>
+          </button>
+        </div>
+
+        {
+          isPopupOpened && ReactDOM.createPortal(
+            <Messages.InfoMessage
+              title="About this app"
+              message={(
+                <span className="auth-page__message-description">
+                  This is my study project that I created for my portfolio and to learn React, Redux and some back-end technologies.
+                  The app has been published for review and not for real use purpose.
+                  You can find source code on my <a href="https://github.com/Sv1nnet/trello-react-app" rel="noopener noreferrer" target="_blank">GitHub</a>.
+                </span>
+              )}
+              closeMessage={this.openAboutPopup}
+              bg
+              btn
+            />,
+            document.querySelector('#root'),
+          )
+        }
       </div>
     );
   }

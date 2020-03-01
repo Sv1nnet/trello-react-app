@@ -23,6 +23,7 @@ const propTypes = {
     current: PropTypes.instanceOf(HTMLElement),
   }),
   closeBtn: PropTypes.bool,
+  removeElement: PropTypes.func,
 };
 
 const defaultProps = {
@@ -32,6 +33,7 @@ const defaultProps = {
   style: {},
   popupToClose: null,
   closeBtn: false,
+  removeElement: null,
 };
 
 

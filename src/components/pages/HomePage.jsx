@@ -19,8 +19,7 @@ const propTypes = {
 };
 
 
-const HomePage = (props) => {
-  const { location, history, match } = props;
+const HomePage = ({ location, history, match }) => {
   const routeInfo = {
     location,
     history,
