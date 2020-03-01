@@ -80,7 +80,7 @@ const AddLabelForm = (props) => {
 
       {status.err.message && ReactDOM.createPortal(
         <Messages.ErrorMessage message={status.err.message} closeMessage={resetStatus} btn />,
-        document.querySelector('.App'),
+        document.body,
       )}
     </>
   );

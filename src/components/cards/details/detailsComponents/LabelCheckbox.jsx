@@ -129,7 +129,7 @@ const LabelCheckbox = (props) => {
           message={status.err.message}
           btn
         />,
-        document.querySelector('.App'),
+        document.body,
       )}
     </>
   );

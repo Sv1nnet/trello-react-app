@@ -268,7 +268,7 @@ const BoardContentContextProvider = (props) => {
           columnTitle={cardForDetails.columnTitle}
           columnId={cardForDetails.columnId}
         />,
-        document.querySelector('.App'),
+        document.body,
       )}
     </BoardContentContext.Provider>
   );

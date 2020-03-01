@@ -126,7 +126,7 @@ const CardTitle = (props) => {
 
       {status.err.message && ReactDOM.createPortal(
         <Messages.ErrorMessage message={status.err.message} closeBtn closeMessage={resetStatus} />,
-        document.querySelector('.App'),
+        document.body,
       )}
     </div>
   );

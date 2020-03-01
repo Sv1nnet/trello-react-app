@@ -195,12 +195,12 @@ const CardDetails = (props) => {
 
       {status.err.message && ReactDOM.createPortal(
         <Messages.ErrorMessage message={status.err.message} closeMessage={resetStatus} btn />,
-        document.querySelector('.App'),
+        document.body,
       )}
 
       {questionIsActive && ReactDOM.createPortal(
         <Messages.QuestionMessage type="error" answer={{ positive: positiveAnswer, negative: negativeAnswer }} message={`Delete the card ${title}`} />,
-        document.querySelector('.App'),
+        document.body,
       )}
     </>
   );

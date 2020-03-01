@@ -4,20 +4,20 @@ import '../../styles/messages.sass';
 
 
 const messageContainerPropTypes = {
-  styles: PropTypes.shape({}),
+  style: PropTypes.shape({}),
   containerBorder: PropTypes.string.isRequired,
 };
 
 const messageContainerDefaultProps = {
-  styles: {},
+  style: {},
 };
 
 const MessageContainer = (props) => {
-  const { children, styles, containerBorder } = props;
+  const { children, style, containerBorder } = props;
   return (
     <>
       <div className="message-container">
-        <div style={styles} className={`message ${containerBorder}`}>
+        <div style={style} className={`message ${containerBorder}`}>
           {children}
         </div>
       </div>

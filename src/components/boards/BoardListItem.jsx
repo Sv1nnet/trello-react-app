@@ -108,12 +108,12 @@ const BoardListItem = (props) => {
 
       {questionIsActive && ReactDOM.createPortal(
         <Messages.QuestionMessage type="error" message={getRequestMessage(title)} answer={{ positive: positiveAnswer, negative: negativeAnswer }} />,
-        document.querySelector('.App'),
+        document.body,
       )}
 
       {status.err.message && ReactDOM.createPortal(
         <Messages.ErrorMessage message={status.err.message} closeMessage={resetStatus} btn />,
-        document.querySelector('.App'),
+        document.body,
       )}
     </>
   );

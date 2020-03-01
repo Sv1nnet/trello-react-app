@@ -125,22 +125,22 @@ const EditAccountForm = (props) => {
 
       {status.success.statusCode === 200 && ReactDOM.createPortal(
         <Messages.SuccessMessage message={status.success.message} closeMessage={resetStatus} btn />,
-        document.querySelector('#root'),
+        document.body,
       )}
 
       {status.err.message && ReactDOM.createPortal(
         <Messages.ErrorMessage message={status.err.message} closeMessage={resetStatus} btn />,
-        document.querySelector('#root'),
+        document.body,
       )}
 
       {passwordStatus.success.statusCode === 200 && ReactDOM.createPortal(
         <Messages.SuccessMessage message={passwordStatus.success.message} closeMessage={resetPasswordStatus} btn />,
-        document.querySelector('#root'),
+        document.body,
       )}
 
       {passwordStatus.err.message && ReactDOM.createPortal(
         <Messages.ErrorMessage message={passwordStatus.err.message} closeMessage={resetPasswordStatus} btn />,
-        document.querySelector('#root'),
+        document.body,
       )}
     </>
   );

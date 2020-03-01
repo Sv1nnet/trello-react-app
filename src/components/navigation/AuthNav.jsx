@@ -5,7 +5,6 @@ import SignupForm from '../forms/authForms/SignupForm';
 import LoginForm from '../forms/authForms/LoginForm';
 import ResetPasswordForm from '../forms/authForms/ForgotPasswordForm';
 import AuthFormHolder from '../pages/AuthFormHolder';
-import PopupContainer from '../utils/PopupContainer';
 import Messages from '../utils/Messages';
 
 
@@ -133,11 +132,12 @@ class AuthNav extends Component {
                   You can find source code on my <a href="https://github.com/Sv1nnet/trello-react-app" rel="noopener noreferrer" target="_blank">GitHub</a>.
                 </span>
               )}
+              styles={{ marginTop: '-20%' }}
               closeMessage={this.openAboutPopup}
               bg
               btn
             />,
-            document.querySelector('#root'),
+            document.body,
           )
         }
       </div>

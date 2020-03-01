@@ -94,12 +94,12 @@ const CardContainer = (props) => {
 
       {questionIsActive && ReactDOM.createPortal(
         <Messages.QuestionMessage type="error" answer={{ positive: positiveAnswer, negative: negativeAnswer }} message={`Delete the card ${title}`} />,
-        document.querySelector('.App'),
+        document.body,
       )}
 
       {status.err.message && ReactDOM.createPortal(
         <Messages.ErrorMessage btn message={status.err.message} closeMessage={resetStatus} />,
-        document.querySelector('.App'),
+        document.body,
       )}
     </>
   );
