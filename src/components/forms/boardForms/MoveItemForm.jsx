@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import '../../../styles/moveCardForm.sass';
+import '../../../styles/moveItemForm.sass';
 import isOutOfViewport from '../../../utlis/isOutOfViewport';
 
 

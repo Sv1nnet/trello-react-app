@@ -13,7 +13,22 @@ const propTypes = {
   columnId: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   position: PropTypes.number.isRequired,
-  handleError: PropTypes.func.isRequired,
+  statusHook: PropTypes.shape({
+    status: PropTypes.shape({
+      loading: PropTypes.bool.isRequired,
+      success: PropTypes.shape({
+        statusCode: PropTypes.number,
+        message: PropTypes.string,
+      }).isRequired,
+      err: PropTypes.shape({
+        statusCode: PropTypes.number,
+        message: PropTypes.string,
+      }).isRequired,
+    }).isRequired,
+    setStatusLoading: PropTypes.func.isRequired,
+    handleSuccess: PropTypes.func.isRequired,
+    handleError: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 
@@ -27,7 +42,7 @@ const ColumnContainer = (props) => {
     columnId,
     index,
     position,
-    handleError,
+    statusHook,
   } = props;
 
   const { columnsWithCards, switchColumns } = useContext(BoardContentContext);
@@ -88,7 +103,7 @@ const ColumnContainer = (props) => {
             }}
             mouseDown={mouseDown}
             mouseUp={mouseUp}
-            handleError={handleError}
+            statusHook={statusHook}
           />
         </div>
       )}

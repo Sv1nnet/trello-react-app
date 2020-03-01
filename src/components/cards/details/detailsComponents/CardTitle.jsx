@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShareSquare } from '@fortawesome/free-solid-svg-icons';
 import TextInput from '../../../utils/TextInput';
-import PopupContainer from '../../../utils/PopupContainer';
 import isEnterPressed from '../../../../utlis/isEnterPressed';
-import MoveCardForm from './MoveCardForm';
 import { BoardContentContext } from '../../../context/BoardContentContext';
 import useStatus from '../../../../utlis/hooks/useStatus';
 import Messages from '../../../utils/Messages';
@@ -115,19 +113,14 @@ const CardTitle = (props) => {
         )}
 
         {moveCardPopupIsActive && (
-          <PopupContainer
+          <MoveCardPopup
             removeElement={setMoveCardPopupState}
-            closeBtn
-            extraClasses={['card-details__popup']}
             style={getPopupContainerPosition(document.querySelector('.column-title > a'), { paddingTop: 17 })}
-          >
-            <MoveCardPopup
-              sourceColumnId={columnId}
-              sourcePosition={position}
-              moveCard={moveCard}
-              deleteCard={deleteCard}
-            />
-          </PopupContainer>
+            sourceColumnId={columnId}
+            sourcePosition={position}
+            moveCard={moveCard}
+            deleteCard={deleteCard}
+          />
         )}
       </div>
 

@@ -27,12 +27,14 @@ const propTypes = {
 const ColumnList = (props) => {
   const { createColumn, token, board } = props;
 
+  const statusHook = useStatus();
+
   const {
     status,
     handleSuccess,
     handleError,
     resetStatus,
-  } = useStatus();
+  } = statusHook;
 
   const boardListContainerRef = useRef(null);
 
@@ -72,7 +74,7 @@ const ColumnList = (props) => {
                   listTitle={column.title}
                   columnId={column._id}
                   position={column.position}
-                  handleError={handleError}
+                  statusHook={statusHook}
                 />
               ))}
 

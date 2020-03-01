@@ -2,16 +2,15 @@ import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { BoardContentContext } from '../../../context/BoardContentContext';
 import MoveItemForm from '../../../forms/boardForms/MoveItemForm';
-import '../../../../styles/moveCardForm.sass';
+import PopupContainer from '../../../utils/PopupContainer';
 
 
 const propTypes = {
   sourceColumnId: PropTypes.string.isRequired,
   sourcePosition: PropTypes.number.isRequired,
   moveCard: PropTypes.func.isRequired,
-  popupContainerRef: PropTypes.shape({
-    current: PropTypes.instanceOf(HTMLElement),
-  }).isRequired,
+  deleteCard: PropTypes.func.isRequired,
+  removeElement: PropTypes.func.isRequired,
 };
 
 
@@ -21,10 +20,12 @@ const MoveCardPopup = (props) => {
     sourcePosition,
     moveCard,
     deleteCard,
-    popupContainerRef,
+    removeElement,
+    style,
   } = props;
 
   const { columnsWithCards } = useContext(BoardContentContext);
+
   const [position, setPosition] = useState(sourcePosition);
   const [columnToMove, setColumnToMove] = useState({
     ...columnsWithCards[sourceColumnId],
@@ -140,16 +141,22 @@ const MoveCardPopup = (props) => {
   ];
 
   return (
-    <MoveItemForm
-      title="Move Card"
-      labels={labels}
-      deleteBtn={{
-        title: 'Delete',
-        onClick: deleteCard,
-      }}
-      onSubmit={onSubmit}
-      popupContainerRef={popupContainerRef}
-    />
+    <PopupContainer
+      removeElement={removeElement}
+      closeBtn
+      extraClasses={['card-details__popup']}
+      style={style}
+    >
+      <MoveItemForm
+        title="Move Card"
+        labels={labels}
+        deleteBtn={{
+          title: 'Delete',
+          onClick: deleteCard,
+        }}
+        onSubmit={onSubmit}
+      />
+    </PopupContainer>
   );
 };
 

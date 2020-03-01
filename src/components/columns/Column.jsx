@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,6 +9,8 @@ import boardActions from '../../actions/boardActions';
 import CardContainer from '../cards/CardContainer';
 import AddBoardContent from '../utils/AddBoardContent';
 import resizeTextarea from '../../utlis/resizeTextarea';
+import MoveColumnPopup from './MoveColumnPopup';
+import { BoardContentContext } from '../context/BoardContentContext';
 
 
 const propTypes = {
@@ -43,7 +45,22 @@ const propTypes = {
   deleteColumn: PropTypes.func.isRequired,
   updateColumn: PropTypes.func.isRequired,
   createCard: PropTypes.func.isRequired,
-  handleError: PropTypes.func.isRequired,
+  statusHook: PropTypes.shape({
+    status: PropTypes.shape({
+      loading: PropTypes.bool.isRequired,
+      success: PropTypes.shape({
+        statusCode: PropTypes.number,
+        message: PropTypes.string,
+      }).isRequired,
+      err: PropTypes.shape({
+        statusCode: PropTypes.number,
+        message: PropTypes.string,
+      }).isRequired,
+    }).isRequired,
+    setStatusLoading: PropTypes.func.isRequired,
+    handleSuccess: PropTypes.func.isRequired,
+    handleError: PropTypes.func.isRequired,
+  }).isRequired,
   refs: PropTypes.shape({
     titleInputRef: PropTypes.shape({
       current: PropTypes.object,
@@ -66,16 +83,25 @@ const Column = (props) => {
     deleteColumn,
     updateColumn,
     createCard,
-    handleError,
+    statusHook,
     refs,
   } = props;
 
-  const { columnId, listTitle, cards } = columnData;
+  const {
+    setStatusLoading,
+    handleSuccess,
+    handleError,
+  } = statusHook;
+
+  const { columnId, listTitle, position, cards } = columnData;
   const { titleInputRef, editingTargetRef } = refs;
+
+  const { switchColumns } = useContext(BoardContentContext);
 
   const [titleState, setTitleState] = useState({
     title: listTitle,
   });
+  const [moveColumnPopupIsActive, setMoveColumnPopupIsActive] = useState(false);
 
   const updateTitle = () => {
     const dataToUpdate = {
@@ -109,11 +135,11 @@ const Column = (props) => {
 
     if (e.nativeEvent.shiftKey) {
       deleteColumn(token.token, board._id, columnId)
-        .catch(err => handleError(err));
+        .catch(handleError);
     }
   };
 
-  const handleTitleChange = (e) => {
+  const onTitleChange = (e) => {
     e.preventDefault();
 
     setTitleState({
@@ -151,6 +177,23 @@ const Column = (props) => {
     dragHandleProps.onMouseDown(e);
   };
 
+  const setMoveColumnPopupState = () => {
+    setMoveColumnPopupIsActive(state => !state);
+  };
+
+  const moveColumn = (target) => {
+    const source = {
+      id: columnId,
+      index: position,
+    };
+
+    setStatusLoading();
+
+    switchColumns(source, target)
+      .then(handleSuccess)
+      .catch(handleError);
+  };
+
   // Set textarea height and add ref to columnRefs on component did mount
   useEffect(() => {
     // Set title height corresponding its content
@@ -169,16 +212,28 @@ const Column = (props) => {
 
         <textarea
           onBlur={updateTitle}
-          onChange={handleTitleChange}
+          onChange={onTitleChange}
           onKeyPress={setTitleInputBlured}
           ref={titleInputRef}
           maxLength="128"
           value={titleState.title}
         />
 
-        <button className="list-menu-button" onClick={deleteThisColumn} type="button">
+        <button className="list-menu-button" onClick={setMoveColumnPopupState} type="button">
           <FontAwesomeIcon className="ellipsis-btn" icon={faEllipsisH} />
         </button>
+
+        {
+          moveColumnPopupIsActive && (
+            <MoveColumnPopup
+              sourcePosition={position}
+              sourceId={columnId}
+              moveColumn={moveColumn}
+              deleteColumn={deleteThisColumn}
+              removeElement={setMoveColumnPopupState}
+            />
+          )
+        }
       </div>
       <Droppable droppableId={columnId} direction="vertical" type="card">
         {dropProvided => (
