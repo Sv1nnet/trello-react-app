@@ -133,10 +133,8 @@ const Column = (props) => {
   const deleteThisColumn = (e) => {
     e.preventDefault();
 
-    if (e.nativeEvent.shiftKey) {
-      deleteColumn(token.token, board._id, columnId)
-        .catch(handleError);
-    }
+    deleteColumn(token.token, board._id, columnId)
+      .catch(handleError);
   };
 
   const onTitleChange = (e) => {
@@ -198,7 +196,7 @@ const Column = (props) => {
   useEffect(() => {
     // Set title height corresponding its content
     resizeTextarea(titleInputRef);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
