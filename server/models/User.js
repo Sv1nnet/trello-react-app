@@ -115,7 +115,7 @@ UserSchema.methods.generateConfirmationToken = function generateAndSetConfirmati
 UserSchema.methods.generateConfirmationUrl = function generateConfirmationUrl() {
   const user = this;
   const confirmationToken = user.tokens.find(token => token.access === 'conf').token;
-  const url = `http://localhost:3000/user/confirmation/${confirmationToken}`;
+  const url = `${process.env.IP}/user/confirmation/${confirmationToken}`;
 
   return url;
 };
@@ -128,7 +128,7 @@ UserSchema.methods.confirmRegistration = function confirmRegistration() {
 UserSchema.methods.generateResetPasswordUrl = function generateResetPasswordUrl() {
   const user = this;
   const resetPasswordToken = user.tokens.find(token => token.access === 'reset').token;
-  const url = `http://localhost:3000/user/reset_password/${resetPasswordToken}`;
+  const url = `${process.env.IP}/user/reset_password/${resetPasswordToken}`;
 
   return url;
 };
