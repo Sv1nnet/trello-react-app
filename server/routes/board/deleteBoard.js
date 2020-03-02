@@ -26,7 +26,7 @@ const deleteBoard = (req, res) => {
 
           board.remove();
 
-          const updatedUser = await user.save();
+          const updatedUser = await User.findById({ _id: decoded._id });
 
           res.status(200).send(_.pick(updatedUser, ['email', 'nickname', 'firstName', 'lastName', 'boards']));
         } else {
