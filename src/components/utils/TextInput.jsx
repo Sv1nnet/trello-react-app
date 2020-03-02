@@ -59,6 +59,12 @@ class TextInput extends Component {
     this.searchBtn = React.createRef();
   }
 
+  state = {
+    isInputElementActive: false,
+    isCrossBtnActive: false,
+    isSearchBtnActive: false,
+  }
+
   componentDidMount() {
     const { props, inputElement } = this;
     const { inputType, focusAfterActivated, selectOnMounted, verticalPadding } = props;
@@ -87,12 +93,18 @@ class TextInput extends Component {
     const { hideCrossBtn, hideSearchBtn } = props;
 
     if (props.inputValue || (!props.inputValue && props.hideSearchBtn)) {
-      this.searchBtn.current.classList.remove('active');
-      this.crossBtn.current.classList.add('active');
+      this.setState(state => ({
+        ...state,
+        isSearchBtnActive: false,
+        isCrossBtnActive: true,
+      }));
     }
 
     if (!(hideCrossBtn && hideSearchBtn)) {
-      this.inputElement.current.classList.add('text-input_btn-active');
+      this.setState(state => ({
+        ...state,
+        isInputElementActive: true,
+      }));
     }
 
     if (props.onFocus) props.onFocus(e);
@@ -102,9 +114,12 @@ class TextInput extends Component {
     const { props } = this;
 
     if (!props.inputValue) {
-      this.searchBtn.current.classList.add('active');
-      this.crossBtn.current.classList.remove('active');
-      this.inputElement.current.classList.remove('text-input_btn-active');
+      this.setState(state => ({
+        ...state,
+        isSearchBtnActive: true,
+        isCrossBtnActive: false,
+        isInputElementActive: false,
+      }));
     }
 
     if (props.onBlur) props.onBlur(e);
@@ -159,6 +174,7 @@ class TextInput extends Component {
     } = props;
 
     const {
+      state,
       onFocus,
       onBlur,
       onKeyUp,
@@ -179,7 +195,7 @@ class TextInput extends Component {
       },
       style: { color: textColor },
       type: 'text',
-      className: `nav-link text-input ${classList}`,
+      className: `nav-link text-input ${classList} ${state.isInputElementActive ? 'text-input_btn-active active' : ''}`,
       placeholder: placeholder || 'Search',
       value: inputValue,
       maxLength,
@@ -201,7 +217,7 @@ class TextInput extends Component {
 
   render() {
     const emptyValue = '';
-    const { props } = this;
+    const { state, props } = this;
     const {
       hideSearchBtn,
       hideCrossBtn,
@@ -215,8 +231,8 @@ class TextInput extends Component {
       onSearchBtnClick,
     } = this;
 
-    const crossBtnActive = inputValue ? 'active' : '';
-    const searchBtnActive = !inputValue ? 'active' : '';
+    const crossBtnActive = inputValue || state.isCrossBtnActive ? 'active' : '';
+    const searchBtnActive = !inputValue || state.isSearchBtnActive ? 'active' : '';
     const input = getInput();
 
     return (
