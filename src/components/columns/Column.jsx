@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 // React/Redux components
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -113,6 +113,8 @@ const Column = (props) => {
   });
   const [moveColumnPopupIsActive, setMoveColumnPopupIsActive] = useState(false);
 
+  const popupRelativeElementRef = useRef();
+
   const updateTitle = () => {
     const dataToUpdate = {
       title: titleState.title,
@@ -202,6 +204,18 @@ const Column = (props) => {
       .catch(handleError);
   };
 
+  const getPopupOffsetStyle = (relativeElement, offset = { top: 0, left: 0 }) => {
+    const boundingClientRect = relativeElement.getBoundingClientRect();
+    const top = offset.top || 0;
+    const left = offset.left || 0;
+
+    return {
+      top: `${boundingClientRect.top + top}px`,
+      left: '50%',
+      transform: `translateX(calc(-50% + ${left}px))`,
+    };
+  };
+
   // Set textarea height and add ref to columnRefs on component did mount
   useEffect(() => {
     // Set title height corresponding its content
@@ -211,7 +225,7 @@ const Column = (props) => {
 
   return (
     <div className={`${isDragging ? 'dragging' : ''} cards-list-container drag-source`}>
-      <div className="list-header-container">
+      <div ref={popupRelativeElementRef} className="list-header-container">
         <div
           onMouseDown={onMouseDown}
           ref={(el) => { editingTargetRef.current = el; dragHandleProps.ref.current = el; }}
@@ -239,6 +253,7 @@ const Column = (props) => {
               moveColumn={moveColumn}
               deleteColumn={deleteThisColumn}
               removeElement={setMoveColumnPopupState}
+              style={getPopupOffsetStyle(popupRelativeElementRef.current, { offsetTop: 40 })}
             />
           )
         }

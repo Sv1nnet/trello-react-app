@@ -19,6 +19,11 @@ const propTypes = {
   moveColumn: PropTypes.func.isRequired,
   deleteColumn: PropTypes.func.isRequired,
   removeElement: PropTypes.func.isRequired,
+  style: PropTypes.shape({}),
+};
+
+const defaultProps = {
+  style: {},
 };
 
 
@@ -29,6 +34,7 @@ const MoveColumnPopup = (props) => {
     moveColumn,
     deleteColumn,
     removeElement,
+    style,
   } = props;
 
   const { columnsWithCards } = useContext(BoardContentContext);
@@ -110,6 +116,7 @@ const MoveColumnPopup = (props) => {
       removeElement={removeElement}
       closeBtn
       extraClasses={['move-column-popup']}
+      style={style}
     >
       <MoveItemForm
         title="Move Column"
@@ -126,6 +133,7 @@ const MoveColumnPopup = (props) => {
 
 
 MoveColumnPopup.propTypes = propTypes;
+MoveColumnPopup.defaultProps = defaultProps;
 
 
 export default MoveColumnPopup;

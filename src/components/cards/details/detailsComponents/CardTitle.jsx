@@ -1,5 +1,5 @@
 // React/Redux components
-import React, { useState, useContext } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
@@ -46,6 +46,7 @@ const CardTitle = (props) => {
   } = props;
 
   const [cardTitle, setCardTitle] = useState(title);
+  const columnTitleBtnRef = useRef();
   const {
     status,
     setStatusLoading,
@@ -113,7 +114,7 @@ const CardTitle = (props) => {
       />
       <div className="column-title">
         in list {(
-          <a href="/" onClick={setMoveCardPopupState}>
+          <a ref={columnTitleBtnRef} href="/" onClick={setMoveCardPopupState}>
             {columnTitle}
             <FontAwesomeIcon className="ml-2 move-card-icon" icon={faShareSquare} />
           </a>
@@ -122,7 +123,7 @@ const CardTitle = (props) => {
         {moveCardPopupIsActive && (
           <MoveCardPopup
             removeElement={setMoveCardPopupState}
-            style={getPopupContainerPosition(document.querySelector('.column-title > a'), { paddingTop: 17 })}
+            style={getPopupContainerPosition(columnTitleBtnRef.current, { paddingTop: 17 })}
             sourceColumnId={columnId}
             sourcePosition={position}
             moveCard={moveCard}
