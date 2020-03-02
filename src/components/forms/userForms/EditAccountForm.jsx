@@ -1,9 +1,14 @@
+// React/Redux components
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import '../../../styles/editAccount.sass';
+
+// Custom components
 import Loader from '../../utils/Loader';
 import Messages from '../../utils/Messages';
+
+// Styles
+import '../../../styles/editAccount.sass';
 
 
 const propTypes = {
@@ -43,6 +48,7 @@ const propTypes = {
   }).isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  resetPassword: PropTypes.func.isRequired,
 };
 
 

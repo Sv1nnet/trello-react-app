@@ -1,11 +1,18 @@
+// React/Redux components
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import '../../styles/resetPasswordPage.sass';
+
+// Custom components
 import Loader from '../utils/Loader';
-import actions from '../../actions/authActions';
 import Messages from '../utils/Messages';
 import ResetPasswordForm from '../forms/authForms/ResetPasswordForm';
+
+// mapState and actions
+import actions from '../../actions/authActions';
+
+// Styles
+import '../../styles/resetPasswordPage.sass';
 
 
 const propTypes = {
@@ -29,11 +36,11 @@ class ResetPasswordPage extends Component {
     },
     status: {
       success: {
-        statusCode: undefined,
+        statusCode: null,
         message: '',
       },
       err: {
-        statusCode: undefined,
+        statusCode: null,
         message: '',
       },
       loading: false,
@@ -66,7 +73,7 @@ class ResetPasswordPage extends Component {
           ...prevState.status,
           err: {
             message,
-            statusCode: undefined,
+            statusCode: null,
           },
         },
       }));
@@ -85,7 +92,7 @@ class ResetPasswordPage extends Component {
             loading: false,
             err: {
               message: '',
-              statusCode: undefined,
+              statusCode: null,
             },
             success: {
               statusCode: res.status,
@@ -143,11 +150,11 @@ class ResetPasswordPage extends Component {
       status: {
         ...prevState.status,
         success: {
-          statusCode: undefined,
+          statusCode: null,
           message: '',
         },
         err: {
-          statusCode: undefined,
+          statusCode: null,
           message: '',
         },
       },

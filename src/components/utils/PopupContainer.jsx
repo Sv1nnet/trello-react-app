@@ -1,8 +1,15 @@
+// React/Redux components
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+
+// Utils
 import hasParent from '../../utlis/hasParent';
+
+// Styles
 import '../../styles/navbar.sass';
 import '../../styles/popupContainer.sass';
 

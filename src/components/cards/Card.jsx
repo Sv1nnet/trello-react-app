@@ -1,9 +1,14 @@
+// React/Redux component
 import React, { useEffect, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { BoardContentContext } from '../context/BoardContentContext';
 import Label from './details/detailsComponents/Label';
+
+// Context
+import { BoardContentContext } from '../context/BoardContentContext';
 
 
 const propTypes = {

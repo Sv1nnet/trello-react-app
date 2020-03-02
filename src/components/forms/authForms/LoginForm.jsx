@@ -1,6 +1,9 @@
+// React/Redux components
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+
+// Types
 import { formActionTypes } from '../../../types';
 
 

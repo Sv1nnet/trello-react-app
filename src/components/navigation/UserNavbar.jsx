@@ -1,22 +1,30 @@
 /* eslint-disable react/destructuring-assignment */
+// React/Redux components
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThList, faHome } from '@fortawesome/free-solid-svg-icons';
 import TextInput from '../utils/TextInput';
-import '../../styles/navbar.sass';
 import PopupContainer from '../utils/PopupContainer';
 import BoardListItem from '../boards/BoardListItem';
 import CreateBoard from '../boards/CreateBoard';
+import CardsSearchDropdown from '../lists/CardsSearchDropdown';
+
+// mapState and actions
+import { mapStateToProps } from '../../utlis/reduxMapFunction';
 import authActions from '../../actions/authActions';
 import boardActions from '../../actions/boardActions';
-import CardsSearchDropdown from '../lists/CardsSearchDropdown';
+
+// Styles
+import '../../styles/navbar.sass';
 
 
 const propTypes = {
-  user: PropTypes.shape({
+  userData: PropTypes.shape({
     email: PropTypes.string.isRequired,
     nickname: PropTypes.string.isRequired,
     boards: PropTypes.arrayOf(
@@ -191,8 +199,8 @@ class UserNavbar extends Component {
       createBoardActive,
     } = state;
 
-    const { board, user } = props;
-    const { nickname, email, boards } = user;
+    const { board, userData } = props;
+    const { nickname, email, boards } = userData;
     const emailInitials = nickname && `${nickname[0]}${nickname[1]}`.toUpperCase();
 
     const [, route, endPoint] = window.location.pathname.split('/');
@@ -302,12 +310,6 @@ class UserNavbar extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.user.userData,
-  token: state.user.token,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   logout: token => dispatch(authActions.logout(token)),
   loadAllBoards: token => dispatch(boardActions.loadAllBoards(token)),
@@ -317,4 +319,4 @@ const mapDispatchToProps = dispatch => ({
 UserNavbar.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserNavbar);
+export default connect(mapStateToProps.mapFullUserData, mapDispatchToProps)(UserNavbar);

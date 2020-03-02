@@ -1,14 +1,21 @@
+// React/Redux components
 import React, { useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShareSquare } from '@fortawesome/free-solid-svg-icons';
-import TextInput from '../../../utils/TextInput';
-import isEnterPressed from '../../../../utlis/isEnterPressed';
-import { BoardContentContext } from '../../../context/BoardContentContext';
-import useStatus from '../../../../utlis/hooks/useStatus';
-import Messages from '../../../utils/Messages';
 import MoveCardPopup from './MoveCardPopup';
+import Messages from '../../../utils/Messages';
+import TextInput from '../../../utils/TextInput';
+
+// Context
+import { BoardContentContext } from '../../../context/BoardContentContext';
+
+// Utils
+import useStatus from '../../../../utlis/hooks/useStatus';
+import isEnterPressed from '../../../../utlis/isEnterPressed';
 
 
 const propTypes = {

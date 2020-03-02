@@ -1,7 +1,10 @@
 /* eslint-disable object-curly-newline */
 /* eslint-disable react/forbid-prop-types */
+// React/Redux components
 import React from 'react';
 import PropTypes from 'prop-types';
+
+// Styles
 import '../../styles/loaders.sass';
 
 

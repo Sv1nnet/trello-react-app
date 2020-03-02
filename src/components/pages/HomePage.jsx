@@ -1,7 +1,12 @@
+// React/Redux components
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../../styles/homePage.sass';
+
+// Custom components
 import AuthNav from '../navigation/AuthNav';
+
+// Styles
+import '../../styles/homePage.sass';
 
 
 const propTypes = {

@@ -1,5 +1,8 @@
+// React/Redux components
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
+
+// Styles
 import '../../../../styles/label.sass';
 
 

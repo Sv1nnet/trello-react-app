@@ -1,18 +1,28 @@
+// React/Redux components
 import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import '../../../styles/cardDetails.sass';
-import '../../../styles/popupContainer.sass';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import boardActions from '../../../actions/boardActions';
 import Messages from '../../utils/Messages';
 import CardDescription from './detailsComponents/CardDescription';
 import CardTitle from './detailsComponents/CardTitle';
 import CardLabels from './detailsComponents/CardLabels';
 import CardComments from './detailsComponents/CardComments';
+
+// Custom hooks
 import useStatus from '../../../utlis/hooks/useStatus';
+
+// mapState and actions
+import { mapStateToProps } from '../../../utlis/reduxMapFunction';
+import boardActions from '../../../actions/boardActions';
+
+// Styles
+import '../../../styles/cardDetails.sass';
+import '../../../styles/popupContainer.sass';
 
 
 const propTypes = {
@@ -206,11 +216,6 @@ const CardDetails = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  token: state.user.token,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   updateCard: (token, boardId, id, dataToUpdate) => dispatch(boardActions.updateCard(token, boardId, id, dataToUpdate)),
   deleteCard: (token, boardId, id) => dispatch(boardActions.deleteCard(token, boardId, id)),
@@ -221,4 +226,4 @@ CardDetails.propTypes = propTypes;
 CardDetails.defaultProps = defaultProps;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(CardDetails);
+export default connect(mapStateToProps.mapRequestData, mapDispatchToProps)(CardDetails);

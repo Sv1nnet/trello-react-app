@@ -1,6 +1,9 @@
+// React/Redux components
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+
+// Custom components
 import SignupForm from '../forms/authForms/SignupForm';
 import LoginForm from '../forms/authForms/LoginForm';
 import ResetPasswordForm from '../forms/authForms/ForgotPasswordForm';
@@ -22,7 +25,7 @@ class AuthNav extends Component {
     isSignupButtonActive: true,
     isLoginButtonActive: false,
     resetPassword: false,
-    isPopupOpened: true,
+    isPopupOpened: false,
   }
 
   componentDidMount() {

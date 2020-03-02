@@ -1,5 +1,8 @@
+// React/Redux components
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import TextInput from '../../../utils/TextInput';
@@ -75,6 +78,7 @@ const CardDescription = (props) => {
           classList="w-100 py-2 card-details__description-input"
           placeholder="Add a more detailed description..."
         />
+
         <div className={`card-details__description-buttons-container ${buttonsActive ? 'active' : ''}`}>
           <button onClick={() => { inputRef.current.blur(); }} type="button" className="bg-success text-white">Add</button>
           <button onMouseDown={discardDescriptionChanges} type="button" className="discard-btn">

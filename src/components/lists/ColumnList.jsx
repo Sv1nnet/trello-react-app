@@ -1,15 +1,27 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+// React/Redux components
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
+// Custom components
 import Droppable from '../utils/dragdrop/Droppable';
-import DragDropContextProvider from '../utils/dragdrop/DragDropContext';
-import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
 import ColumnContainer from '../columns/ColumnContainer';
-import '../../styles/columnList.sass';
 import AddBoardContent from '../utils/AddBoardContent';
+
+// Context
+import DragDropContextProvider from '../utils/dragdrop/DragDropContext';
+
+// Custom hooks
 import useStatus from '../../utlis/hooks/useStatus';
+
+// mapState and actions
+import { mapStateToProps } from '../../utlis/reduxMapFunction';
+import boardActions from '../../actions/boardActions';
+
+// Styles
+import '../../styles/columnList.sass';
 
 
 const propTypes = {
@@ -24,16 +36,14 @@ const propTypes = {
 };
 
 
-const ColumnList = (props) => {
-  const { createColumn, token, board } = props;
-
+const ColumnList = ({ createColumn, token, board }) => {
   const statusHook = useStatus();
 
   const {
     status,
+    resetStatus,
     handleSuccess,
     handleError,
-    resetStatus,
   } = statusHook;
 
   const boardListContainerRef = useRef(null);
@@ -64,7 +74,15 @@ const ColumnList = (props) => {
       >
         <Droppable droppableId={board._id} direction="horizontal" type="column">
           {dropProvided => (
-            <div {...dropProvided.droppableProps} ref={(el) => { const { innerRef } = dropProvided; innerRef.current = el; boardListContainerRef.current = el; }} className="board-lists-container d-flex align-items-start">
+            <div
+              {...dropProvided.droppableProps}
+              ref={(el) => {
+                const { innerRef } = dropProvided;
+                innerRef.current = el;
+                boardListContainerRef.current = el;
+              }}
+              className="board-lists-container d-flex align-items-start"
+            >
 
               {board.columns.map((column, index) => (
                 <ColumnContainer
@@ -103,11 +121,6 @@ const ColumnList = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  token: state.user.token,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   createColumn: (token, boardId, data) => dispatch(boardActions.createColumn(token, boardId, data)),
 });
@@ -116,4 +129,4 @@ const mapDispatchToProps = dispatch => ({
 ColumnList.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ColumnList);
+export default connect(mapStateToProps.mapRequestData, mapDispatchToProps)(ColumnList);

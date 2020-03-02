@@ -1,13 +1,23 @@
+// Reacr/Redux components
 import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+// Custom components
 import TextInput from '../../../utils/TextInput';
-import boardActions from '../../../../actions/boardActions';
-import isEnterPressed from '../../../../utlis/isEnterPressed';
 import Comment from './Comment';
-import useStatus from '../../../../utlis/hooks/useStatus';
 import Messages from '../../../utils/Messages';
+
+// Custom hooks
+import useStatus from '../../../../utlis/hooks/useStatus';
+
+// mapState and actions
+import { mapStateToProps } from '../../../../utlis/reduxMapFunction';
+import boardActions from '../../../../actions/boardActions';
+
+// Utils
+import isEnterPressed from '../../../../utlis/isEnterPressed';
 
 
 const propTypes = {
@@ -152,12 +162,6 @@ const CardComments = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  userData: state.user.userData,
-  token: state.user.token,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   addComment: (token, boardId, cardId, comment) => dispatch(boardActions.addCardComment(token, boardId, cardId, comment)),
 });
@@ -167,4 +171,4 @@ CardComments.propTypes = propTypes;
 CardComments.defaultProps = defaultProps;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(CardComments);
+export default connect(mapStateToProps.mapFullUserData, mapDispatchToProps)(CardComments);

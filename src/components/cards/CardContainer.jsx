@@ -1,14 +1,26 @@
+// React/Redux components
 import React, { useRef, useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+// Custom components
 import Draggable from '../utils/dragdrop/Draggable';
 import Card from './Card';
-import boardActions from '../../actions/boardActions';
-import '../../styles/cardItem.sass';
-import { BoardContentContext } from '../context/BoardContentContext';
 import Messages from '../utils/Messages';
+
+// Context
+import { BoardContentContext } from '../context/BoardContentContext';
+
+// Custom hooks
 import useStatus from '../../utlis/hooks/useStatus';
+
+// mapState and action
+import { mapStateToProps } from '../../utlis/reduxMapFunction';
+import boardActions from '../../actions/boardActions';
+
+// Styles
+import '../../styles/cardItem.sass';
 
 
 const propTypes = {
@@ -105,17 +117,12 @@ const CardContainer = (props) => {
   );
 };
 
-
-CardContainer.propTypes = propTypes;
-
-
 const mapDispatchToProps = dispatch => ({
   deleteCard: (token, boardId, id) => dispatch(boardActions.deleteCard(token, boardId, id)),
 });
 
-const mapStateToProps = state => ({
-  token: state.user.token,
-  board: state.board,
-});
 
-export default React.memo(connect(mapStateToProps, mapDispatchToProps)(CardContainer));
+CardContainer.propTypes = propTypes;
+
+
+export default React.memo(connect(mapStateToProps.mapRequestData, mapDispatchToProps)(CardContainer));

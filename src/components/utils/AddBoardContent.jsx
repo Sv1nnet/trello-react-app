@@ -1,9 +1,14 @@
+// React/Redux components
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
-import hasParent from '../../utlis/hasParent';
 import TextInput from './TextInput';
+
+// Utils
+import hasParent from '../../utlis/hasParent';
 import isEnterPressed from '../../utlis/isEnterPressed';
 
 

@@ -1,15 +1,24 @@
+// React/Redux components
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-
-import '../../styles/boardListItem.sass';
-import boardActions from '../../actions/boardActions';
-import useStatus from '../../utlis/hooks/useStatus';
 import Messages from '../utils/Messages';
+
+// Custom hooks
+import useStatus from '../../utlis/hooks/useStatus';
+
+// mapState and actions
+import { mapStateToProps } from '../../utlis/reduxMapFunction';
+import boardActions from '../../actions/boardActions';
+
+// Styles
+import '../../styles/boardListItem.sass';
 
 
 const propTypes = {
@@ -25,7 +34,7 @@ const defaultProps = {
   events: {},
 };
 
-// User can either delete a board or remove it from his board list (if he is not the board owner).
+// User can either delete a board from database or remove it from his board list (if he is not the board owner).
 // So we have 2 types of actions of delete/remove button and we can get them from the object below.
 const boardDeleteOptions = {
   owner: {
@@ -119,12 +128,6 @@ const BoardListItem = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  userData: state.user.userData,
-  token: state.user.token,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   deleteBoard: (token, boardId) => dispatch(boardActions.deleteBoard(token, boardId)),
   removeBoard: (token, boardId) => dispatch(boardActions.removeBoard(token, boardId)),
@@ -135,4 +138,4 @@ BoardListItem.propTypes = propTypes;
 BoardListItem.defaultProps = defaultProps;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(BoardListItem);
+export default connect(mapStateToProps.mapFullUserData, mapDispatchToProps)(BoardListItem);

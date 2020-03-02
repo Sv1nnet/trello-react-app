@@ -1,5 +1,8 @@
+// React/Redux components
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faCrown, faPlus } from '@fortawesome/free-solid-svg-icons';
 import Loader from '../utils/Loader';
@@ -10,6 +13,8 @@ const propTypes = {
   email: PropTypes.string.isRequired,
   nickname: PropTypes.string.isRequired,
   isMember: PropTypes.bool.isRequired,
+  isOwner: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
   addMember: PropTypes.func.isRequired,
   removeMember: PropTypes.func.isRequired,
 };

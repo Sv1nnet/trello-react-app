@@ -1,13 +1,69 @@
+// React/Redux components
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import '../../../styles/moveItemForm.sass';
+
+// Utils
 import isOutOfViewport from '../../../utlis/isOutOfViewport';
+
+// Styles
+import '../../../styles/moveItemForm.sass';
 
 
 const propTypes = {
+  title: PropTypes.string.isRequired,
+  labels: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      modificator: PropTypes.string.isRequired,
+      select: PropTypes.shape({
+        props: PropTypes.shape({
+          defaultValue: PropTypes.string,
+          value: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+          ]),
+          onChange: PropTypes.func,
+          name: PropTypes.string.isRequired,
+          id: PropTypes.string.isRequired,
+          className: PropTypes.string,
+        }).isRequired,
+        options: PropTypes.arrayOf(
+          PropTypes.shape({
+            title: PropTypes.oneOfType([
+              PropTypes.string,
+              PropTypes.number,
+            ]),
+            props: PropTypes.shape({
+              value: PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.number,
+              ]),
+              key: PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.number,
+              ]).isRequired,
+            }).isRequired,
+          }),
+        ).isRequired,
+      }).isRequired,
+      key: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+      ]).isRequired,
+    }).isRequired,
+  ).isRequired,
+  deleteBtn: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
+  }),
+  onSubmit: PropTypes.func.isRequired,
   popupContainerRef: PropTypes.shape({
     current: PropTypes.instanceOf(HTMLElement),
   }).isRequired,
+};
+
+const defaultProps = {
+  deleteBtn: {},
 };
 
 
@@ -68,6 +124,7 @@ const MoveItemForm = (props) => {
 
 
 MoveItemForm.propTypes = propTypes;
+MoveItemForm.defaultProps = defaultProps;
 
 
 export default MoveItemForm;

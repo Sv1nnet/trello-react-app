@@ -1,10 +1,19 @@
+// React/Redux
 import React, { useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
+
+// Custom components
 import Draggable from '../utils/dragdrop/Draggable';
-import isMouseMoved from '../../utlis/isMouseMoved';
 import Column from './Column';
-import '../../styles/cardsList.sass';
+
+// Context
 import { BoardContentContext } from '../context/BoardContentContext';
+
+// Utils
+import isMouseMoved from '../../utlis/isMouseMoved';
+
+// Style
+import '../../styles/cardsList.sass';
 
 
 const propTypes = {

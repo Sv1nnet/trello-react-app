@@ -1,12 +1,22 @@
+// Reacr/Redux components
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import '../../../../styles/addLabelForm.sass';
-import LabelCheckbox from './LabelCheckbox';
-import boardActions from '../../../../actions/boardActions';
-import useStatus from '../../../../utlis/hooks/useStatus';
+
+// Custom components
 import Messages from '../../../utils/Messages';
+import LabelCheckbox from './LabelCheckbox';
+
+// Custom hooks
+import useStatus from '../../../../utlis/hooks/useStatus';
+
+// mapState and actions
+import { mapStateToProps } from '../../../../utlis/reduxMapFunction';
+import boardActions from '../../../../actions/boardActions';
+
+// Styles
+import '../../../../styles/addLabelForm.sass';
 
 
 const propTypes = {
@@ -71,7 +81,7 @@ const AddLabelForm = (props) => {
       <div className="add-label-popup__container">
         <span className="popup-title">Lables</span>
 
-        <form action="" onSubmit={(e) => { e.preventDefault(); }}>
+        <form className="add-label-popup__form" action="" onSubmit={(e) => { e.preventDefault(); }}>
           <span className="add-label-popup-title">SELECT LABEL</span>
 
           {board.labels.map(label => <LabelCheckbox key={label._id} id={label._id} onChange={onLableChange} colorName={label.colorName} color={label.color} title={label.title} checked={!!attachedLabels[label._id]} />)}
@@ -86,11 +96,6 @@ const AddLabelForm = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  token: state.user.token,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   attachLabel: (token, boardId, cardId, data) => dispatch(boardActions.attachLabel(token, boardId, cardId, data)),
   removeLabel: (token, boardId, cardId, data) => dispatch(boardActions.removeLabel(token, boardId, cardId, data)),
@@ -100,4 +105,4 @@ AddLabelForm.propTypes = propTypes;
 AddLabelForm.defaultProps = defaultProps;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddLabelForm);
+export default connect(mapStateToProps.mapRequestData, mapDispatchToProps)(AddLabelForm);

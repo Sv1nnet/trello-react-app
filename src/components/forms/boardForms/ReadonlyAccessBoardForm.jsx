@@ -1,10 +1,16 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
+// React/Redux components
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import actions from '../../../actions/boardActions';
+
+// Custom components
 import Messages from '../../utils/Messages';
+
+// mapState and actions
+import { mapStateToProps } from '../../../utlis/reduxMapFunction';
+import actions from '../../../actions/boardActions';
 
 
 const propTypes = {
@@ -45,8 +51,8 @@ const ReadonlyAccessBoardForm = ({ closePopup, isReadOnly, user, board, updateBo
       isReadOnly: state.isReadOnly,
     };
 
-    updateBoard(user.token.token, board._id, data)
-      .then((res) => {
+    return updateBoard(user.token.token, board._id, data)
+      .then(() => {
         closePopup(e);
       })
       .catch((err) => {
@@ -84,11 +90,6 @@ const ReadonlyAccessBoardForm = ({ closePopup, isReadOnly, user, board, updateBo
   );
 };
 
-const mapStateToProps = state => ({
-  user: state.user,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   updateBoard: (token, id, data) => dispatch(actions.updateBoard(token, id, data)),
 });
@@ -97,4 +98,4 @@ const mapDispatchToProps = dispatch => ({
 ReadonlyAccessBoardForm.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReadonlyAccessBoardForm);
+export default connect(mapStateToProps.mapBoardAndUser, mapDispatchToProps)(ReadonlyAccessBoardForm);

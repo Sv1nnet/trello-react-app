@@ -3,20 +3,30 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect } from 'react';
+// React/Redux components
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import '../../styles/createBoard.sass';
 import CreateBoardForm from '../forms/boardForms/CreateBoardForm';
-import actions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
+
+// mapState and actions
+import { mapStateToProps } from '../../utlis/reduxMapFunction';
+import actions from '../../actions/boardActions';
+
+// Styles
+import '../../styles/createBoard.sass';
 
 
 const propTypes = {
   close: PropTypes.func.isRequired,
-  token: PropTypes.string.isRequired,
+  token: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+  }).isRequired,
   createBoard: PropTypes.func.isRequired,
 };
 
@@ -44,7 +54,7 @@ const CreateBoard = (props) => {
 
     const { token } = props;
     props.createBoard({
-      token,
+      token: token.token,
       title: state.title,
       access: state.access,
       description: state.description,
@@ -101,8 +111,17 @@ const CreateBoard = (props) => {
             </div>
 
             <div className="col-12 col-sm-12">
-              {state.err.message && <Messages.ErrorMessage message={state.err.message} closeMessage={closeMessage} />}
-              <CreateBoardForm handleSubmit={onSubmit} handleChange={onChange} title={state.title} description={state.description} />
+              {
+                state.err.message
+                && <Messages.ErrorMessage message={state.err.message} closeMessage={closeMessage} />
+              }
+
+              <CreateBoardForm
+                handleSubmit={onSubmit}
+                handleChange={onChange}
+                title={state.title}
+                description={state.description}
+              />
             </div>
 
           </div>
@@ -113,10 +132,6 @@ const CreateBoard = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  token: state.user.token.token,
-});
-
 const mapDispatchToProps = dispatch => ({
   createBoard: (token, data) => dispatch(actions.createBoard(token, data)),
 });
@@ -125,4 +140,4 @@ const mapDispatchToProps = dispatch => ({
 CreateBoard.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateBoard);
+export default connect(mapStateToProps.mapToken, mapDispatchToProps)(CreateBoard);

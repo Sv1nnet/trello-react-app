@@ -1,5 +1,8 @@
+// React/Redux components
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
+
+// Custom components
 import HomePage from '../pages/HomePage';
 import ConfirmationPage from '../pages/ConfirmationPage';
 import ResetPasswordPage from '../pages/ResetPasswordPage';

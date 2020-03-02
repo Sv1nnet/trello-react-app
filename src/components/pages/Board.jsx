@@ -2,11 +2,13 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
+// React/Redux components
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import '../../styles/board.sass';
+
+// Custom components
 import Loader from '../utils/Loader';
 import PopupContainer from '../utils/PopupContainer';
 import RenameBoardForm from '../forms/boardForms/RenameBoardForm';
@@ -14,9 +16,15 @@ import ReadonlyAccessBoardForm from '../forms/boardForms/ReadonlyAccessBoardForm
 import PublicAccessBoardForm from '../forms/boardForms/PublicAccessBoardForm';
 import MembersForm from '../forms/boardForms/MembersForm';
 import BoardMenu from '../boards/BoardMenu';
-import boardActions from '../../actions/boardActions';
 import Messages from '../utils/Messages';
 import ColumnList from '../lists/ColumnList';
+
+// mapState and actions
+import { mapStateToProps } from '../../utlis/reduxMapFunction';
+import boardActions from '../../actions/boardActions';
+
+// Styles
+import '../../styles/board.sass';
 
 
 const propTypes = {
@@ -242,11 +250,6 @@ class Board extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  token: state.user.token,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   getBoard: (token, boardId) => dispatch(boardActions.getBoard(token, boardId)),
   getMembers: (token, userId) => dispatch(boardActions.getMembers(token, userId)),
@@ -256,4 +259,4 @@ const mapDispatchToProps = dispatch => ({
 Board.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Board);
+export default connect(mapStateToProps.mapRequestData, mapDispatchToProps)(Board);

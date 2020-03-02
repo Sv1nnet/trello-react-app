@@ -1,7 +1,13 @@
+// React/Redux components
 import {
-  useContext, useRef, useEffect, useCallback,
+  useContext,
+  useRef,
+  useEffect,
+  useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
+
+// Context
 import { DragDropContext } from './DragDropContext';
 
 

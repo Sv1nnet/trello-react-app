@@ -1,14 +1,24 @@
+// React/Redux comonents
 import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import '../../../../styles/comment.sass';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrown, faTimes } from '@fortawesome/free-solid-svg-icons';
-import TextInput from '../../../utils/TextInput';
-import boardActions from '../../../../actions/boardActions';
-import useStatus from '../../../../utlis/hooks/useStatus';
 import Messages from '../../../utils/Messages';
+import TextInput from '../../../utils/TextInput';
+
+// Custom hooks
+import useStatus from '../../../../utlis/hooks/useStatus';
+
+// mapState and actions
+import { mapStateToProps } from '../../../../utlis/reduxMapFunction';
+import boardActions from '../../../../actions/boardActions';
+
+// Styles
+import '../../../../styles/comment.sass';
 
 
 const propTypes = {
@@ -183,12 +193,6 @@ const Comment = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  userData: state.user.userData,
-  token: state.user.token,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   updateCardComment: (token, boardId, cardId, commentId, data) => dispatch(boardActions.updateCardComment(token, boardId, cardId, commentId, data)),
   deleteCardComment: (token, boardId, cardId, commentId) => dispatch(boardActions.deleteCardComment(token, boardId, cardId, commentId)),
@@ -198,4 +202,4 @@ const mapDispatchToProps = dispatch => ({
 Comment.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Comment);
+export default connect(mapStateToProps.mapFullUserData, mapDispatchToProps)(Comment);

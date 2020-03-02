@@ -1,10 +1,15 @@
+// React/Redux components
 import React, { useState, useRef, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Label from './Label';
-import PopupContainer from '../../../utils/PopupContainer';
 import AddLabelForm from './AddLabelForm';
+
+// Utils
+import PopupContainer from '../../../utils/PopupContainer';
 import isOutOfViewport from '../../../../utlis/isOutOfViewport';
 
 

@@ -1,12 +1,18 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
+// React/Rdus components
 import React, { useState, useEffect, createContext } from 'react';
 import ReactDOM from 'react-dom';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+// Custom components
 import Messages from '../utils/Messages';
-import boardActions from '../../actions/boardActions';
 import CardDetails from '../cards/details/CardDetails';
+
+// mapState and actions
+import { mapStateToProps } from '../../utlis/reduxMapFunction';
+import boardActions from '../../actions/boardActions';
 
 
 const propTypes = {
@@ -274,11 +280,6 @@ const BoardContentContextProvider = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  user: state.user,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   // Clear board data after transition to another page.
   // We need it to prevent from showing wrong baord data.
@@ -291,4 +292,4 @@ const mapDispatchToProps = dispatch => ({
 BoardContentContextProvider.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(BoardContentContextProvider);
+export default connect(mapStateToProps.mapBoardAndUser, mapDispatchToProps)(BoardContentContextProvider);

@@ -1,8 +1,13 @@
+// React/Redux components
 import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { BoardContentContext } from '../../../context/BoardContentContext';
+
+// Custom components
 import MoveItemForm from '../../../forms/boardForms/MoveItemForm';
 import PopupContainer from '../../../utils/PopupContainer';
+
+// Context
+import { BoardContentContext } from '../../../context/BoardContentContext';
 
 
 const propTypes = {
@@ -11,6 +16,11 @@ const propTypes = {
   moveCard: PropTypes.func.isRequired,
   deleteCard: PropTypes.func.isRequired,
   removeElement: PropTypes.func.isRequired,
+  style: PropTypes.shape({}),
+};
+
+const defaultProps = {
+  style: {},
 };
 
 
@@ -127,13 +137,15 @@ const MoveCardPopup = (props) => {
               key: card._id,
             },
           })),
-          columnToMove.id !== sourceColumnId && {
-            title: columnToMove.cards.length + 1,
-            props: {
-              value: columnToMove.cards.length,
-              key: columnToMove.cards.length,
-            },
-          },
+          columnToMove.id !== sourceColumnId
+            ? {
+              title: columnToMove.cards.length + 1,
+              props: {
+                value: columnToMove.cards.length,
+                key: columnToMove.cards.length,
+              },
+            }
+            : null,
         ],
       },
       key: 'positions-label',
@@ -162,6 +174,7 @@ const MoveCardPopup = (props) => {
 
 
 MoveCardPopup.propTypes = propTypes;
+MoveCardPopup.defaultProps = defaultProps;
 
 
 export default MoveCardPopup;

@@ -1,9 +1,17 @@
+// React/Redux components
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import actions from '../../actions/boardActions';
+
+// Custom components
 import BoardListItem from '../boards/BoardListItem';
 import CreateBoard from '../boards/CreateBoard';
+
+// mapState and actions
+import { mapStateToProps } from '../../utlis/reduxMapFunction';
+import actions from '../../actions/boardActions';
+
+// Styles
 import '../../styles/allBoards.sass';
 
 
@@ -112,11 +120,6 @@ class UserBoardsPage extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  boards: state.user.userData.boards,
-  token: state.user.token.token,
-});
-
 const mapDispatchToProps = dispatch => ({
   loadAllBoards: token => dispatch(actions.loadAllBoards(token)),
 });
@@ -125,4 +128,4 @@ const mapDispatchToProps = dispatch => ({
 UserBoardsPage.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserBoardsPage);
+export default connect(mapStateToProps.mapBoardsAndToken, mapDispatchToProps)(UserBoardsPage);

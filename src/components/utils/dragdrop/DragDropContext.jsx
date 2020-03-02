@@ -1,8 +1,13 @@
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable no-param-reassign */
+// React/Redux components
 import React, { Component, createContext } from 'react';
 import PropTypes from 'prop-types';
+
+// Context
 import { BoardContentContext } from '../../context/BoardContentContext';
+
+// Utils
 import scrollElements from '../../../utlis/scrollElements';
 
 

@@ -1,13 +1,19 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
+// React/Redux components
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+// Custom omponents
 import TextInput from '../../utils/TextInput';
 import Loader from '../../utils/Loader';
-import actions from '../../../actions/boardActions';
 import Messages from '../../utils/Messages';
 import UserListIten from '../../lists/UserListItem';
+
+// mapState and actions
+import { mapStateToProps } from '../../../utlis/reduxMapFunction';
+import actions from '../../../actions/boardActions';
 
 
 const propTypes = {
@@ -36,18 +42,18 @@ class MembersForm extends Component {
 
     this.state = {
       inputValue: '',
-      getUsersInterval: undefined,
+      getUsersInterval: null,
       members: props.members,
       status: {
         loading: false,
         success: {
           message: '',
-          data: undefined,
-          statusCode: undefined,
+          data: null,
+          statusCode: null,
         },
         err: {
           message: '',
-          statusCode: undefined,
+          statusCode: null,
         },
       },
     };
@@ -159,12 +165,12 @@ class MembersForm extends Component {
         loading: false,
         success: {
           message: '',
-          data: undefined,
-          statusCode: undefined,
+          data: null,
+          statusCode: null,
         },
         err: {
           message: '',
-          statusCode: undefined,
+          statusCode: null,
         },
       },
     }));
@@ -181,12 +187,12 @@ class MembersForm extends Component {
           loading: false,
           success: {
             message: '',
-            data: undefined,
-            statusCode: undefined,
+            data: null,
+            statusCode: null,
           },
           err: {
             message: '',
-            statusCode: undefined,
+            statusCode: null,
           },
         },
       }));
@@ -244,7 +250,7 @@ class MembersForm extends Component {
         ...state.status,
         err: {
           message: '',
-          statusCode: undefined,
+          statusCode: null,
         },
       },
     }));
@@ -364,11 +370,6 @@ class MembersForm extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  userId: state.user.userData._id,
-  token: state.user.token,
-});
-
 const mapDispatchToProps = dispatch => ({
   findUsers: (token, email) => dispatch(actions.findUsers(token, email)),
   addMember: (token, boardId, member) => dispatch(actions.addMember(token, boardId, member)),
@@ -379,4 +380,4 @@ const mapDispatchToProps = dispatch => ({
 MembersForm.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(MembersForm);
+export default connect(mapStateToProps.mapUserIdAndToken, mapDispatchToProps)(MembersForm);

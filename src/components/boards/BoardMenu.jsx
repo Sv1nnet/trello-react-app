@@ -1,12 +1,22 @@
+// React/Redux components
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+
+// Custom components
 import Loader from '../utils/Loader';
 import Messages from '../utils/Messages';
-import '../../styles/boardMenu.sass';
 import BoardDescriptionForm from '../forms/boardForms/BoardDescriptionForm';
-import boardActions from '../../actions/boardActions';
+
+// Custom hooks
 import useStatus from '../../utlis/hooks/useStatus';
+
+// mapState and actions
+import { mapStateToProps } from '../../utlis/reduxMapFunction';
+import boardActions from '../../actions/boardActions';
+
+// Styles
+import '../../styles/boardMenu.sass';
 
 
 const propTypes = {
@@ -23,6 +33,7 @@ const propTypes = {
     })).isRequired,
   }).isRequired,
   getActivities: PropTypes.func.isRequired,
+  cleanActivities: PropTypes.func.isRequired,
 };
 
 
@@ -94,11 +105,6 @@ const BoardMenu = ({ token, board, getActivities, cleanActivities }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  token: state.user.token,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   getActivities: (token, boardId, data) => dispatch(boardActions.getActivities(token, boardId, data)),
   cleanActivities: () => dispatch(boardActions.cleanActivities()),
@@ -107,4 +113,4 @@ const mapDispatchToProps = dispatch => ({
 BoardMenu.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(BoardMenu);
+export default connect(mapStateToProps.mapRequestData, mapDispatchToProps)(BoardMenu);

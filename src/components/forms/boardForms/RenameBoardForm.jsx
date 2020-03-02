@@ -1,11 +1,17 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
+// React/Redux components
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
+// Custom components
 import TextInput from '../../utils/TextInput';
-import actions from '../../../actions/boardActions';
 import Messages from '../../utils/Messages';
+
+// mapState and actions
+import { mapStateToProps } from '../../../utlis/reduxMapFunction';
+import actions from '../../../actions/boardActions';
 
 
 const propTypes = {
@@ -95,11 +101,6 @@ const RenameBoardForm = ({ closePopup, boardTitle, user, board, updateBoard }) =
   );
 };
 
-const mapStateToProps = state => ({
-  user: state.user,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   updateBoard: (token, id, data) => dispatch(actions.updateBoard(token, id, data)),
 });
@@ -108,4 +109,4 @@ const mapDispatchToProps = dispatch => ({
 RenameBoardForm.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(RenameBoardForm);
+export default connect(mapStateToProps.mapBoardAndUser, mapDispatchToProps)(RenameBoardForm);

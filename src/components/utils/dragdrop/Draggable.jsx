@@ -1,6 +1,11 @@
+// React/Redux components
 import { useContext, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
+
+// Context
 import { DragDropContext } from './DragDropContext';
+
+// Utils
 import dragElement from '../../../utlis/dragElement';
 import isMouseMoved from '../../../utlis/isMouseMoved';
 import createPlaceholder from '../../../utlis/createPlaceholder';

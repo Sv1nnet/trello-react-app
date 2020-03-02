@@ -1,7 +1,12 @@
+// React/Redux components
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
+// Custom components
 import Messages from '../utils/Messages';
+
+// mapState and action
 import action from '../../actions/authActions';
 
 

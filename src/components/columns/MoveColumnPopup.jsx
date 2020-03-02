@@ -1,13 +1,21 @@
+// React/Redux compontnes
 import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { BoardContentContext } from '../context/BoardContentContext';
+
+// Custom components
 import MoveItemForm from '../forms/boardForms/MoveItemForm';
-import '../../styles/moveItemForm.sass';
 import PopupContainer from '../utils/PopupContainer';
+
+// Context
+import { BoardContentContext } from '../context/BoardContentContext';
+
+// Styles
+import '../../styles/moveItemForm.sass';
 
 
 const propTypes = {
   sourcePosition: PropTypes.number.isRequired,
+  sourceId: PropTypes.string.isRequired,
   moveColumn: PropTypes.func.isRequired,
   deleteColumn: PropTypes.func.isRequired,
   removeElement: PropTypes.func.isRequired,

@@ -1,5 +1,8 @@
+// React/Redux components
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
+
+// Custom components
 import TextInput from '../utils/TextInput';
 import CardContainer from '../cards/CardContainer';
 

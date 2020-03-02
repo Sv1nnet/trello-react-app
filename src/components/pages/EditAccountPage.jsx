@@ -1,10 +1,18 @@
+// React/Redux components
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+// Custom components
+import EditAccountForm from '../forms/userForms/EditAccountForm';
+
+// Custom hooks
+import useStatus from '../../utlis/hooks/useStatus';
+
+// mapState and actions
+import { mapStateToProps } from '../../utlis/reduxMapFunction';
 import boardActions from '../../actions/boardActions';
 import authActions from '../../actions/authActions';
-import useStatus from '../../utlis/hooks/useStatus';
-import EditAccountForm from '../forms/userForms/EditAccountForm';
 
 
 const propTypes = {
@@ -119,12 +127,6 @@ const EditAccountPage = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  userData: state.user.userData,
-  token: state.user.token,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   editAccount: (token, boardId, data) => dispatch(boardActions.editAccount(token, boardId, data)),
   resetPassword: data => dispatch(authActions.forgotPassword(data)),
@@ -134,4 +136,4 @@ const mapDispatchToProps = dispatch => ({
 EditAccountPage.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditAccountPage);
+export default connect(mapStateToProps.mapFullUserData, mapDispatchToProps)(EditAccountPage);

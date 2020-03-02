@@ -1,5 +1,8 @@
+// React/Redux components
 import React from 'react';
 import PropTypes from 'prop-types';
+
+// Styles
 import '../../styles/messages.sass';
 
 

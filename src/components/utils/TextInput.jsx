@@ -1,9 +1,16 @@
+// React/Redux components
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import '../../styles/textInput.sass';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
+
+// Utils
 import resizeTextarea from '../../utlis/resizeTextarea';
+
+// Styles
+import '../../styles/textInput.sass';
 
 
 const propTypes = {

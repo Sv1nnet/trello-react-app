@@ -1,16 +1,26 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
+// React/Redux components
 import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
+// Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import Droppable from '../utils/dragdrop/Droppable';
-import boardActions from '../../actions/boardActions';
 import CardContainer from '../cards/CardContainer';
 import AddBoardContent from '../utils/AddBoardContent';
-import resizeTextarea from '../../utlis/resizeTextarea';
 import MoveColumnPopup from './MoveColumnPopup';
+
+// Context
 import { BoardContentContext } from '../context/BoardContentContext';
+
+// mapState and action
+import { mapStateToProps } from '../../utlis/reduxMapFunction';
+import boardActions from '../../actions/boardActions';
+
+// Utils
+import resizeTextarea from '../../utlis/resizeTextarea';
 
 
 const propTypes = {
@@ -274,17 +284,14 @@ const Column = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  token: state.user.token,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   deleteColumn: (token, boardId, columnId) => dispatch(boardActions.deleteColumn(token, boardId, columnId)),
   updateColumn: (token, boardId, columnId, data) => dispatch(boardActions.updateColumn(token, boardId, columnId, data)),
   createCard: (token, boardId, card) => dispatch(boardActions.createCard(token, boardId, card)),
 });
 
+
 Column.propTypes = propTypes;
 
-export default React.memo(connect(mapStateToProps, mapDispatchToProps)(Column));
+
+export default React.memo(connect(mapStateToProps.mapRequestData, mapDispatchToProps)(Column));

@@ -1,10 +1,17 @@
+// React/Redux components
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
+// Utils
 import { isEmail } from 'validator';
+
+// Custom components
 import Loader from '../utils/Loader';
-import actions from '../../actions/authActions';
 import Messages from '../utils/Messages';
+
+// mapState and actions
+import actions from '../../actions/authActions';
 
 
 const propTypes = {

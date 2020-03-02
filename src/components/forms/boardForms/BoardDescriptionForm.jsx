@@ -1,8 +1,16 @@
+// React/Redux components
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import boardActions from '../../../actions/boardActions';
+
+// Custom components
 import TextInput from '../../utils/TextInput';
+
+// mapState and actions
+import { mapStateToProps } from '../../../utlis/reduxMapFunction';
+import boardActions from '../../../actions/boardActions';
+
+// Utils
 import isEnterPressed from '../../../utlis/isEnterPressed';
 
 
@@ -14,6 +22,8 @@ const propTypes = {
     description: PropTypes.string.isRequired,
     _id: PropTypes.string.isRequired,
   }).isRequired,
+  updateBoard: PropTypes.func.isRequired,
+  handleError: PropTypes.func.isRequired,
 };
 
 
@@ -32,9 +42,6 @@ const BoardDescriptionForm = ({ token, board, updateBoard, handleError }) => {
     // TODO: Colmplete server response
     const data = { description: boardDescription };
     updateBoard(token.token, board._id, data)
-      .then((res) => {
-        console.log('res', res);
-      })
       .catch(handleError);
   };
 
@@ -56,7 +63,7 @@ const BoardDescriptionForm = ({ token, board, updateBoard, handleError }) => {
         hideCrossBtn
         inputType="textarea"
         placeholder="Add a description to this board"
-        maxLength="320"
+        maxLength="180"
         varticalPadding={2}
         classList="board-menu-text-input px-1"
         name="board-description"
@@ -69,11 +76,6 @@ const BoardDescriptionForm = ({ token, board, updateBoard, handleError }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  token: state.user.token,
-  board: state.board,
-});
-
 const mapDispatchToProps = dispatch => ({
   updateBoard: (token, boardId, data) => dispatch(boardActions.updateBoard(token, boardId, data)),
 });
@@ -82,4 +84,4 @@ const mapDispatchToProps = dispatch => ({
 BoardDescriptionForm.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(BoardDescriptionForm);
+export default connect(mapStateToProps.mapRequestData, mapDispatchToProps)(BoardDescriptionForm);
