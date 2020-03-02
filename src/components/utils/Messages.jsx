@@ -8,15 +8,22 @@ import '../../styles/messages.sass';
 
 const messageContainerPropTypes = {
   style: PropTypes.shape({}),
+  bgPosition: PropTypes.string,
   containerBorder: PropTypes.string.isRequired,
 };
 
 const messageContainerDefaultProps = {
   style: {},
+  bgPosition: 'absolute',
 };
 
 const MessageContainer = (props) => {
-  const { children, style, containerBorder } = props;
+  const {
+    children,
+    style,
+    containerBorder,
+    bgPosition,
+  } = props;
   return (
     <>
       <div className="message-container">
@@ -24,7 +31,7 @@ const MessageContainer = (props) => {
           {children}
         </div>
       </div>
-      <div className="position-absolute w-100 h-100 bg-white loader-bg" />
+      <div className={`position-${bgPosition} w-100 h-100 bg-white loader-bg`} />
     </>
   );
 };
@@ -61,10 +68,11 @@ const ErrorMessage = (props) => {
     btn,
     loadingTextAnimation,
     dataForClosingMessage,
+    bgPosition,
   } = props;
   const animationClassName = loadingTextAnimation ? 'loading-text' : '';
   return (
-    <MessageContainer style={styles} containerBorder="message-danger">
+    <MessageContainer bgPosition={bgPosition} style={styles} containerBorder="message-danger">
       <h4 className="bg-danger">{title}</h4>
       <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
       {btn !== false && <button onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-danger bg-danger my-3">OK</button>}
@@ -85,10 +93,11 @@ const InfoMessage = (props) => {
     btn,
     loadingTextAnimation,
     dataForClosingMessage,
+    bgPosition,
   } = props;
   const animationClassName = loadingTextAnimation ? 'loading-text' : '';
   return (
-    <MessageContainer style={styles} containerBorder="message-info">
+    <MessageContainer bgPosition={bgPosition} style={styles} containerBorder="message-info">
       <h4 className="bg-primary">{title}</h4>
       <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
       {btn !== false && <button onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-primary bg-primary my-3">OK</button>}
@@ -109,10 +118,11 @@ const SuccessMessage = (props) => {
     btn,
     loadingTextAnimation,
     dataForClosingMessage,
+    bgPosition,
   } = props;
   const animationClassName = loadingTextAnimation ? 'loading-text' : '';
   return (
-    <MessageContainer style={styles} containerBorder="message-success">
+    <MessageContainer bgPosition={bgPosition} style={styles} containerBorder="message-success">
       <h4 className="bg-success">{title}</h4>
       <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
       {btn !== false && <button onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-success bg-success my-3">OK</button>}
@@ -145,6 +155,7 @@ const QuestionMessage = (props) => {
     message,
     answer,
     styles,
+    bgPosition,
   } = props;
 
   const colors = {
@@ -156,7 +167,7 @@ const QuestionMessage = (props) => {
   const colorType = colors[type] || 'primary';
 
   return (
-    <MessageContainer style={styles} containerBorder={`message-${colorType}`}>
+    <MessageContainer bgPosition={bgPosition} style={styles} containerBorder={`message-${colorType}`}>
       <h4 className={`bg-${colorType}`}>Confirm</h4>
       <h5 className="mt-4 w-100">{message}</h5>
       <div className="question-message__buttons-container">

@@ -46,11 +46,11 @@ class AuthFormHolder extends Component {
       loading: false,
       success: { // for success resquests
         message: '',
-        statusCode: undefined,
+        statusCode: null,
       },
       err: { // for resquests or validation errors
         message: '',
-        statusCode: undefined,
+        statusCode: null,
       },
     },
   }
@@ -144,7 +144,7 @@ class AuthFormHolder extends Component {
             loading: false,
             err: {
               message: '',
-              statusCode: undefined,
+              statusCode: null,
             },
             success: {
               statusCode: res.status,
@@ -190,12 +190,12 @@ class AuthFormHolder extends Component {
             status: {
               err: {
                 message: '',
-                statusCode: undefined,
+                statusCode: null,
               },
               loading: false,
               success: {
                 message: '',
-                statusCode: undefined,
+                statusCode: null,
               },
             },
           }));
@@ -224,7 +224,7 @@ class AuthFormHolder extends Component {
             loading: false,
             success: {
               message,
-              statusCode: undefined,
+              statusCode: null,
             },
           },
         }));
@@ -298,11 +298,11 @@ class AuthFormHolder extends Component {
 
     const status = {
       success: {
-        statusCode: undefined,
+        statusCode: null,
         message: '',
       },
       err: {
-        statusCode: undefined,
+        statusCode: null,
         message: '',
       },
     };

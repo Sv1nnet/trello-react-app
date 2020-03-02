@@ -68,8 +68,6 @@ class TextInput extends Component {
 
   state = {
     isInputElementActive: false,
-    isCrossBtnActive: false,
-    isSearchBtnActive: false,
   }
 
   componentDidMount() {
@@ -99,17 +97,8 @@ class TextInput extends Component {
     const { props } = this;
     const { hideCrossBtn, hideSearchBtn } = props;
 
-    if (props.inputValue || (!props.inputValue && props.hideSearchBtn)) {
-      this.setState(state => ({
-        ...state,
-        isSearchBtnActive: false,
-        isCrossBtnActive: true,
-      }));
-    }
-
     if (!(hideCrossBtn && hideSearchBtn)) {
-      this.setState(state => ({
-        ...state,
+      this.setState(() => ({
         isInputElementActive: true,
       }));
     }
@@ -121,10 +110,7 @@ class TextInput extends Component {
     const { props } = this;
 
     if (!props.inputValue) {
-      this.setState(state => ({
-        ...state,
-        isSearchBtnActive: true,
-        isCrossBtnActive: false,
+      this.setState(() => ({
         isInputElementActive: false,
       }));
     }
@@ -224,7 +210,7 @@ class TextInput extends Component {
 
   render() {
     const emptyValue = '';
-    const { state, props } = this;
+    const { props } = this;
     const {
       hideSearchBtn,
       hideCrossBtn,
@@ -238,8 +224,8 @@ class TextInput extends Component {
       onSearchBtnClick,
     } = this;
 
-    const crossBtnActive = inputValue || state.isCrossBtnActive ? 'active' : '';
-    const searchBtnActive = !inputValue || state.isSearchBtnActive ? 'active' : '';
+    const crossBtnActive = inputValue ? 'active' : '';
+    const searchBtnActive = !inputValue ? 'active' : '';
     const input = getInput();
 
     return (

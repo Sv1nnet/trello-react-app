@@ -136,6 +136,7 @@ class AuthNav extends Component {
                 </span>
               )}
               styles={{ marginTop: '-20%' }}
+              bgPosition="fixed"
               closeMessage={this.openAboutPopup}
               bg
               btn
