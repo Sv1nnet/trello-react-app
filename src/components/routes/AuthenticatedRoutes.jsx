@@ -15,7 +15,7 @@ const AuthenticatedRoutes = () => (
   <>
     <BoardContentContextProvider>
       <UserNavbar />
-      <div className="container-fluid px-0 h-100">
+      <div className="container-fluid px-0">
         <Switch>
           <Route exact path="/board/all" component={UserBoardsPage} />
           <Route exact path="/board/:id" component={Board} />
