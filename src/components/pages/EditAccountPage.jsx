@@ -80,6 +80,13 @@ const EditAccountPage = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
 
+    if (userDetails.newPassword && userDetails.newPassword.length < 8) {
+      handleError({
+        message: 'New password is too short',
+        status: 400,
+      });
+      return;
+    }
     setStatusLoading();
 
     editAccount(token.token, board._id, userDetails)
@@ -94,7 +101,7 @@ const EditAccountPage = (props) => {
       .catch(handleError);
   };
 
-  const sendResetPasswordEmail = (e) => {
+  const sendResetPasswordEmail = () => {
     const { email } = userData;
 
     setPasswordStatusLoading();
