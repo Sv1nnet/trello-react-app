@@ -1,5 +1,5 @@
 // React/Redux components
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 // Types
@@ -22,10 +22,10 @@ const propTypes = {
 };
 
 
-const SignupForm = (props) => {
+const SignupForm = ({ formMethods, userData, setFormHeight }) => {
   const [mounted, setMounted] = useState(false);
+  const formRef = useRef();
 
-  const { formMethods, userData } = props;
   const { onChange, onSubmit } = formMethods;
   const {
     email,
@@ -36,11 +36,15 @@ const SignupForm = (props) => {
     lastName,
   } = userData;
 
-  // Fadein component
-  setTimeout(() => setMounted(true), 50);
+  useEffect(() => {
+    // Fadein component
+    setMounted(true);
+    setFormHeight(formRef.current.offsetHeight);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <form action="" onSubmit={e => onSubmit(e, formActionTypes.SIGNUP)} className={`${mounted ? 'active' : ''}`}>
+    <form ref={formRef} action="" onSubmit={e => onSubmit(e, formActionTypes.SIGNUP)} className={`${mounted ? 'active' : ''}`}>
       <label htmlFor="email" className="d-block w-100">
         <input onChange={onChange} type="email" name="email" id="email" className="w-100 px-2" value={email} required />
         <span className="form-label-text">Email</span>

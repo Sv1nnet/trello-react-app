@@ -319,14 +319,14 @@ class AuthFormHolder extends Component {
       closeMessage,
     } = this;
 
-    const { switchForm } = props;
+    const { switchForm, setFormHeight } = props;
     const { userData, status } = state;
     const { loading, err, success } = status;
     const AuthForm = props.authForm;
 
     return (
       <>
-        <AuthForm switchForm={switchForm} userData={userData} err={err} formMethods={{ onChange, onSubmit }} />
+        <AuthForm setFormHeight={setFormHeight} switchForm={switchForm} userData={userData} err={err} formMethods={{ onChange, onSubmit }} />
 
         {/* If error occured show an error message */}
         {/* If user did not managed to login because he did confirm his email show info message */}

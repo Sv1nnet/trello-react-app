@@ -21,11 +21,18 @@ const propTypes = {
 
 
 class AuthNav extends Component {
+  constructor(props) {
+    super(props);
+
+    this.formContainer = React.createRef();
+  }
+
   state = {
     isSignupButtonActive: true,
     isLoginButtonActive: false,
     resetPassword: false,
     isPopupOpened: false,
+    formHeight: '',
   }
 
   componentDidMount() {
@@ -55,14 +62,15 @@ class AuthNav extends Component {
   }
 
   // Get form height to make smooth increase height
-  getFormHeight = () => {
-    const { isSignupButtonActive, isLoginButtonActive, resetPassword } = this.state;
+  setFormHeight = (height = 0) => {
+    const { formContainer } = this;
+    const formMarginInPixels = 58;
+    const selfHeight = formContainer.current.children[0].offsetHeight + formMarginInPixels;
 
-    if (isSignupButtonActive) return '546px';
-    if (isLoginButtonActive) return '303px';
-    if (resetPassword) return '200px';
-
-    return '100%';
+    this.setState(state => ({
+      ...state,
+      formHeight: `${selfHeight + height}px`,
+    }));
   }
 
   // Get AuthFormHolder with a form that we need to render as authProp and render it in AuthFormHolder as children
@@ -75,19 +83,25 @@ class AuthNav extends Component {
     if (resetPassword) Form = ResetPasswordForm;
 
     return (
-      <AuthFormHolder authForm={Form} switchForm={this.switchForm} />
+      <AuthFormHolder setFormHeight={this.setFormHeight} authForm={Form} switchForm={this.switchForm} />
     );
   }
 
   render() {
-    const { isSignupButtonActive, isLoginButtonActive, isPopupOpened } = this.state;
-    const height = this.getFormHeight();
+    const {
+      isSignupButtonActive,
+      isLoginButtonActive,
+      isPopupOpened,
+      formHeight,
+    } = this.state;
+    const height = formHeight;
     const authForm = this.getForm();
 
     return (
       <div className="container auth-page mb-3">
         <div className="row justify-content-center">
           <div
+            ref={this.formContainer}
             style={{ height }}
             className="col-xs-12 col-sm-12 col-md-6 col-l-4 col-xl-4 text-center auth-forms-container"
           >
