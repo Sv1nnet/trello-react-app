@@ -1,30 +1,33 @@
-.board-list-item-container
-  position: relative
-  width: 95%
-  height: 50px
-  margin: 0 auto
-  background-color: #e8e8e8
-  border-radius: 2px
-  line-height: 50px
-  transition: .3s all ease
-  cursor: pointer
-  a
-    color: black
-    text-overflow: ellipsis
-    white-space: nowrap
-    overflow: hidden
-  &:hover
-    background-color: #d0d0d0
-    & .delete-board-btn
-      transition: all 0.2s
-  .delete-board-btn
-    display: block
-    opacity: 0.5
-    background-color: transparent
-    border: none
-    position: absolute
-    top: 50%
-    right: 10px
-    transform: translateY(-50%)
+.dropdown-board-list-item
+  list-style-type: none
+  padding-left: 0
+  .board-list-item-container
+    position: relative
+    width: 95%
+    height: 50px
+    margin: 0 auto
+    background-color: #e8e8e8
+    border-radius: 2px
+    line-height: 50px
+    transition: .3s all ease
+    cursor: pointer
+    a
+      color: black
+      text-overflow: ellipsis
+      white-space: nowrap
+      overflow: hidden
     &:hover
-      opacity: 1
+      background-color: #d0d0d0
+      & .delete-board-btn
+        transition: all 0.2s
+    .delete-board-btn
+      display: block
+      opacity: 0.5
+      background-color: transparent
+      border: none
+      position: absolute
+      top: 50%
+      right: 10px
+      transform: translateY(-50%)
+      &:hover
+        opacity: 1

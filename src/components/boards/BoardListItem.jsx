@@ -105,7 +105,7 @@ const BoardListItem = (props) => {
 
   return (
     <>
-      <div className="col-12 px-0 dropdown-board-list-item pt-2">
+      <li className="col-12 px-0 dropdown-board-list-item pt-2">
         <div className="board-list-item-container">
           <Link to={url} {...events} className="pl-3 pr-5 w-100 d-block text-decoration-none text-center font-weight-bold">{title}</Link>
 
@@ -113,7 +113,7 @@ const BoardListItem = (props) => {
             <FontAwesomeIcon className="delete-icon" icon={faTrashAlt} />
           </button>
         </div>
-      </div>
+      </li>
 
       {questionIsActive && ReactDOM.createPortal(
         <Messages.QuestionMessage type="error" message={getRequestMessage(title)} answer={{ positive: positiveAnswer, negative: negativeAnswer }} />,

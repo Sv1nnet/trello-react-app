@@ -103,7 +103,7 @@ const CardComments = (props) => {
     if (!e.target.value.match(/\S/)) setButtonsActive(false);
   };
 
-  const blurOnShiftAndEnterPresse = (e) => {
+  const blurOnShiftAndEnterPressed = (e) => {
     if (e.nativeEvent.shiftKey && isEnterPressed(e)) {
       e.preventDefault();
       e.target.blur();
@@ -128,7 +128,7 @@ const CardComments = (props) => {
             onBlur={onBlur}
             onFocus={onFocus}
             onChange={onCommentChange}
-            onKeyPress={blurOnShiftAndEnterPresse}
+            onKeyPress={blurOnShiftAndEnterPressed}
             classList="w-100 py-2 card-details__comment-input"
             placeholder="Write a comment..."
           />

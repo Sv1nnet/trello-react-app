@@ -42,8 +42,8 @@ const CardLabels = (props) => {
   const popupContainerRef = useRef(null);
 
   // Need this ref in order to find out should we close popup (if clicked the same element that opened the popup)
-  // or open the popup/update popup position (if clicked an element different from that opened the popup).
-  // So we will sign the element was clicked to this ref.
+  // or open popup or update popup position (if user clicks an element different from one that opened the popup).
+  // So we will sign the element that was clicked to this ref.
   const sourceOpenedPupopRef = useRef(null);
 
   const setAddLabelPopupState = (e, label) => {

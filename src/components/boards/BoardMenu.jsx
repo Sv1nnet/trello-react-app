@@ -71,11 +71,13 @@ const BoardMenu = ({ token, board, getActivities, cleanActivities }) => {
   return (
     <div className="w-100 overflow-hidden board-menu-container">
       {status.err.message && <Messages.ErrorMessage message={status.err.message} closeMessage={closeMessage} btn />}
+
       <span className="popup-title">Menu</span>
       <BoardDescriptionForm handleError={handleError} />
 
       <div className="activity-container">
         <span className="d-block w-100 text-center pb-1">Activity</span>
+
         <ul className="activity-list-container list-group">
           {board.activities.slice(0, activityCount).map((activity) => {
             const todayStr = new Date().toLocaleDateString();

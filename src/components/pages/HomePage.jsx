@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Custom components
-import AuthNav from '../navigation/AuthNav';
+import AuthNav from '../navigation/auth/AuthNav';
 
 // Styles
 import '../../styles/homePage.sass';

@@ -8,19 +8,19 @@ import { connect } from 'react-redux';
 // Custom components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThList, faHome } from '@fortawesome/free-solid-svg-icons';
-import TextInput from '../utils/TextInput';
-import PopupContainer from '../utils/PopupContainer';
-import BoardListItem from '../boards/BoardListItem';
-import CreateBoard from '../boards/CreateBoard';
-import CardsSearchDropdown from '../lists/CardsSearchDropdown';
+import TextInput from '../../utils/TextInput';
+import CreateBoard from '../../boards/CreateBoard';
+import CardsSearchDropdown from '../../lists/CardsSearchDropdown';
+import BoardListPopup from './popups/BoardListPopup';
+import UserPopup from './popups/UserPopup';
 
 // mapState and actions
-import { mapStateToProps } from '../../utlis/reduxMapFunction';
-import authActions from '../../actions/authActions';
-import boardActions from '../../actions/boardActions';
+import { mapStateToProps } from '../../../utlis/reduxMapFunction';
+import authActions from '../../../actions/authActions';
+import boardActions from '../../../actions/boardActions';
 
 // Styles
-import '../../styles/navbar.sass';
+import '../../../styles/navbar.sass';
 
 
 const propTypes = {
@@ -253,55 +253,36 @@ class UserNavbar extends Component {
           </li>
 
           {/* Further I placed dropdown menu for navigation. Search specifically in dropdown-menu container and User menu, Boards list as separeted components out of dropdown-menu container */}
-          {
-            isBoardOpened && (
-              <CardsSearchDropdown
-                searchBar={searchBar}
-                searchCardsInput={searchCardsInput}
-                onSearchChange={onSearchChange}
-                searchText={searchText}
-                clearInput={clearInput}
-                onSearchInputBlur={onSearchInputBlur}
-                cards={board.cards}
+          {isBoardOpened && (
+            <CardsSearchDropdown
+              searchBar={searchBar}
+              searchCardsInput={searchCardsInput}
+              onSearchChange={onSearchChange}
+              searchText={searchText}
+              clearInput={clearInput}
+              onSearchInputBlur={onSearchInputBlur}
+              cards={board.cards}
+            />
+          )}
+
+          {boardsPopupActive
+            && (
+              <BoardListPopup
+                boards={boards}
+                openCreateBoard={openCreateBoard}
+                onPopupBtnClick={onPopupBtnClick}
+                userData={{ email, nickname }}
               />
-            )
-          }
+            )}
 
-          {
-            boardsPopupActive
+          {userPopupActive
             && (
-              <PopupContainer popupToClose="boardsPopupActive" classesToNotClosePopup={['dropdown-boards', 'boards-title', 'message-container', 'message', 'btn']} extraClasses={['dropdown-boards']} removeElement={onPopupBtnClick} userData={{ email, nickname }}>
-                <h5 className="mt-2 w-100 boards-title text-secondary text-center">Boards</h5>
-
-                <div className="board-list-container">
-                  {boards.map(board => <BoardListItem key={board._id} id={board._id} owner={board.owner} title={board.title} events={{ onClick: e => onPopupBtnClick(e, 'boardsPopupActive') }} />)}
-                </div>
-
-                <div className="col-12 px-0 text-center dropdown-board-list-item pt-2">
-                  <a onClick={openCreateBoard} href="/">Create a new board</a>
-                </div>
-              </PopupContainer>
-            )
-          }
-
-          {
-            userPopupActive
-            && (
-              <PopupContainer popupToClose="userPopupActive" classesToNotClosePopup={['user-credentials']} targetClasses={['dropdown-user', 'user-credentials']} extraClasses={['dropdown-user']} removeElement={onPopupBtnClick} userData={{ email, nickname }}>
-                <div className="col-12 dropdown-user-credentials pt-2 border-bottom">
-                  <p className="user-credentials text-center">{`${email} (${nickname})`}</p>
-                </div>
-
-                <div className="col-12 px-0 dropdown-user-credentials pt-2 pb-2 border-bottom">
-                  <Link className="text-center w-100 d-block" to="/user">Edit account</Link>
-                </div>
-
-                <div className="col-12 px-0 dropdown-user-credentials pt-2">
-                  <Link onClick={this.logout} className="text-center w-100 d-block" to="/logout">Log out</Link>
-                </div>
-              </PopupContainer>
-            )
-          }
+              <UserPopup
+                logout={this.logout}
+                onPopupBtnClick={onPopupBtnClick}
+                userData={{ email, nickname }}
+              />
+            )}
         </ul>
 
         {createBoardActive && <CreateBoard close={closeCreateBoard} />}

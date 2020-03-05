@@ -4,11 +4,11 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 // Custom components
-import SignupForm from '../forms/authForms/SignupForm';
-import LoginForm from '../forms/authForms/LoginForm';
-import ResetPasswordForm from '../forms/authForms/ForgotPasswordForm';
-import AuthFormHolder from '../pages/AuthFormHolder';
-import Messages from '../utils/Messages';
+import SignupForm from '../../forms/authForms/SignupForm';
+import LoginForm from '../../forms/authForms/LoginForm';
+import ResetPasswordForm from '../../forms/authForms/ForgotPasswordForm';
+import AuthFormHolder from '../../pages/AuthFormHolder';
+import Messages from '../../utils/Messages';
 
 
 const propTypes = {

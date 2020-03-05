@@ -87,7 +87,7 @@ const CreateBoard = (props) => {
   };
 
   useEffect(() => {
-    if (state.boardCreated) close();
+    if (state.boardCreated) close(); // Close createBoard popup if a board has been created
   }, [close, state.boardCreated]);
 
   if (state.boardCreated) {

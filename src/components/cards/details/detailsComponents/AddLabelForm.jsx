@@ -68,7 +68,10 @@ const AddLabelForm = (props) => {
       id: target.id,
     };
 
-    const changeResultPromise = target.checked ? attachLabel(token.token, board._id, cardId, target.id, data) : removeLabel(token.token, board._id, cardId, target.id, data);
+    const changeResultPromise = target.checked
+      ? attachLabel(token.token, board._id, cardId, target.id, data)
+      : removeLabel(token.token, board._id, cardId, target.id, data);
+
     setStatusLoading();
 
     changeResultPromise
@@ -84,7 +87,17 @@ const AddLabelForm = (props) => {
         <form className="add-label-popup__form" action="" onSubmit={(e) => { e.preventDefault(); }}>
           <span className="add-label-popup-title">SELECT LABEL</span>
 
-          {board.labels.map(label => <LabelCheckbox key={label._id} id={label._id} onChange={onLableChange} colorName={label.colorName} color={label.color} title={label.title} checked={!!attachedLabels[label._id]} />)}
+          {board.labels.map(label => (
+            <LabelCheckbox
+              key={label._id}
+              id={label._id}
+              onChange={onLableChange}
+              colorName={label.colorName}
+              color={label.color}
+              title={label.title}
+              checked={!!attachedLabels[label._id]}
+            />
+          ))}
         </form>
       </div>
 

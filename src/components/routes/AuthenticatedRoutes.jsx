@@ -3,7 +3,7 @@ import React from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
 // Custom components
-import UserNavbar from '../navigation/UserNavbar';
+import UserNavbar from '../navigation/user/UserNavbar';
 import UserBoardsPage from '../pages/UserBoardsPage';
 import Board from '../pages/Board';
 import EditAccountPage from '../pages/EditAccountPage';
