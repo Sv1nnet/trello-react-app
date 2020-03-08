@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import TextInput from '../../utils/TextInput';
 import Loader from '../../utils/Loader';
 import Messages from '../../utils/Messages';
-import UserListIten from '../../lists/UserListItem';
+import UserListItem from '../../lists/UserListItem';
 
 // mapState and actions
 import { mapStateToProps } from '../../../utlis/reduxMapFunction';
@@ -342,7 +342,7 @@ class MembersForm extends Component {
               }
 
               return (
-                <UserListIten
+                <UserListItem
                   addMember={this.handleAddMember}
                   removeMember={this.handleRemoveMember}
                   key={user._id}

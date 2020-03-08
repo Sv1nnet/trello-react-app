@@ -1,5 +1,3 @@
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
 import { boardActionTypes, columnActionTypes, cardActionTypes } from '../types';
 
 const initialState = {
@@ -115,6 +113,12 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         cards = [...state.cards];
       }
 
+      columns = data.columns.sort((columnOne, columnTwo) => {
+        if (columnOne.position < columnTwo.position) return -1;
+        if (columnOne.position > columnTwo.position) return 1;
+        return 0;
+      });
+
       return {
         _id: data._id,
         owner: data.owner,
@@ -132,6 +136,8 @@ const boardReducer = (state = initialState, action = { type: 'default', data: {}
         timeOfLastChange: null,
       };
     case columnActionTypes.COLUMN_POSITIONS_SWITCHED:
+      data = { ...action.data };
+
       columns = action.data.columns.sort((columnOne, columnTwo) => {
         if (columnOne.position < columnTwo.position) return -1;
         if (columnOne.position > columnTwo.position) return 1;

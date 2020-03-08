@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 const setElementPosition = (initialPosition, e, element) => {
-  // debugger;
   const newElementPosition = {
     x: e.clientX - initialPosition.x,
     y: e.clientY - initialPosition.y,
@@ -8,7 +7,6 @@ const setElementPosition = (initialPosition, e, element) => {
 
   element.style.left = `${newElementPosition.x}px`;
   element.style.top = `${newElementPosition.y}px`;
-  // element.style.transform = `translate(${newElementPosition.x}px, ${newElementPosition.y}px)`;
 };
 
 /**

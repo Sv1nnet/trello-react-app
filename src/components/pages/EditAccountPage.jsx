@@ -106,7 +106,6 @@ const EditAccountPage = (props) => {
 
     setPasswordStatusLoading();
 
-    // setTimeout(resetPasswordStatus, 5000);
     resetPassword({ email })
       .then(handlePasswordSuccess)
       .catch(handlePasswordError);

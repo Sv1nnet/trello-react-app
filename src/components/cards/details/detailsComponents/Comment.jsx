@@ -185,6 +185,7 @@ const Comment = (props) => {
           )}
         </div>
       </li>
+
       {status.err.message && ReactDOM.createPortal(
         <Messages.ErrorMessage message={status.err.message} closeMessage={resetStatus} btn />,
         document.body,

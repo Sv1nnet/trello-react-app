@@ -5,8 +5,8 @@
  * @param {number} [options.distanceToStartScrollingX=20] - int - distance in pixels between edge of element and cursor to start scrolling.
  * @param {number} [options.distanceToStartScrollingY=20] - int - distance in pixels between edge of element and cursor to start scrolling.
  * @param {Object} options.scrollIntervals - object that contains scrollHorizontalInterval.
- * @param {number} options.scrollIntervals.scrollHorizontalInterval - object that contains scrollHorizontalInterval.
- * @param {number} options.scrollIntervals.scrollVerticalInterval - object that contains scrollHorizontalInterval.
+ * @param {number|null} options.scrollIntervals.scrollHorizontalInterval - object that contains scrollHorizontalInterval.
+ * @param {number|null} options.scrollIntervals.scrollVerticalInterval - object that contains scrollHorizontalInterval.
  * @param {boolean} [options.scrollX=5] - should we scroll acroos this axis.
  * @param {boolean} [options.scrollY=5] - should we scroll acroos this axis.
  * @param {boolean} [options.scrollBoth=false] - should we scroll both axises.

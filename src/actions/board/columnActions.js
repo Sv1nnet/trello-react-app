@@ -12,31 +12,25 @@ const createColumn = (token, boardId, column) => (dispatch) => {
       dispatch({ type: columnActionTypes.COLUMN_CREATED, data: res.data });
       return res;
     })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: columnActionTypes.COLUMN_CREATE_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
+    .catch(err => Promise.reject(
+      dispatch({
+        type: columnActionTypes.COLUMN_CREATE_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    ));
 };
 
-const deleteColumn = (token, boardId, columnId) => (dispatch) => {
-  return api.board.deleteColumn(token, boardId, columnId)
-    .then((res) => {
-      dispatch({ type: columnActionTypes.COLUMN_DELETED, data: res.data });
-      return res;
-    })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: columnActionTypes.COLUMN_DELETE_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
-};
+const deleteColumn = (token, boardId, columnId) => dispatch => api.board.deleteColumn(token, boardId, columnId)
+  .then((res) => {
+    dispatch({ type: columnActionTypes.COLUMN_DELETED, data: res.data });
+    return res;
+  })
+  .catch(err => Promise.reject(
+    dispatch({
+      type: columnActionTypes.COLUMN_DELETE_FAILED,
+      data: createErrorResponseObject(err),
+    }).data,
+  ));
 
 const updateColumn = (token, boardId, columnId, dataToUpdate) => (dispatch) => {
   const data = {
@@ -50,14 +44,12 @@ const updateColumn = (token, boardId, columnId, dataToUpdate) => (dispatch) => {
       dispatch({ type: columnActionTypes.COLUMN_UPDATED, data: res.data });
       return res;
     })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: columnActionTypes.COLUMN_UPDATE_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
+    .catch(err => Promise.reject(
+      dispatch({
+        type: columnActionTypes.COLUMN_UPDATE_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    ));
 };
 
 // Send new column positions to the server
@@ -72,17 +64,15 @@ const updateColumnPositions = (token, boardId, dataToUpdate) => (dispatch) => {
       dispatch({ type: columnActionTypes.COLUMN_POSITIONS_UPDATED, data: res.data });
       return res;
     })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: columnActionTypes.COLUMN_POSITIONS_UPDATE_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
+    .catch(err => Promise.reject(
+      dispatch({
+        type: columnActionTypes.COLUMN_POSITIONS_UPDATE_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    ));
 };
 
-const switchColumnPositions = (token, boardId, newColumns) => (dispatch, getState) => {
+const moveColumnToNewPosition = (token, boardId, newColumns) => (dispatch, getState) => {
   const timeOfChange = Date.now();
 
   // Save changes locally
@@ -97,5 +87,5 @@ export {
   createColumn,
   deleteColumn,
   updateColumn,
-  switchColumnPositions,
+  moveColumnToNewPosition,
 };

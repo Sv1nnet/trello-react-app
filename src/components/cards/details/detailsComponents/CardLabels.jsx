@@ -50,6 +50,7 @@ const CardLabels = (props) => {
     const el = label || buttonRef.current;
     const openedByLabelClick = !!label;
 
+    // If user opened popup by clickin on label element
     if (openedByLabelClick) {
       if (label === sourceOpenedPupopRef.current) {
         sourceOpenedPupopRef.current = null;

@@ -27,8 +27,8 @@ const deleteCard = (req, res) => {
         await board.deleteCard(cardId);
 
         await board.save().catch((err) => {
-          console.log('Could not save board with a new card', err);
-          return Promise.reject(new Error('Could not save the board with a new card'));
+          console.log('Could not save board with a new cards', err);
+          return Promise.reject(new Error('Could not save the board with a new cards'));
         });
 
         await Card.deleteOne({ _id: cardId }).catch(err => console.log('err in deleting card', err));

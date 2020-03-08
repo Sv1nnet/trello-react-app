@@ -1,12 +1,20 @@
 /* eslint-disable react/no-did-update-set-state */
+// React/Redux components
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import '../node_modules/bootstrap/scss/bootstrap.scss';
-import './styles/App.sass';
-import actions from './actions/authActions';
+
+// Custom components
 import GuestRoutes from './components/routes/GuestRoutes';
 import AuthenticatedRoutes from './components/routes/AuthenticatedRoutes';
 import Loader from './components/utils/Loader';
+
+// mapState and actions
+import { mapStateToProps } from './utlis/reduxMapFunction';
+import actions from './actions/authActions';
+
+// Styles
+import '../node_modules/bootstrap/scss/bootstrap.scss';
+import './styles/App.sass';
 
 class App extends Component {
   state = {
@@ -24,9 +32,9 @@ class App extends Component {
     const { token, verifyToken } = props;
 
     // If user has token in redux store verify it
-    if (token) {
+    if (token.token) {
       if (state.loading && !state.isAuthenticated) {
-        verifyToken(token)
+        verifyToken(token.token)
           .then(res => this.setState({ isAuthenticated: res.status === 200, loading: false }))
           .catch(() => this.setState({ isAuthenticated: false, loading: false }));
       }
@@ -42,7 +50,7 @@ class App extends Component {
   // Once we got token from redux store in props it means token is verified successfully and we set state isAuthenticated
   componentDidUpdate() {
     const { props, state } = this;
-    const { token } = props;
+    const { token } = props.token;
 
     if (token && !state.isAuthenticated) {
       this.setState(() => ({
@@ -71,12 +79,12 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  token: state.user.token ? state.user.token.token : undefined,
-});
+// const mapStateToProps = state => ({
+//   token: state.user.token ? state.user.token.token : undefined,
+// });
 
 const mapDispatchToProps = dispatch => ({
   verifyToken: token => dispatch(actions.verifyToken(token)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps.mapToken, mapDispatchToProps)(App);

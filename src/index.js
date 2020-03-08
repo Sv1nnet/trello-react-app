@@ -1,5 +1,4 @@
-import 'react-app-polyfill/ie11';
-import 'react-app-polyfill/stable';
+// React/Redux components
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -7,10 +6,17 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from './reducers/rootReducer';
-import './index.css';
+
+// Custom components
 import App from './App';
+
+// Utils
 import * as serviceWorker from './serviceWorker';
 
+// Styles
+import './index.css';
+
+// eslint-disable-next-line no-underscore-dangle
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));

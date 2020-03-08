@@ -7,11 +7,11 @@ import { connect } from 'react-redux';
 import { isEmail } from 'validator';
 
 // Custom components
-import Loader from '../utils/Loader';
-import Messages from '../utils/Messages';
+import Loader from '../../utils/Loader';
+import Messages from '../../utils/Messages';
 
 // mapState and actions
-import actions from '../../actions/authActions';
+import actions from '../../../actions/authActions';
 
 
 const propTypes = {

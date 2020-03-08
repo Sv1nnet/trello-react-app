@@ -1,6 +1,3 @@
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
-
 /**
  *
  * @param {HTMLElement} element HTML element that we want to replace with a placeholder

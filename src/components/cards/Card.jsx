@@ -91,12 +91,12 @@ const Card = (props) => {
 
   return dragProvided
     ? (
-      <div {...dragProvided.draggableProps} ref={dragProvided.innerRef} className="card-drag-area drag-target">
+      <div {...dragProvided.draggableProps} ref={dragProvided.innerRef} className="card-container drag-target">
         {cardBody}
       </div>
     )
     : (
-      <div className="card-drag-area">
+      <div className="card-container">
         {cardBody}
       </div>
     );

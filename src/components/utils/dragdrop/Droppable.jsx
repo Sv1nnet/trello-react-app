@@ -12,6 +12,8 @@ import { DragDropContext } from './DragDropContext';
 
 
 const propTypes = {
+  type: PropTypes.string.isRequired,
+  droppableId: PropTypes.string.isRequired,
   children: PropTypes.func.isRequired,
 };
 
@@ -31,8 +33,8 @@ const Droppable = ({ type, droppableId, children }) => {
 
     // Since we can put an dragged element into different list only if it comes over another element (onMouseEnter event)
     // we can't just put it into an empty list. A list with a single element. We need to do following steps:
-    // 1) Get all draggable children in empty container (droppable)
-    const droppableChildren = Array.from(current.querySelectorAll('[data-draggable-id]:not([data-type="placeholder"])'));
+    // 1) Get all draggable children in empty droppable container
+    const droppableChildren = current.querySelectorAll('[data-draggable-id]:not([data-type="placeholder"])');
     // 2) Find out if the container is really empty
     const isDroppablEmpty = droppableChildren.length === 0;
     // 3) Or we are currently dragging an element from it, so the element in DOM still in visually empty container
@@ -69,7 +71,7 @@ const Droppable = ({ type, droppableId, children }) => {
     // Since we can put an dragged element into different list only if it comes over another element (onMouseEnter event)
     // we can't just put it into an empty list. A list with a single element. We need to do following steps:
     // 1) Get all draggable children in empty container (droppable)
-    const droppableChildren = Array.from(current.querySelectorAll('[data-draggable-id]:not([data-type="placeholder"])'));
+    const droppableChildren = current.querySelectorAll('[data-draggable-id]:not([data-type="placeholder"])');
     // 2) Find out if the container is really empty
     const isDroppablEmpty = droppableChildren.length === 0;
     // 3) Or we are currently dragging an element from it, so the element in DOM still in visually empty container

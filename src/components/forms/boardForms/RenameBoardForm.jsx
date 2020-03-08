@@ -9,6 +9,9 @@ import { connect } from 'react-redux';
 import TextInput from '../../utils/TextInput';
 import Messages from '../../utils/Messages';
 
+// Custom hooks
+import useStatus from '../../../utlis/hooks/useStatus';
+
 // mapState and actions
 import { mapStateToProps } from '../../../utlis/reduxMapFunction';
 import actions from '../../../actions/boardActions';
@@ -31,60 +34,60 @@ const propTypes = {
 
 
 const RenameBoardForm = ({ closePopup, boardTitle, user, board, updateBoard }) => {
-  const [state, setState] = useState({
-    boardTitle,
-    err: {
-      message: '',
-      statusCode: undefined,
-    },
-  });
+  const [title, setTitle] = useState(boardTitle);
+  const {
+    status,
+    setStatusLoading,
+    resetStatus,
+    handleSuccess,
+    handleError,
+  } = useStatus();
 
-  const handleChange = (e) => {
-    setState({ ...state, boardTitle: e.target.value });
+  const onChange = (e) => {
+    setTitle(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
 
-    if (state.boardTitle === boardTitle) return closePopup(e);
+    if (title === boardTitle) {
+      closePopup(e);
+      return;
+    }
 
-    if (state.boardTitle.length < 1) {
-      return setState({ ...state, err: { message: 'Input the board title', statusCode: 400 } });
+    if (title.length < 1) {
+      handleError({ status: 400, message: 'Input the board title' });
+      return;
     }
 
     const data = {
-      title: state.boardTitle,
+      title,
     };
+
+    setStatusLoading();
 
     updateBoard(user.token.token, board._id, data)
       .then((res) => {
+        handleSuccess(res);
         closePopup(e);
       })
-      .catch((err) => {
-        setState({ ...state, err: { message: err.message, statusCode: err.status } });
-      });
+      .catch(handleError);
   };
 
   const clearInput = () => {
-    setState({ ...state, boardTitle: '' });
-  };
-
-  const closeMessage = () => {
-    // TODO Handle no title
-    if (state.err.message === 'Input the board title') {}
-    setState({ ...state, err: { message: '', statusCode: undefined } });
+    setTitle('');
   };
 
   return (
     <>
-      <form action="" onSubmit={handleSubmit} className="w-100">
+      <form action="" onSubmit={onSubmit} className="w-100">
         <span className="popup-title text-dark">Rename board</span>
         <div className="input-container">
           <label htmlFor="titlename">Title</label>
           <TextInput
             onCrossBtnClick={clearInput}
-            onChange={handleChange}
-            inputValue={state.boardTitle}
+            onChange={onChange}
+            inputValue={title}
             classList="rename-board-input"
             name="titlename"
             id="titlename"
@@ -94,9 +97,9 @@ const RenameBoardForm = ({ closePopup, boardTitle, user, board, updateBoard }) =
             selectOnMounted
           />
         </div>
-        <button type="submit" className="btn btn-success btn-block board-control-popup-btn">Rename</button>
+        <button type="submit" className="btn btn-success btn-block board-control-popup-btn" disabled={status.loading}>Rename</button>
       </form>
-      {state.err.message && <Messages.ErrorMessage message={state.err.message} closeMessage={closeMessage} btn />}
+      {status.err.message && <Messages.ErrorMessage message={status.err.message} closeMessage={resetStatus} btn />}
     </>
   );
 };

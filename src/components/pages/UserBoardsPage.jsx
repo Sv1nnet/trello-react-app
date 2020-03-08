@@ -76,7 +76,6 @@ class UserBoardsPage extends Component {
       });
   }
 
-  // console.log('state.status.loading', state.status.loading);
   openCreateBoard = (e) => {
     e.preventDefault();
 

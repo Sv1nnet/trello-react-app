@@ -1,3 +1,8 @@
+/**
+ *  Find out if "Enter" has been pressed
+ * @param {event} e react event object
+ * @return bool
+ */
 const isEnterPressed = (e) => {
   const { target } = e;
 

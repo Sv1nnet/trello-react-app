@@ -1,4 +1,3 @@
-/* eslint-disable arrow-body-style */
 import { cardActionTypes } from '../../types';
 import api from '../../api';
 import createErrorResponseObject from '../../utlis/createErrorResponseObject';
@@ -13,31 +12,25 @@ const createCard = (token, boardId, card) => (dispatch) => {
       dispatch({ type: cardActionTypes.CARD_CREATED, data: res.data });
       return res;
     })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: cardActionTypes.CARD_CREATE_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
+    .catch(err => Promise.reject(
+      dispatch({
+        type: cardActionTypes.CARD_CREATE_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    ));
 };
 
-const deleteCard = (token, boardId, cardId) => (dispatch) => {
-  return api.board.deleteCard(token, boardId, cardId)
-    .then((res) => {
-      dispatch({ type: cardActionTypes.CARD_DELETED, data: res.data });
-      return res;
-    })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: cardActionTypes.CARD_DELETE_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
-};
+const deleteCard = (token, boardId, cardId) => dispatch => api.board.deleteCard(token, boardId, cardId)
+  .then((res) => {
+    dispatch({ type: cardActionTypes.CARD_DELETED, data: res.data });
+    return res;
+  })
+  .catch(err => Promise.reject(
+    dispatch({
+      type: cardActionTypes.CARD_DELETE_FAILED,
+      data: createErrorResponseObject(err),
+    }).data,
+  ));
 
 const updateCardPositions = (token, boardId, dataToUpdate) => (dispatch) => {
   const data = {
@@ -50,17 +43,15 @@ const updateCardPositions = (token, boardId, dataToUpdate) => (dispatch) => {
       dispatch({ type: cardActionTypes.CARD_POSITIONS_UPDATED, data: res.data });
       return res;
     })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: cardActionTypes.CARD_POSITIONS_UPDATE_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
+    .catch(err => Promise.reject(
+      dispatch({
+        type: cardActionTypes.CARD_POSITIONS_UPDATE_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    ));
 };
 
-const switchCardPositions = (token, boardId, newCards) => (dispatch, getState) => {
+const moveCardToNewPosition = (token, boardId, newCards) => (dispatch, getState) => {
   const timeOfChange = Date.now();
   dispatch({ type: cardActionTypes.CARD_POSITIONS_SWITCHED, data: { cards: newCards, timeOfLastChange: timeOfChange } });
 
@@ -69,7 +60,7 @@ const switchCardPositions = (token, boardId, newCards) => (dispatch, getState) =
   return updateCardPositions(token, boardId, { cards, timeOfChange })(dispatch);
 };
 
-const updateCard = (token, boardId, cardId, dataToUpdate) => (dispatch, getState) => {
+const updateCard = (token, boardId, cardId, dataToUpdate) => (dispatch) => {
   const data = {
     dataToUpdate,
   };
@@ -81,62 +72,49 @@ const updateCard = (token, boardId, cardId, dataToUpdate) => (dispatch, getState
       dispatch({ type: cardActionTypes.CARD_UPDATED, data: res.data });
       return res;
     })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: cardActionTypes.CARD_UPDATE_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
+    .catch(err => Promise.reject(
+      dispatch({
+        type: cardActionTypes.CARD_UPDATE_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    ));
 };
 
-const addCardComment = (token, boardId, cardId, data) => (dispatch) => {
-  return api.board.addCardComment(token, boardId, cardId, data)
-    .then((res) => {
-      dispatch({ type: cardActionTypes.CARD_COMMENT_ADDED, data: res.data });
-      return res;
-    })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: cardActionTypes.CARD_COMMENT_ADD_FALIED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
-};
+const addCardComment = (token, boardId, cardId, data) => dispatch => api.board.addCardComment(token, boardId, cardId, data)
+  .then((res) => {
+    dispatch({ type: cardActionTypes.CARD_COMMENT_ADDED, data: res.data });
+    return res;
+  })
+  .catch(err => Promise.reject(
+    dispatch({
+      type: cardActionTypes.CARD_COMMENT_ADD_FALIED,
+      data: createErrorResponseObject(err),
+    }).data,
+  ));
 
-const updateCardComment = (token, boardId, cardId, commentId, dataToUpdate) => (dispatch) => {
-  return api.board.updateCardComment(token, boardId, cardId, commentId, dataToUpdate)
-    .then((res) => {
-      dispatch({ type: cardActionTypes.CARD_COMMENT_UPDATED, data: res.data });
-      return res;
-    })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: cardActionTypes.CARD_UPDATE_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
-};
-const deleteCardComment = (token, boardId, cardId, commentId) => (dispatch) => {
-  return api.board.deleteCardComment(token, boardId, cardId, commentId)
-    .then((res) => {
-      dispatch({ type: cardActionTypes.CARD_COMMENT_DELETED, data: res.data });
-      return res;
-    })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: cardActionTypes.CARD_COMMENT_DELETE_FALIED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
-};
+const updateCardComment = (token, boardId, cardId, commentId, dataToUpdate) => dispatch => api.board.updateCardComment(token, boardId, cardId, commentId, dataToUpdate)
+  .then((res) => {
+    dispatch({ type: cardActionTypes.CARD_COMMENT_UPDATED, data: res.data });
+    return res;
+  })
+  .catch(err => Promise.reject(
+    dispatch({
+      type: cardActionTypes.CARD_UPDATE_FAILED,
+      data: createErrorResponseObject(err),
+    }).data,
+  ));
+
+const deleteCardComment = (token, boardId, cardId, commentId) => dispatch => api.board.deleteCardComment(token, boardId, cardId, commentId)
+  .then((res) => {
+    dispatch({ type: cardActionTypes.CARD_COMMENT_DELETED, data: res.data });
+    return res;
+  })
+  .catch(err => Promise.reject(
+    dispatch({
+      type: cardActionTypes.CARD_COMMENT_DELETE_FALIED,
+      data: createErrorResponseObject(err),
+    }).data,
+  ));
 
 const attachLabel = (token, boardId, cardId, labelId) => (dispatch, getState) => {
   const timeOfChange = Date.now();
@@ -161,14 +139,12 @@ const attachLabel = (token, boardId, cardId, labelId) => (dispatch, getState) =>
       dispatch({ type: cardActionTypes.CARD_LOCAL_CHANGES_UPDATED, data: res.data });
       return res;
     })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: cardActionTypes.LABEL_ATTACH_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
+    .catch(err => Promise.reject(
+      dispatch({
+        type: cardActionTypes.LABEL_ATTACH_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    ));
 };
 
 const removeLabel = (token, boardId, cardId, labelId) => (dispatch, getState) => {
@@ -194,21 +170,19 @@ const removeLabel = (token, boardId, cardId, labelId) => (dispatch, getState) =>
       dispatch({ type: cardActionTypes.CARD_LOCAL_CHANGES_UPDATED, data: res.data });
       return res;
     })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: cardActionTypes.LABEL_REMOVE_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
+    .catch(err => Promise.reject(
+      dispatch({
+        type: cardActionTypes.LABEL_REMOVE_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    ));
 };
 
 
 export {
   createCard,
   deleteCard,
-  switchCardPositions,
+  moveCardToNewPosition,
   updateCard,
   addCardComment,
   updateCardComment,

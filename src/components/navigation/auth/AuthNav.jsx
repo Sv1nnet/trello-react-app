@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import SignupForm from '../../forms/authForms/SignupForm';
 import LoginForm from '../../forms/authForms/LoginForm';
 import ResetPasswordForm from '../../forms/authForms/ForgotPasswordForm';
-import AuthFormHolder from '../../pages/AuthFormHolder';
+import AuthFormHolder from './AuthFormHolder';
 import Messages from '../../utils/Messages';
 
 
@@ -76,7 +76,7 @@ class AuthNav extends Component {
   // Get AuthFormHolder with a form that we need to render as authProp and render it in AuthFormHolder as children
   getForm = () => {
     const { isSignupButtonActive, isLoginButtonActive, resetPassword } = this.state;
-    let Form;
+    let Form = SignupForm;
 
     if (isSignupButtonActive) Form = SignupForm;
     if (isLoginButtonActive) Form = LoginForm;
@@ -94,7 +94,6 @@ class AuthNav extends Component {
       isPopupOpened,
       formHeight,
     } = this.state;
-    const height = formHeight;
     const authForm = this.getForm();
 
     return (
@@ -102,7 +101,7 @@ class AuthNav extends Component {
         <div className="row justify-content-center">
           <div
             ref={this.formContainer}
-            style={{ height }}
+            style={{ height: formHeight }}
             className="col-xs-12 col-sm-12 col-md-6 col-l-4 col-xl-4 text-center auth-forms-container"
           >
             <div className="row">

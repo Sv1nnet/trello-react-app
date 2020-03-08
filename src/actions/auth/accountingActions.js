@@ -11,7 +11,7 @@ const {
   LOGGEDOUT_FAILED,
 } = userActionTypes;
 
-const login = ({ email, password }) => (dispatch, getState) => {
+const login = ({ email, password }) => (dispatch) => {
   const data = {
     credentials: {
       email,
@@ -24,42 +24,36 @@ const login = ({ email, password }) => (dispatch, getState) => {
       dispatch({ type: LOGGEDIN, data: res.data });
       return res;
     })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: LOGGING_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
+    .catch(err => Promise.reject(
+      dispatch({
+        type: LOGGING_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    ));
 };
 
-const verifyToken = token => (dispatch, getState) => api.auth.verifyToken(token)
+const verifyToken = token => dispatch => api.auth.verifyToken(token)
   .then((res) => {
     dispatch({ type: TOKEN_VERIFIED, data: res.data });
     return res;
   })
-  .catch((err) => {
-    return Promise.reject(
-      dispatch({
-        type: VERIFY_TOKEN_FAILED,
-        data: createErrorResponseObject(err),
-      }).data,
-    );
-  });
+  .catch(err => Promise.reject(
+    dispatch({
+      type: VERIFY_TOKEN_FAILED,
+      data: createErrorResponseObject(err),
+    }).data,
+  ));
 
-const logout = token => (dispatch, getState) => api.auth.logout(token)
+const logout = token => dispatch => api.auth.logout(token)
   .then((res) => {
     dispatch({ type: LOGGEDOUT, data: res.data });
   })
-  .catch((err) => {
-    return Promise.reject(
-      dispatch({
-        type: LOGGEDOUT_FAILED,
-        data: createErrorResponseObject(err),
-      }).data,
-    );
-  });
+  .catch(err => Promise.reject(
+    dispatch({
+      type: LOGGEDOUT_FAILED,
+      data: createErrorResponseObject(err),
+    }).data,
+  ));
 
 export {
   login,

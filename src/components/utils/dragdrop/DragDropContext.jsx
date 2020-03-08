@@ -69,12 +69,13 @@ class DragDropContextProvider extends Component {
     const { dragState } = state;
     const { columnsWithCards } = context;
 
+    // If we just stoped dragging an element
     if (!dragState.dragging && prevState.dragState.dragging !== dragState.dragging) {
       // Clear intervals if for a some reason scroll interval wasn't cleared after drag ended
       if (scrollIntervals.scrollHorizontalInterval || scrollIntervals.scrollVerticalInterval) clearScrollIntervals({ scrollIntervals });
     }
 
-    // If we just started dragging
+    // If we just started dragging an element
     if (dragState.dragging && prevState.dragState.dragging !== dragState.dragging) {
       const boardListContainer = document.querySelector('.board-lists-container');
       hireScrollElementHandlers({
@@ -140,6 +141,11 @@ class DragDropContextProvider extends Component {
     }
   }
 
+  /**
+   * Set scroll handlers to an elements.
+   * @param {object} options contains options for scroll handlers
+   * @param {object} options.scrollOption setting for scrolling elements. Look up scrollElements util function
+   */
   hireScrollElementHandlers = (options) => {
     const {
       scrollOption,
@@ -169,6 +175,7 @@ class DragDropContextProvider extends Component {
       });
     };
 
+    // Remove all handlers
     const onMouseUp = () => {
       elementToScroll.removeEventListener('mousemove', scrollElement);
       elementToScroll.removeEventListener('mouseenter', onMouseEnter);
@@ -247,13 +254,13 @@ class DragDropContextProvider extends Component {
     } = this;
 
     const { source, target } = state.dragState;
-    let switchResultPromise;
+    let resultOfMoving;
 
     if (source.containerId !== target.containerId || source.index !== target.index) {
-      switchResultPromise = handler ? handler(source, target) : null;
+      resultOfMoving = handler ? handler(source, target) : null;
 
-      if (switchResultPromise) {
-        switchResultPromise
+      if (resultOfMoving) {
+        resultOfMoving
           .catch((err) => {
             props.handleError(err);
 
@@ -288,8 +295,6 @@ class DragDropContextProvider extends Component {
       dragStart,
       dragEnd,
       dragUpdate,
-      switchCards,
-      switchColumns,
     } = this;
     const { dragState } = state;
 
@@ -300,8 +305,6 @@ class DragDropContextProvider extends Component {
           dragStart,
           dragEnd,
           dragUpdate,
-          switchCards,
-          switchColumns,
         }}
       >
         {props.children}

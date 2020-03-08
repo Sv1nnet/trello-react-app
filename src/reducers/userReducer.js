@@ -31,7 +31,6 @@ const initialState = user ? JSON.parse(user) : {
 const userReducer = (state = initialState, action) => {
   let data;
   let newState;
-  console.log(action);
 
   switch (action.type) {
     case userActionTypes.SIGNEDUP:

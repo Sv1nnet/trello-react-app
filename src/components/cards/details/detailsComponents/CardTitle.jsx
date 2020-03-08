@@ -55,7 +55,7 @@ const CardTitle = (props) => {
     handleError,
   } = useStatus();
 
-  const { switchCards } = useContext(BoardContentContext);
+  const { moveCard: moveCardToNewPosition } = useContext(BoardContentContext);
 
   const onKeyPress = (e) => {
     const { target } = e;
@@ -91,13 +91,13 @@ const CardTitle = (props) => {
 
     setStatusLoading();
 
-    switchCards(source, target)
+    moveCardToNewPosition(source, target)
       .then(handleSuccess)
       .catch(handleError);
   };
 
   return (
-    <div className="card-title-container w-100">
+    <div className="w-100">
       <TextInput
         hideSearchBtn
         hideCrossBtn

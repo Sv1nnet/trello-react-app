@@ -35,17 +35,15 @@ describe('Action LOGGEDIN', () => {
     const action = {
       type: userActionTypes.LOGGEDIN,
       data: {
-        data: {
-          _id: 'justrandomidhere',
-          email: 'email@mail.com',
-          nickname: 'Nickname',
-          firstName: 'firstname',
-          lastName: 'lastname',
-          boards: ['justrandomishere'],
-          token: {
-            access: 'auth',
-            token: 'justtokenhere',
-          },
+        _id: 'justrandomidhere',
+        email: 'email@mail.com',
+        nickname: 'Nickname',
+        firstName: 'firstname',
+        lastName: 'lastname',
+        boards: ['justrandomishere'],
+        token: {
+          access: 'auth',
+          token: 'justtokenhere',
         },
       },
     };
@@ -65,17 +63,15 @@ describe('Action LOGGEDOUT', () => {
     const action = {
       type: userActionTypes.LOGGEDOUT,
       data: {
-        data: {
-          _id: 'justrandomidhere',
-          email: 'email@mail.com',
-          nickname: 'Nickname',
-          firstName: 'firstname',
-          lastName: 'lastname',
-          boards: ['justrandomishere'],
-          token: {
-            access: 'auth',
-            token: 'justtokenhere',
-          },
+        _id: 'justrandomidhere',
+        email: 'email@mail.com',
+        nickname: 'Nickname',
+        firstName: 'firstname',
+        lastName: 'lastname',
+        boards: ['justrandomishere'],
+        token: {
+          access: 'auth',
+          token: 'justtokenhere',
         },
       },
     };

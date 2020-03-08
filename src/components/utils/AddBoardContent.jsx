@@ -111,18 +111,24 @@ const AddBoardContent = (props) => {
   };
 
   const onAddContent = (e) => {
-    addContent(e, addContentState.contentTitle)
-      .then(() => {
+    const result = addContent(e, addContentState.contentTitle);
+
+    if (result instanceof Promise) {
+      result.then(() => {
         closeAddContentInput(null, true);
       });
+    }
   };
 
-  const onKeyUp = (e) => {
+  const onKeyDown = (e) => {
     if (isEnterPressed(e)) {
-      addContent(e, addContentState.contentTitle)
-        .then(() => {
+      const result = addContent(e, addContentState.contentTitle);
+
+      if (result instanceof Promise) {
+        result.then(() => {
           closeAddContentInput(null, true);
         });
+      }
     }
 
     if (e.nativeEvent.keyCode === 27 || e.nativeEvent.key === 'Escape') {
@@ -146,7 +152,7 @@ const AddBoardContent = (props) => {
                 classList={`w-100 ${textInputClass}`}
                 placeholder={textInputPlaceholder}
                 onChange={onChange}
-                onKeyUp={onKeyUp}
+                onKeyDown={onKeyDown}
                 onCrossBtnClick={clearInput}
                 inputValue={addContentState.contentTitle}
                 focusAfterActivated

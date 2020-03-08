@@ -69,13 +69,14 @@ class UserNavbar extends Component {
   // Handle blur event for search input
   onSearchInputBlur = (e) => {
     const activeInputElement = this.navSearchInput.current.inputElement.current;
+    const isInputEmpty = !e.target.value;
 
     if (getComputedStyle(activeInputElement).display !== 'none') {
-      if (!e.target.value) {
+      if (isInputEmpty) {
         e.target.classList.remove('active');
         this.searchBar.current.classList.remove('active');
       }
-    } else if (!e.target.value && e.target === this.searchBtn.current) {
+    } else if (isInputEmpty && e.target === this.searchBtn.current) {
       e.target.classList.remove('active');
       this.searchBar.current.classList.remove('active');
     }
@@ -227,27 +228,26 @@ class UserNavbar extends Component {
             </Link>
           </div>
 
-          {
-            isBoardOpened && (
-              <li className="nav-item nav-button dropdown search-button">
-                <div className="nav-search-input-container">
+          {isBoardOpened && (
+            <li className="nav-item nav-button dropdown search-button">
+              <div className="nav-search-input-container">
 
-                  <TextInput
-                    ref={navSearchInput}
-                    containerClassList="nav-search-input__text-input"
-                    inputValue={searchText}
-                    placeholder="Search"
-                    onChange={onSearchChange}
-                    onFocus={onSearchInputFocus}
-                    onBlur={onSearchInputBlur}
-                    onCrossBtnClick={clearInput}
-                    hideSearchBtn
-                  />
+                <TextInput
+                  ref={navSearchInput}
+                  containerClassList="nav-search-input__text-input"
+                  inputValue={searchText}
+                  placeholder="Search"
+                  onChange={onSearchChange}
+                  onFocus={onSearchInputFocus}
+                  onBlur={onSearchInputBlur}
+                  onCrossBtnClick={clearInput}
+                  hideSearchBtn
+                />
 
-                </div>
-                <input ref={searchBtn} onClick={onSearchButtonClick} type="button" className="nav-link text-white" value="Search" />
-              </li>
-            )}
+              </div>
+              <input ref={searchBtn} onClick={onSearchButtonClick} type="button" className="nav-link text-white" value="Search" />
+            </li>
+          )}
           <li className="nav-item nav-button user-logo">
             <button onClick={onPopupBtnClick} data-popup-type="userPopupActive" type="button" className="nav-link p-0 w-100 text-primary rounded-circle bg-white text-center font-weight-bold">{emailInitials || 'US'}</button>
           </li>

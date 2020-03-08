@@ -11,10 +11,6 @@ import isMouseMoved from '../../../utlis/isMouseMoved';
 import createPlaceholder from '../../../utlis/createPlaceholder';
 
 
-const defaultProps = {
-  dragHandlers: {},
-};
-
 const propTypes = {
   children: PropTypes.func.isRequired,
   containerId: PropTypes.string.isRequired,
@@ -27,6 +23,10 @@ const propTypes = {
     onDragUpdate: PropTypes.func,
     onDragEnd: PropTypes.func,
   }),
+};
+
+const defaultProps = {
+  dragHandlers: {},
 };
 
 
@@ -48,23 +48,29 @@ const Draggable = (props) => {
     dragStart,
     dragUpdate,
     dragEnd,
-  } = DNDContext || { dragState: { draggind: false } };
+  } = DNDContext || { dragState: { draggind: false } }; // Need this "OR" condition in case of Draggable component is being placed out of DNDContext scope
 
   const draggableElementRef = useRef();
   const draggableAnchorRef = useRef();
 
+  // Store position where mouseDown event occurred in order to
+  // find out did user move mouse far enough to start dragging an element
   const mouseState = {
     onMouseDownPosition: {
       x: null,
       y: null,
     },
   };
+
+  // Need this to set initial element position on dragStart event since it's gonna be positioned as absolute or fixed
   const initialElementPosition = {
     x: null,
     y: null,
   };
 
-  const getTargetIndex = useCallback((placeholder, source, target, container) => {
+  // TargetIndex will be an index of an element the onMouseEnter event occurred on
+  // or index of placeholder that we put on a new position before we execute this function
+  const getTargetIndex = useCallback((placeholder, source, container) => {
     // If item just moved into another list
     if (placeholder.dataset.containerId !== containerId) {
       if (placeholder.dataset.originalContainerId === containerId) {
@@ -74,8 +80,8 @@ const Draggable = (props) => {
       return index;
     }
 
-    const childrenItems = Array
-      .prototype.filter.call(
+    const childrenItems = Array.prototype.filter
+      .call(
         container.querySelectorAll(`[data-droppable-id="${containerId}"] > [data-draggable-id]`),
         item => source.id !== item.dataset.draggableId,
       );
@@ -148,7 +154,7 @@ const Draggable = (props) => {
           draggableElementRef.current.parentElement.insertBefore(placeholder, draggableElementRef.current);
           placeholder.dataset.containerId = containerId;
         }
-        targetIndex = getTargetIndex(placeholder, dragState.source, draggableElementRef.current, container);
+        targetIndex = getTargetIndex(placeholder, dragState.source, container);
 
         placeholder.dataset.draggableIndex = targetIndex;
       }
@@ -205,14 +211,14 @@ const Draggable = (props) => {
       },
       innerRef: draggableElementRef,
     }
-    : null;
+    : null; // Need this ternary operator in case of Draggable component is being placed out of DNDContext scope
 
   const snapshot = DNDContext
     ? {
       ...dragState,
       isThisElementDragging: dragState.dragging && dragState.draggableId === draggableId,
     }
-    : null;
+    : null; // Need this ternary operator in case of Draggable component is being placed out of DNDContext scope
 
   return children(provider, snapshot);
 };

@@ -9,7 +9,7 @@ const {
   EMAIL_CONFIRMATION_FAILED,
 } = userActionTypes;
 
-const signup = ({ email, password, nickname, firstName, lastName }) => (dispatch, getState) => {
+const signup = ({ email, password, nickname, firstName, lastName }) => (dispatch) => {
   const data = {
     credentials: {
       email,
@@ -25,29 +25,25 @@ const signup = ({ email, password, nickname, firstName, lastName }) => (dispatch
       dispatch({ type: SIGNEDUP, data: res.data });
       return res;
     })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: SIGNINGUP_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
+    .catch(err => Promise.reject(
+      dispatch({
+        type: SIGNINGUP_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    ));
 };
 
-const confirmEmail = token => (dispatch, getState) => api.auth.confirmEmail(token)
+const confirmEmail = token => dispatch => api.auth.confirmEmail(token)
   .then((res) => {
     dispatch({ type: EMAIL_CONFIRMED, data: res.data });
     return res;
   })
-  .catch((err) => {
-    return Promise.reject(
-      dispatch({
-        type: EMAIL_CONFIRMATION_FAILED,
-        data: createErrorResponseObject(err),
-      }).data,
-    );
-  });
+  .catch(err => Promise.reject(
+    dispatch({
+      type: EMAIL_CONFIRMATION_FAILED,
+      data: createErrorResponseObject(err),
+    }).data,
+  ));
 
 export {
   signup,

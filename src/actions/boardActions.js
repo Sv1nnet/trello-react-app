@@ -14,12 +14,12 @@ import {
   createColumn,
   deleteColumn,
   updateColumn,
-  switchColumnPositions,
+  moveColumnToNewPosition,
 } from './board/columnActions';
 import {
   createCard,
   deleteCard,
-  switchCardPositions,
+  moveCardToNewPosition,
   updateCard,
   addCardComment,
   deleteCardComment,
@@ -33,9 +33,7 @@ import {
   addMember,
   removeMember,
 } from './board/membersActions';
-import {
-  editAccount,
-} from './user/userActions';
+import { editAccount } from './user/userActions';
 
 export default {
   createBoard,
@@ -49,14 +47,14 @@ export default {
   createColumn,
   deleteColumn,
   updateColumn,
-  switchColumnPositions,
+  moveColumnToNewPosition,
   createCard,
   deleteCard,
   updateCard,
   addCardComment,
   deleteCardComment,
   updateCardComment,
-  switchCardPositions,
+  moveCardToNewPosition,
   clearBoardData,
   getActivities,
   cleanActivities,

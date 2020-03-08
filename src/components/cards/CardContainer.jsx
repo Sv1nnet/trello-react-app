@@ -62,7 +62,7 @@ const CardContainer = (props) => {
     handleError,
   } = useStatus();
 
-  const { openDetails, switchCards } = useContext(BoardContentContext);
+  const { openDetails, moveCard } = useContext(BoardContentContext);
   const editingTargetRef = useRef(null);
 
   const deleteCard = (e) => {
@@ -90,7 +90,7 @@ const CardContainer = (props) => {
 
   return (
     <>
-      <Draggable dragHandlers={{ onDragEnd: switchCards }} containerId={columnId} draggableId={id} index={index} direction="vertical" type="card">
+      <Draggable dragHandlers={{ onDragEnd: moveCard }} containerId={columnId} draggableId={id} index={index} direction="vertical" type="card">
         {dragProvided => (
           <Card
             openDetails={openDetails}

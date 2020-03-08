@@ -137,6 +137,7 @@ const MoveCardPopup = (props) => {
               key: card._id,
             },
           })),
+          // If destination in another column then we need create one more slot for a moving card
           columnToMove.id !== sourceColumnId
             ? {
               title: columnToMove.cards.length + 1,

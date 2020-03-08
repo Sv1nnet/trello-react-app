@@ -1,5 +1,5 @@
 // React/Redux components
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 // Styles
@@ -71,11 +71,18 @@ const ErrorMessage = (props) => {
     bgPosition,
   } = props;
   const animationClassName = loadingTextAnimation ? 'loading-text' : '';
+
+  const btnRef = useRef();
+
+  useEffect(() => {
+    btnRef.current.focus();
+  }, []);
+
   return (
     <MessageContainer bgPosition={bgPosition} style={styles} containerBorder="message-danger">
       <h4 className="bg-danger">{title}</h4>
       <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
-      {btn !== false && <button onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-danger bg-danger my-3">OK</button>}
+      {btn !== false && <button ref={btnRef} onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-danger bg-danger my-3">OK</button>}
     </MessageContainer>
   );
 };
@@ -96,11 +103,18 @@ const InfoMessage = (props) => {
     bgPosition,
   } = props;
   const animationClassName = loadingTextAnimation ? 'loading-text' : '';
+
+  const btnRef = useRef();
+
+  useEffect(() => {
+    btnRef.current.focus();
+  }, []);
+
   return (
     <MessageContainer bgPosition={bgPosition} style={styles} containerBorder="message-info">
       <h4 className="bg-primary">{title}</h4>
       <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
-      {btn !== false && <button onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-primary bg-primary my-3">OK</button>}
+      {btn !== false && <button ref={btnRef} onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-primary bg-primary my-3">OK</button>}
     </MessageContainer>
   );
 };
@@ -121,11 +135,18 @@ const SuccessMessage = (props) => {
     bgPosition,
   } = props;
   const animationClassName = loadingTextAnimation ? 'loading-text' : '';
+
+  const btnRef = useRef();
+
+  useEffect(() => {
+    btnRef.current.focus();
+  }, []);
+
   return (
     <MessageContainer bgPosition={bgPosition} style={styles} containerBorder="message-success">
       <h4 className="bg-success">{title}</h4>
       <h5 className={`${animationClassName} mt-4 w-100`}>{message}</h5>
-      {btn !== false && <button onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-success bg-success my-3">OK</button>}
+      {btn !== false && <button ref={btnRef} onClick={() => closeMessage(dataForClosingMessage)} onKeyPress={() => closeMessage(dataForClosingMessage)} type="button" className="btn btn-success bg-success my-3">OK</button>}
     </MessageContainer>
   );
 };
@@ -166,13 +187,19 @@ const QuestionMessage = (props) => {
 
   const colorType = colors[type] || 'primary';
 
+  const btnRef = useRef();
+
+  useEffect(() => {
+    btnRef.current.focus();
+  }, []);
+
   return (
     <MessageContainer bgPosition={bgPosition} style={styles} containerBorder={`message-${colorType}`}>
       <h4 className={`bg-${colorType}`}>Confirm</h4>
       <h5 className="mt-4 w-100">{message}</h5>
       <div className="question-message__buttons-container">
-        <button onClick={answer.positive} onKeyPress={answer.positive} type="button" className="question-message-btn btn btn-outline-success my-3">Yes</button>
-        <button onClick={answer.negative} onKeyPress={answer.negative} type="button" className="question-message-btn btn btn-outline-danger my-3">No</button>
+        <button onClick={answer.positive} type="button" className="question-message-btn btn btn-outline-success my-3">Yes</button>
+        <button ref={btnRef} onClick={answer.negative} type="button" className="question-message-btn btn btn-outline-danger my-3">No</button>
       </div>
     </MessageContainer>
   );

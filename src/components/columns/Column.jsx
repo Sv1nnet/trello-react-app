@@ -106,11 +106,9 @@ const Column = (props) => {
   const { columnId, listTitle, position, cards } = columnData;
   const { titleInputRef, editingTargetRef } = refs;
 
-  const { switchColumns } = useContext(BoardContentContext);
+  const { moveColumn: updateColumnPosition } = useContext(BoardContentContext);
 
-  const [titleState, setTitleState] = useState({
-    title: listTitle,
-  });
+  const [titleState, setTitleState] = useState({ title: listTitle });
   const [moveColumnPopupIsActive, setMoveColumnPopupIsActive] = useState(false);
 
   const popupRelativeElementRef = useRef();
@@ -199,7 +197,7 @@ const Column = (props) => {
 
     setStatusLoading();
 
-    switchColumns(source, target)
+    updateColumnPosition(source, target)
       .then(handleSuccess)
       .catch(handleError);
   };

@@ -27,8 +27,8 @@ const propTypes = {
     _id: PropTypes.string.isRequired,
   }).isRequired,
   clearBoardData: PropTypes.func.isRequired,
-  switchCards: PropTypes.func.isRequired,
-  switchColumns: PropTypes.func.isRequired,
+  moveCard: PropTypes.func.isRequired,
+  moveColumn: PropTypes.func.isRequired,
 };
 
 
@@ -47,7 +47,7 @@ const BoardContentContextProvider = (props) => {
   const [boardLabels, setBoardLabels] = useState(null);
   const [updatePositionsState, setUpdatePositionsState] = useState({
     message: '',
-    statusCode: undefined,
+    statusCode: null,
   });
 
   const handleError = (err) => {
@@ -85,7 +85,7 @@ const BoardContentContextProvider = (props) => {
    * @param {number} target.index - target's index in the list of columns
    * @return {Promise} promise that contains a result of request to the server for putting a column on a new position
    */
-  const switchColumns = (source, target) => {
+  const moveColumn = (source, target) => {
     const { token } = props.user;
 
     const newColumns = [];
@@ -114,7 +114,7 @@ const BoardContentContextProvider = (props) => {
       newColumns.push(newColumn);
     }
 
-    return props.switchColumns(token.token, board._id, newColumns);
+    return props.moveColumn(token.token, board._id, newColumns);
   };
 
   /**
@@ -127,7 +127,7 @@ const BoardContentContextProvider = (props) => {
    * @param {number} target.index - target's index in the list of cards
    * @return {Promise} promise that contains a result of request to the server for putting a card on a new position
    */
-  const switchCards = (source, target) => {
+  const moveCard = (source, target) => {
     const { token } = props.user;
 
     const newCards = [];
@@ -169,7 +169,7 @@ const BoardContentContextProvider = (props) => {
       }
     }
 
-    return props.switchCards(token.token, board._id, newCards);
+    return props.moveCard(token.token, board._id, newCards);
   };
 
   const closeMessage = () => {
@@ -253,8 +253,8 @@ const BoardContentContextProvider = (props) => {
       value={{
         columnsWithCards,
         handleError,
-        switchColumns,
-        switchCards,
+        moveColumn,
+        moveCard,
         openDetails,
         closeDetails,
         boardLabels,
@@ -284,8 +284,8 @@ const mapDispatchToProps = dispatch => ({
   // Clear board data after transition to another page.
   // We need it to prevent from showing wrong baord data.
   clearBoardData: () => dispatch(boardActions.clearBoardData()),
-  switchCards: (token, boardId, data) => dispatch(boardActions.switchCardPositions(token, boardId, data)),
-  switchColumns: (token, boardId, data) => dispatch(boardActions.switchColumnPositions(token, boardId, data)),
+  moveCard: (token, boardId, data) => dispatch(boardActions.moveCardToNewPosition(token, boardId, data)),
+  moveColumn: (token, boardId, data) => dispatch(boardActions.moveColumnToNewPosition(token, boardId, data)),
 });
 
 

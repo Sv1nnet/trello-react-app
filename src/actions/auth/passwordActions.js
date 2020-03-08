@@ -9,7 +9,7 @@ const {
   FORGOT_PASSWORD_FAILED,
 } = userActionTypes;
 
-const resetPassword = ({ token, password }) => (dispatch, getState) => {
+const resetPassword = ({ token, password }) => (dispatch) => {
   const data = {
     credentials: {
       password,
@@ -21,17 +21,15 @@ const resetPassword = ({ token, password }) => (dispatch, getState) => {
       dispatch({ type: RESET_PASSWORD, data: res.data });
       return res;
     })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: RESET_PASSWORD_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
+    .catch(err => Promise.reject(
+      dispatch({
+        type: RESET_PASSWORD_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    ));
 };
 
-const forgotPassword = ({ email }) => (dispatch, getState) => {
+const forgotPassword = ({ email }) => (dispatch) => {
   const data = {
     credentials: {
       email,
@@ -43,14 +41,12 @@ const forgotPassword = ({ email }) => (dispatch, getState) => {
       dispatch({ type: FORGOT_PASSWORD, data: res.data });
       return res;
     })
-    .catch((err) => {
-      return Promise.reject(
-        dispatch({
-          type: FORGOT_PASSWORD_FAILED,
-          data: createErrorResponseObject(err),
-        }).data,
-      );
-    });
+    .catch(err => Promise.reject(
+      dispatch({
+        type: FORGOT_PASSWORD_FAILED,
+        data: createErrorResponseObject(err),
+      }).data,
+    ));
 };
 
 export {

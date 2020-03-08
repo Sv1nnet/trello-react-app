@@ -173,11 +173,14 @@ class ResetPasswordPage extends Component {
       <div className="container mb-4">
         <div className="row justify-content-center align-items-center h-100">
           <div className="col-xs-12 col-sm-12 col-md-6 col-l-4 col-xl-4 px-0 text-center">
+
             <h2 className="bg-primary mb-0 py-1">Reset password</h2>
             <ResetPasswordForm formMethods={{ onChange, onSubmit }} userData={state.userData} />
+
             {state.status.loading && <Loader.FormLoader bgStyles={{ top: '0px' }} />}
             {state.status.err.message && <Messages.ErrorMessage message={state.status.err.message} closeMessage={closeMessage} />}
             {state.status.success.message && <Messages.SuccessMessage message={state.status.success.message} closeMessage={closeMessage} />}
+
           </div>
         </div>
       </div>
