@@ -24,7 +24,7 @@ function sendConfirmationEmail(user) {
     to: user.email,
     subject: 'Welcome to Trellolike',
     text: `
-      Welcome to Trellolike, ${user.nick}! Please, confirm your email.
+      Welcome to Trellolike, ${user.nickname}! Please, confirm your email.
     
       ${url}
     `,
