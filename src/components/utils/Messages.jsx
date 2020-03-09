@@ -75,7 +75,7 @@ const ErrorMessage = (props) => {
   const btnRef = useRef();
 
   useEffect(() => {
-    btnRef.current.focus();
+    if (btnRef.current) btnRef.current.focus();
   }, []);
 
   return (
@@ -107,7 +107,7 @@ const InfoMessage = (props) => {
   const btnRef = useRef();
 
   useEffect(() => {
-    btnRef.current.focus();
+    if (btnRef.current) btnRef.current.focus();
   }, []);
 
   return (
@@ -139,7 +139,7 @@ const SuccessMessage = (props) => {
   const btnRef = useRef();
 
   useEffect(() => {
-    btnRef.current.focus();
+    if (btnRef.current) btnRef.current.focus();
   }, []);
 
   return (
@@ -190,7 +190,7 @@ const QuestionMessage = (props) => {
   const btnRef = useRef();
 
   useEffect(() => {
-    btnRef.current.focus();
+    if (btnRef.current) btnRef.current.focus();
   }, []);
 
   return (
