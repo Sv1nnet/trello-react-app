@@ -28,7 +28,7 @@ Almost all things those you can do with original Trello:
 
 ## Configs
 
-To check it out create .env file in "server" folder and set JWT_SECRET.
+To check it out create .env file in "server" folder and set JWT_SECRET and IP as local IP (it's used for creating confirmation and reset password emails).
 Also, in server/index.js set correct MONGODB_URI and PORT for process.env.
 To send emails I'm using mailtrap.io so you need to set EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS in .env.
 
