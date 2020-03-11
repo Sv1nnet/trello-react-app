@@ -37,7 +37,7 @@ const propTypes = {
 };
 
 
-const BoardMenu = ({ token, board, getActivities, cleanActivities }) => {
+const BoardMenuPopup = ({ token, board, getActivities, cleanActivities }) => {
   const [activityCount, setActivityCount] = useState(10); // activityCount is a start index for requesting activities from activities array on the server
   const {
     status,
@@ -112,7 +112,7 @@ const mapDispatchToProps = dispatch => ({
   cleanActivities: () => dispatch(boardActions.cleanActivities()),
 });
 
-BoardMenu.propTypes = propTypes;
+BoardMenuPopup.propTypes = propTypes;
 
 
-export default connect(mapStateToProps.mapRequestData, mapDispatchToProps)(BoardMenu);
+export default connect(mapStateToProps.mapRequestData, mapDispatchToProps)(BoardMenuPopup);

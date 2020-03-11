@@ -15,7 +15,7 @@ import RenameBoardForm from '../forms/boardForms/RenameBoardForm';
 import ReadonlyAccessBoardForm from '../forms/boardForms/ReadonlyAccessBoardForm';
 import PublicAccessBoardForm from '../forms/boardForms/PublicAccessBoardForm';
 import MembersForm from '../forms/boardForms/MembersForm';
-import BoardMenu from '../boards/BoardMenu';
+import BoardMenuPopup from '../boards/BoardMenuPopup';
 import Messages from '../utils/Messages';
 import ColumnList from '../lists/ColumnList';
 
@@ -239,7 +239,7 @@ class Board extends Component {
 
           {state.popup.isMenuPopupActive && (
             <PopupContainer removeElement={handlePopupBtnClick} closeBtn extraClasses={['board-controls-dropdown', 'board-controls-dropdown-board-menu']}>
-              <BoardMenu closePopup={(e) => { handlePopupBtnClick(e, 'isMenuPopupActive'); }} />
+              <BoardMenuPopup closePopup={(e) => { handlePopupBtnClick(e, 'isMenuPopupActive'); }} />
             </PopupContainer>
           )}
         </div>

@@ -53,9 +53,6 @@
 
 .board-controls-dropdown
   background-color: $popup-background-light
-  display: block
-  top: 75px
-  width: 100%
   &.board-controls-dropdown-members
     max-height: calc(100vh - 135px)
     overflow: hidden
@@ -64,6 +61,10 @@
     .user-list
       width: 95%
       margin: 15px auto 0
+  &.active
+    display: block
+    top: 75px
+    width: 100%
 
 .board-controls-container
   .dropdown-menu
@@ -88,9 +89,6 @@
   padding-bottom: 5px
   border-bottom: 1px solid #bfbfbf
   text-align: center
-
-// .board-list-container
-  // max-height: calc(100vh - 140px)
 
 .access-dropdown-inputs-container
   display: flex
@@ -128,10 +126,11 @@ input[type="radio"]:checked
   display: block
   max-height: calc(100vh - 280px)
   .list-group-item
+    flex: 0 0 100%
     padding: .5em 0
     border: none
     overflow: hidden
-    background-color: $popup-background-light
+    background-color: white
     .user-logo-container
       position: relative
       .owner-icon-container
@@ -173,7 +172,7 @@ input[type="radio"]:checked
         svg
           transform: scale(1.5)
 
-.board-controls-dropdown-board-menu
+.dropdown-menu.board-controls-dropdown-board-menu
   right: 0
   left: auto
   flex-grow: 1
