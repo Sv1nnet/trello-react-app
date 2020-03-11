@@ -59,6 +59,10 @@ class UserBoardsPage extends Component {
               message,
               statusCode: 200,
             },
+            err: {
+              message: '',
+              statusCode: null,
+            },
           },
         }));
       })
@@ -67,6 +71,10 @@ class UserBoardsPage extends Component {
           ...state,
           status: {
             loading: false,
+            success: {
+              message: '',
+              statusCode: null,
+            },
             err: {
               message: err.message,
               statusCode: err.status,

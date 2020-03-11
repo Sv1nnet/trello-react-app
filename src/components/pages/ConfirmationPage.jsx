@@ -90,7 +90,7 @@ class ConfirmationPage extends Component {
 
     // Render either loading info message if request is being sent or error message if request failed
     return (
-      <div className="">
+      <div>
         {state.loading && <Messages.InfoMessage loadingTextAnimation styles={{ height: '115px' }} btn={false} message="Sending" />}
         {state.result.err && <Messages.ErrorMessage message={state.result.message} closeMessage={closeMessage} />}
       </div>

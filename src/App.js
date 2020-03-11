@@ -31,7 +31,7 @@ class App extends Component {
     const { props, state } = this;
     const { token, verifyToken } = props;
 
-    // If user has token in redux store verify it
+    // If user has token in redux store then verify it
     if (token.token) {
       if (state.loading && !state.isAuthenticated) {
         verifyToken(token.token)
