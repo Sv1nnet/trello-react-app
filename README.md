@@ -4,7 +4,7 @@ It's a Trello like app that I made for my portfolio.
 
 # What am I using to create the app
 
-I'm using create-react-app for a client and node and express for server. Also, I'm using mongodb as a database and bootstrap as a css framework. And air-bnb config for eslint.
+I'm using create-react-app for a client side and node and express for server side. Also, I'm using mongodb as a database and bootstrap (take a look on P.P.S.) as a css framework. And air-bnb config for eslint.
 
 # What you can do using the app
 
@@ -26,9 +26,6 @@ Almost all things those you can do with original Trello:
  - sign up and log in with email (and log out of course)
  - editing profile: email, nick, credentials
 
-## Chat
- - Also, I'm considering to add a chat to a board
-
 ## Configs
 
 To check it out create .env file in "server" folder and set JWT_SECRET.
@@ -37,4 +34,8 @@ To send emails I'm using mailtrap.io so you need to set EMAIL_HOST, EMAIL_PORT, 
 
 ## P.S.
 
-This is my first own app that I'm making all by myself. I hope it will be good enough to you consider to invite me to interview. I'm looking for trainee/junior position. But if you have something different (and still in front-end) and interesting, please, let me know!
+This is my first own app that I have made all by myself. I'm not a designer, so it can look not as good as I'd like to. I hope it will be good enough to you consider to invite me to interview. I'm looking for a trainee/junior position!
+
+## P.P.S.
+
+On the project start I picked Twitter bootstrap up for learning it but later I noticed that it's not suitable for my project, so on the halfway to finish I tried to use BEM naming. Due to my mischoice of CSS tool, CSS looks messed and right now I'm working on the improvement of my HTML/CSS skills.
