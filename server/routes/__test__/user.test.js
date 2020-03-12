@@ -89,6 +89,7 @@ function userRequests() {
     });
   });
 
+  /* I commented this code because of mailtrap.io limits on incoming requests */
   // describe('POST /user/signup', function() {
   //   this.timeout(10000);
 
