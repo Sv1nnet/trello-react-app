@@ -32,7 +32,7 @@ class App extends Component {
     const { token, verifyToken } = props;
 
     // If user has token in redux store then verify it
-    if (token.token) {
+    if (token && token.token) {
       if (state.loading && !state.isAuthenticated) {
         verifyToken(token.token)
           .then(res => this.setState({ isAuthenticated: res.status === 200, loading: false }))
@@ -50,9 +50,9 @@ class App extends Component {
   // Once we got token from redux store in props it means token is verified successfully and we set state isAuthenticated
   componentDidUpdate() {
     const { props, state } = this;
-    const { token } = props.token;
+    const { token } = props;
 
-    if (token && !state.isAuthenticated) {
+    if (token && token.token && !state.isAuthenticated) {
       this.setState(() => ({
         isAuthenticated: true,
         loading: false,
