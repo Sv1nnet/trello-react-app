@@ -26,14 +26,21 @@ Almost all things those you can do with original Trello:
  - sign up and log in with email (and log out of course)
  - editing profile: email, nick, credentials
 
+# How to install
 ## Configs
-
 To check it out:
   1. create .env file in "server" folder and set JWT_SECRET and IP as local IP (it's used for creating confirmation and reset password emails).
   2. In src/api.js set your IP in "ip" const on the 4th line.
   3. In package.json put the server ip in proxy.
   4. In server/index.js set correct MONGODB_URI and PORT for process.env.
   5. To send emails I'm using mailtrap.io so you need to set EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS in .env.
+
+## Tools I used
+ - Axios
+ - Redux
+ - Redux-thunk
+ - React hooks (~70% of all components are functional and contain React hooks)
+ - Custom hooks
 
 ## P.S.
 
