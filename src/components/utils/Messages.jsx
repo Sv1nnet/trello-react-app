@@ -49,6 +49,7 @@ const messagePropTypes = {
   loadingTextAnimation: PropTypes.bool,
   // eslint-disable-next-line react/forbid-prop-types
   dataForClosingMessage: PropTypes.any,
+  bgPosition: PropTypes.string,
 };
 
 const messageDefaultProps = {
@@ -57,6 +58,7 @@ const messageDefaultProps = {
   btn: true,
   loadingTextAnimation: false,
   dataForClosingMessage: undefined,
+  bgPosition: 'absolute',
 };
 
 const ErrorMessage = (props) => {
@@ -163,11 +165,13 @@ const questionMessagePropTypes = {
     negative: PropTypes.func.isRequired,
   }).isRequired,
   styles: PropTypes.shape({}),
+  bgPosition: PropTypes.string,
 };
 
 const questionMessageDefaultProps = {
   type: 'info',
   styles: {},
+  bgPosition: 'absolute',
 };
 
 const QuestionMessage = (props) => {
