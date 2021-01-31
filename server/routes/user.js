@@ -17,11 +17,13 @@ router.post('/', (req, res) => {
   const token = req.header('Authorization').split(' ')[1];
   const { credentials } = req.body;
 
-  const { email } = credentials;
-  const { password } = credentials;
-  const { nickname } = credentials;
-  const { firstName } = credentials;
-  const { lastName } = credentials;
+  const {
+    email,
+    password,
+    nickname,
+    firstName,
+    lastName,
+  } = credentials;
 
   const userData = {
     email,
@@ -55,11 +57,13 @@ router.post('/', (req, res) => {
 // Registration
 router.post('/signup', (req, res) => {
   const { credentials } = req.body;
-  const { email } = credentials;
-  const { password } = credentials;
-  const { nickname } = credentials;
-  const { firstName } = credentials;
-  const { lastName } = credentials;
+  const {
+    email,
+    password,
+    nickname,
+    firstName,
+    lastName,
+  } = credentials;
 
   User.findOne({ email }).then((doc) => {
     if (doc) {
@@ -130,7 +134,6 @@ router.post('/confirmation', (req, res) => {
           },
         ).then((user) => {
           const authToken = user.generateAuthToken();
-          console.log(authToken);
 
           user.save()
             .then((user) => {
@@ -262,8 +265,7 @@ router.post('/edit_account', (req, res) => {
 // Login
 router.post('/login', (req, res) => {
   const { credentials } = req.body;
-  const { email } = credentials;
-  const { password } = credentials;
+  const { email, password } = credentials;
   const queryField = email ? 'email' : 'nickname';
   const queryObject = {
     [queryField]: credentials[queryField],

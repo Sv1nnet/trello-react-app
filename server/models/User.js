@@ -6,6 +6,8 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const IP = process.env.NODE_ENV === 'prod' ? process.env.ADDRESS : process.env.DEV_IP;
+
 const UserSchema = new Schema({
   email: {
     type: String,
@@ -115,7 +117,7 @@ UserSchema.methods.generateConfirmationToken = function generateAndSetConfirmati
 UserSchema.methods.generateConfirmationUrl = function generateConfirmationUrl() {
   const user = this;
   const confirmationToken = user.tokens.find(token => token.access === 'conf').token;
-  const url = `${process.env.IP}/user/confirmation/${confirmationToken}`;
+  const url = `${IP}${process.env.NODE_ENV === 'prod' ? '' : process.env.BACK_PORT}/user/confirmation/${confirmationToken}`;
 
   return url;
 };
@@ -128,7 +130,7 @@ UserSchema.methods.confirmRegistration = function confirmRegistration() {
 UserSchema.methods.generateResetPasswordUrl = function generateResetPasswordUrl() {
   const user = this;
   const resetPasswordToken = user.tokens.find(token => token.access === 'reset').token;
-  const url = `${process.env.IP}/user/reset_password/${resetPasswordToken}`;
+  const url = `${IP}${process.env.NODE_ENV === 'prod' ? '' : process.env.BACK_PORT}/user/reset_password/${resetPasswordToken}`;
 
   return url;
 };
