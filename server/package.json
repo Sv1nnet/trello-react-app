@@ -6,7 +6,9 @@
   "scripts": {
     "start": "cross-env \"NODE_ENV=development\" nodemon index.js",
     "test": "cross-env \"NODE_ENV=test\" && mocha ./**/*.spec.js",
-    "prod": "cross-env \"NODE_ENV=prod\" nodemon index.js",
+    "back-prod": "cross-env \"NODE_ENV=prod\" nodemon index.js",
+    "front-prod": "cross-env \"NODE_ENV=prod\" nodemon index.front.js",
+    "prod": "npm-run-all --parallel back-prod front-prod",
     "test-watch": "nodemon --exec \"npm test\""
   },
   "author": "Leonid Tsukanov",
@@ -21,6 +23,7 @@
     "mongoose": "^5.6.4",
     "nodemailer": "^6.3.0",
     "nodemon": "^1.19.1",
+    "npm-run-all": "^4.1.5",
     "validator": "^11.1.0"
   },
   "devDependencies": {

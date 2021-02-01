@@ -40,7 +40,7 @@ To check it out:
   - `BACK_PORT`=port for serving ajax requests
   - `FRONT_PORT`=port for serving static files (for profuction only)
 
-  - `ADDRESS`=address for emails (e.g. https://some.com) (for profuction only)
+  - `ADDRESS`=address for emails (e.g. https://some.com) (for production only)
   - `DEV_IP`=local IP for emails (e.g. 192.168.0.10)
 
   - `JWT_SECRET`
